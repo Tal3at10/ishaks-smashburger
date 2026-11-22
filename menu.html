@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meny &amp; Beställning — Ishak's Smash Burger</title>
+  <meta name="description" content="Beställ äkta smashburgare online för avhämtning på Hantverkargatan 5, Borlänge. Pommes och 33 cl dryck ingår i alla menyer." />
+  <meta name="theme-color" content="#0C0C0C" />
+  <link rel="icon" type="image/png" href="assets/images/logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="site-nav">
+    <a href="index.html" class="nav-brand" aria-label="Startsida">
+      <img src="assets/images/logo.png" alt="" />
+      <div>
+        <div class="nav-brand-name">ISHAK'S</div>
+        <div class="nav-brand-city">Södra Backa · Borlänge</div>
+      </div>
+    </a>
+    <div class="nav-links" id="navLinks">
+      <a href="menu.html" class="active">Meny</a>
+      <a href="om-oss.html">Om oss</a>
+      <a href="catering.html">Catering</a>
+      <a href="hitta-hit.html">Hitta hit</a>
+    </div>
+    <div class="nav-actions">
+      <button class="nav-cart-btn" id="navCartBtn" aria-label="Kundvagn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        <span class="cart-badge" id="cartBadge">0</span>
+      </button>
+      <button class="nav-hamburger" id="hamburger" aria-label="Meny" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <main class="page-top">
+
+    <!-- CATEGORY TABS -->
+    <div class="category-tabs">
+      <div class="category-tabs-inner" id="categoryTabs"></div>
+    </div>
+
+    <!-- MAIN MENU LAYOUT -->
+    <div class="menu-layout">
+
+      <!-- DISHES COLUMN -->
+      <div class="menu-main" id="menuMain"></div>
+
+      <!-- DESKTOP CART SIDEBAR -->
+      <aside class="cart-sidebar" aria-label="Varukorg">
+        <div class="cart-header">
+          <div class="cart-type-toggle">
+            <button type="button" class="cart-type-btn active">Upphämtning</button>
+            <button type="button" class="cart-type-btn" style="opacity:0.4;cursor:not-allowed;" title="Endast vid företagsbeställning">Leverans</button>
+          </div>
+          <div class="cart-time">
+            <span class="cart-time-dot"></span>
+            <span>Klar för upphämtning inom ca 15–20 min</span>
+          </div>
+        </div>
+
+        <div class="cart-items" id="cartItems">
+          <div class="cart-empty" id="cartEmpty">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+            <p>Din varukorg är tom.<br>Välj en burgare för att börja.</p>
+          </div>
+          <div id="cartList"></div>
+        </div>
+
+        <div class="cart-footer">
+          <div class="cart-subtotal">
+            <span>Delsumma</span>
+            <span id="cartSubtotal">0 kr</span>
+          </div>
+          <div class="cart-total">
+            <span>Totalt att betala</span>
+            <span id="cartTotal" style="color:var(--red);">0 kr</span>
+          </div>
+          <button type="button" class="btn-kassa" id="btnKassa" disabled>KASSA</button>
+        </div>
+      </aside>
+
+    </div>
+
+  </main>
+
+  <!-- MOBILE FLOATING CART BAR -->
+  <button type="button" class="cart-mobile-trigger" id="mobileCartTrigger">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+    <span id="mobileCartCount">0 st</span>
+    <span>·</span>
+    <span id="mobileCartTotal">0 kr</span>
+    <span style="margin-left:8px;font-size:12px;opacity:0.85;">TILL KASSAN &rarr;</span>
+  </button>
+
+  <!-- MOBILE CART DRAWER -->
+  <div class="cart-drawer-overlay" id="drawerOverlay"></div>
+  <div class="cart-drawer" id="mobileDrawer">
+    <div class="cart-drawer-handle"></div>
+    <div style="padding:12px 20px 8px;display:flex;justify-content:space-between;align-items:center;">
+      <h3 style="font-family:var(--font-display);font-weight:800;font-size:20px;text-transform:uppercase;">Varukorg</h3>
+      <button type="button" id="closeDrawer" style="color:var(--ink-muted);font-size:22px;line-height:1;">&times;</button>
+    </div>
+    <div class="cart-items" id="drawerCartItems" style="flex:1;max-height:50vh;"></div>
+    <div class="cart-footer">
+      <div class="cart-total">
+        <span>Totalt</span>
+        <span id="drawerTotal" style="color:var(--red);">0 kr</span>
+      </div>
+      <button type="button" class="btn-kassa" id="btnDrawerKassa">KASSA</button>
+    </div>
+  </div>
+
+  <!-- PRODUCT CUSTOMIZATION MODAL -->
+  <div class="modal-overlay" id="productModal">
+    <div class="modal-sheet" style="position:relative;">
+      <button type="button" class="modal-close-btn" id="modalClose">&times;</button>
+      <img src="" alt="" class="modal-sheet-img" id="modalImg" />
+      <div class="modal-body">
+        <h2 class="modal-name" id="modalName"></h2>
+        <p class="modal-desc" id="modalDesc"></p>
+        <div class="modal-price" id="modalPrice"></div>
+
+        <div id="modalOptions"></div>
+      </div>
+      <div class="modal-footer">
+        <div class="modal-qty-ctrl">
+          <button type="button" class="modal-qty-btn" id="modalMinus">&minus;</button>
+          <span class="modal-qty-num" id="modalQty">1</span>
+          <button type="button" class="modal-qty-btn" id="modalPlus">+</button>
+        </div>
+        <button type="button" class="btn-add-modal" id="modalAddBtn">
+          <span>Lägg till</span>
+          <span id="modalAddPrice">0 kr</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHECKOUT MODAL -->
+  <div class="checkout-modal" id="checkoutModal">
+    <div class="checkout-sheet">
+      <h2>Kassa &amp; Beställning</h2>
+      
+      <div class="checkout-items" id="checkoutItemsList"></div>
+
+      <div class="checkout-total-row">
+        <span>Totalt att betala</span>
+        <span id="checkoutTotalAmount" style="color:var(--red);">0 kr</span>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="orderName">Ditt namn</label>
+        <input type="text" id="orderName" class="form-control" placeholder="Förnamn Efternamn" autocomplete="name" required />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="orderTime">Önskad upphämtningstid</label>
+        <select id="orderTime" class="form-control">
+          <option value="Snarast (ca 15-20 min)">Snarast (ca 15–20 min)</option>
+          <option value="Om 30 minuter">Om 30 minuter</option>
+          <option value="Om 45 minuter">Om 45 minuter</option>
+          <option value="Om 60 minuter">Om 60 minuter</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="orderNotes">Meddelande / allergier (valfritt)</label>
+        <textarea id="orderNotes" class="form-control" placeholder="T.ex. utan lök, allergi mot nötter..." style="min-height:60px;"></textarea>
+      </div>
+
+      <div class="swish-box">
+        <strong>Betalningsinformation (Swish):</strong><br>
+        Nummer: <strong>070-549 11 32</strong><br>
+        Mottagare: Ishak Abika<br>
+        Märk betalningen med ditt namn.
+      </div>
+
+      <div class="checkout-actions">
+        <button type="button" class="btn-whatsapp" id="btnSendOrder">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.998 2C6.473 2 2 6.473 2 11.998c0 1.763.456 3.422 1.252 4.864L2 22l5.283-1.237A9.957 9.957 0 0012 22c5.525 0 10-4.473 10-9.998C22 6.473 17.525 2 11.998 2z"/></svg>
+          Skicka beställning via WhatsApp
+        </button>
+        <button type="button" class="btn-cancel-checkout" id="btnCancelCheckout">Avbryt och gå tillbaka</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div style="font-family:var(--font-display);font-weight:800;font-size:20px;">ISHAK'S SMASH BURGER</div>
+          <p>Äkta smashburgare tillagade på beställning.<br>Hantverkargatan 5, Södra Backa, Borlänge.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Navigering</h4>
+          <a href="menu.html">Meny &amp; Beställ</a>
+          <a href="om-oss.html">Om oss</a>
+          <a href="catering.html">Catering</a>
+          <a href="hitta-hit.html">Hitta hit</a>
+        </div>
+        <div class="footer-col">
+          <h4>Kontakt</h4>
+          <a href="tel:+46705491132">070-549 11 32</a>
+          <a href="https://www.instagram.com/ishaks_smashburger/" target="_blank" rel="noopener">@ishaks_smashburger</a>
+          <p>Mån–Fre 11:00–15:00</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 Ishak's Smash Burger</p>
+        <div class="footer-social">
+          <a href="https://www.instagram.com/ishaks_smashburger/" target="_blank" rel="noopener" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="menu-data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
