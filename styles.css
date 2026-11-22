@@ -1198,7 +1198,13 @@ button {
   white-space: nowrap;
 }
 
-.cart-mobile-trigger.has-items { display: flex; }
+@media (max-width: 768px) {
+  .cart-mobile-trigger.has-items { display: flex; }
+}
+
+@media (min-width: 769px) {
+  .cart-mobile-trigger { display: none !important; }
+}
 
 .cart-drawer-overlay {
   display: none;
