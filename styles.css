@@ -183,6 +183,7 @@ img { display: block; max-width: 100%; }
 .btn-black-yellow {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   background: var(--yellow);
   color: #000;
   font-family: var(--font-display);
@@ -192,12 +193,17 @@ img { display: block; max-width: 100%; }
   text-transform: uppercase;
   padding: 12px 26px;
   border-radius: 4px;
+  transition: transform 0.1s ease, background 0.15s ease;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
+.btn-black-yellow:active { transform: scale(0.97); }
 .btn-black-yellow:hover { background: var(--yellow-hover); }
 
 .btn-black-outline {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   background: transparent;
   color: #fff;
   border: 1px solid var(--border);
@@ -208,7 +214,11 @@ img { display: block; max-width: 100%; }
   text-transform: uppercase;
   padding: 12px 24px;
   border-radius: 4px;
+  transition: transform 0.1s ease, border-color 0.15s ease;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
+.btn-black-outline:active { transform: scale(0.97); }
 .btn-black-outline:hover { border-color: #444; }
 
 .hero-clean-meta {
@@ -238,9 +248,50 @@ img { display: block; max-width: 100%; }
 }
 
 @media (max-width: 900px) {
-  .hero-clean-grid { grid-template-columns: 1fr; gap: 36px; }
-  .hero-clean-img-wrap img { height: 320px; }
-  .hero-clean { padding: 40px 0; }
+  .hero-clean { padding: 24px 0 36px; }
+  .hero-clean-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .hero-clean-title {
+    font-size: 42px;
+    margin-bottom: 12px;
+  }
+  .hero-clean-desc {
+    font-size: 14.5px;
+    margin-bottom: 20px;
+  }
+  .hero-clean-actions {
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .hero-clean-actions a {
+    width: 100%;
+    justify-content: center;
+    padding: 14px;
+    font-size: 15px;
+  }
+  .hero-clean-meta {
+    flex-direction: column;
+    gap: 8px;
+    padding-top: 14px;
+  }
+  .hero-clean-meta div {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+  }
+  .hero-clean-meta strong {
+    font-size: 13px;
+  }
+  .hero-clean-img-wrap {
+    order: -1;
+    border-radius: 6px;
+  }
+  .hero-clean-img-wrap img {
+    height: 220px;
+  }
 }
 
 /* SECTION */
