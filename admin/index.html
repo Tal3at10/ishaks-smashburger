@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — Ishak's Smash Burger</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0A0A0A;
+      --surface:   #121212;
+      --surface2:  #181818;
+      --border:    #222222;
+      --accent:    #FFC000;
+      --white:     #FFFFFF;
+      --muted:     #8E8E8E;
+      --green:     #4CAF50;
+      --sidebar-w: 220px;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--white);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    /* ─── LAYOUT ─────────────────────────────────────── */
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* ─── SIDEBAR ────────────────────────────────────── */
+    .sidebar {
+      width: var(--sidebar-w);
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      z-index: 100;
+      transition: transform 0.25s ease;
+    }
+
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 22px 20px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .sidebar-logo svg {
+      flex-shrink: 0;
+    }
+
+    .sidebar-logo-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.1;
+    }
+
+    .sidebar-logo-text span:first-child {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900;
+      font-size: 16px;
+      color: var(--accent);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .sidebar-logo-text span:last-child {
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 400;
+      letter-spacing: 0.3px;
+    }
+
+    nav {
+      flex: 1;
+      padding: 16px 0;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding: 10px 20px;
+      cursor: pointer;
+      color: var(--muted);
+      font-size: 13.5px;
+      font-weight: 500;
+      border-left: 3px solid transparent;
+      transition: color 0.15s, background 0.15s;
+      user-select: none;
+    }
+
+    .nav-item:hover {
+      color: var(--white);
+      background: rgba(255,255,255,0.03);
+    }
+
+    .nav-item.active {
+      color: var(--white);
+      border-left-color: var(--accent);
+      background: rgba(255, 192, 0, 0.05);
+    }
+
+    .nav-item svg {
+      flex-shrink: 0;
+      opacity: 0.7;
+    }
+
+    .nav-item.active svg {
+      opacity: 1;
+    }
+
+    .sidebar-footer {
+      padding: 16px 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    .sidebar-footer-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: 6px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .demo-badge {
+      display: inline-block;
+      background: var(--accent);
+      color: #000;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 3px;
+    }
+
+    /* ─── MAIN ───────────────────────────────────────── */
+    .main {
+      margin-left: var(--sidebar-w);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    /* ─── TOPBAR (mobile only) ───────────────────────── */
+    .topbar {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 20px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 90;
+    }
+
+    .topbar-logo {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900;
+      font-size: 18px;
+      color: var(--accent);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .hamburger {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+      color: var(--white);
+    }
+
+    /* ─── MOBILE SIDEBAR OVERLAY ─────────────────────── */
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 99;
+    }
+
+    .sidebar-overlay.visible { display: block; }
+
+    /* ─── CONTENT ─────────────────────────────────────── */
+    .content {
+      padding: 32px 32px 48px;
+      max-width: 1300px;
+      width: 100%;
+    }
+
+    /* ─── HEADER ─────────────────────────────────────── */
+    .page-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .page-header h1 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900;
+      font-size: 36px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      line-height: 1;
+      color: var(--white);
+    }
+
+    .page-header-sub {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 5px;
+      font-weight: 400;
+    }
+
+    .status-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 8px 14px;
+      border-radius: 6px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      flex-shrink: 0;
+      animation: pulse 2.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .status-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--green);
+    }
+
+    .status-hours {
+      font-size: 13px;
+      color: var(--muted);
+      border-left: 1px solid var(--border);
+      padding-left: 8px;
+      margin-left: 2px;
+    }
+
+    /* ─── SECTION TITLE ──────────────────────────────── */
+    .section-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 800;
+      font-size: 20px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: var(--white);
+      margin-bottom: 14px;
+    }
+
+    /* ─── KPI CARDS ──────────────────────────────────── */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+
+    .kpi-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px 22px;
+    }
+
+    .kpi-label {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 500;
+      letter-spacing: 0.3px;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+
+    .kpi-value {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900;
+      font-size: 34px;
+      color: var(--accent);
+      letter-spacing: 0.5px;
+      line-height: 1;
+    }
+
+    .kpi-meta {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .kpi-trend {
+      color: var(--green);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+
+    /* ─── ROW 2 ──────────────────────────────────────── */
+    .row-two {
+      display: grid;
+      grid-template-columns: 60fr 40fr;
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+
+    /* ─── CARD WRAPPER ───────────────────────────────── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 22px 24px;
+    }
+
+    /* ─── TABLE ──────────────────────────────────────── */
+    .table-scroll {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      white-space: nowrap;
+    }
+
+    thead th {
+      text-align: left;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--muted);
+      padding: 0 12px 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    thead th:last-child { padding-right: 0; }
+
+    tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background 0.1s;
+      cursor: default;
+    }
+
+    tbody tr:last-child { border-bottom: none; }
+
+    tbody tr:hover { background: #1e1e1e; }
+
+    tbody td {
+      padding: 11px 12px 11px 0;
+      font-size: 13px;
+      color: var(--white);
+    }
+
+    tbody td:last-child { padding-right: 0; }
+
+    .order-id {
+      font-weight: 600;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .order-time {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .order-items {
+      color: var(--white);
+      max-width: 240px;
+      white-space: normal;
+      line-height: 1.4;
+    }
+
+    .order-total {
+      font-weight: 600;
+      color: var(--white);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 3px 9px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+    }
+
+    .badge-klar {
+      background: #1a3a1a;
+      color: #4CAF50;
+    }
+
+    .badge-iko {
+      background: #3a2a00;
+      color: var(--accent);
+    }
+
+    /* ─── POPULAR LIST ───────────────────────────────── */
+    .popular-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .popular-item {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .popular-item-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+
+    .popular-item-name {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--white);
+    }
+
+    .popular-item-pct {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+    }
+
+    .bar-track {
+      height: 5px;
+      background: var(--border);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 3px;
+    }
+
+    /* ─── WEEKLY CHART ───────────────────────────────── */
+    .chart-card {
+      margin-bottom: 28px;
+    }
+
+    .chart-area {
+      display: flex;
+      align-items: flex-end;
+      gap: 10px;
+      height: 160px;
+      padding-top: 28px; /* room for value labels */
+      position: relative;
+    }
+
+    .chart-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      height: 100%;
+      justify-content: flex-end;
+    }
+
+    .chart-col-inner {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      flex: 1;
+    }
+
+    .bar-value {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 4px;
+      white-space: nowrap;
+    }
+
+    .bar-value.accent { color: var(--accent); }
+
+    .bar-block {
+      width: 100%;
+      border-radius: 4px 4px 0 0;
+      transition: opacity 0.2s;
+    }
+
+    .chart-col:hover .bar-block { opacity: 0.85; }
+
+    .bar-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .bar-label.accent { color: var(--white); }
+
+    .bar-sub {
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 2px;
+      font-style: italic;
+    }
+
+    .chart-baseline {
+      position: absolute;
+      bottom: 32px; /* height of label row */
+      left: 0; right: 0;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ─── ROW 4 ──────────────────────────────────────── */
+    .row-four {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    /* ─── CATERING ───────────────────────────────────── */
+    .catering-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .catering-item {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .catering-info { flex: 1; min-width: 0; }
+
+    .catering-title {
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--white);
+      margin-bottom: 4px;
+    }
+
+    .catering-meta {
+      font-size: 12px;
+      color: var(--muted);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .catering-meta span {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .badge-kontakt {
+      background: #1a2a3a;
+      color: #5B9BD5;
+    }
+
+    .badge-ny {
+      background: #3a2a00;
+      color: var(--accent);
+    }
+
+    /* ─── QUICK ACTIONS ──────────────────────────────── */
+    .actions-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .action-btn {
+      display: block;
+      width: 100%;
+      padding: 14px 20px;
+      border-radius: 6px;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid transparent;
+      text-align: left;
+      transition: opacity 0.15s, background 0.15s;
+      text-decoration: none;
+    }
+
+    .action-btn:hover { opacity: 0.85; }
+
+    .action-btn-primary {
+      background: var(--accent);
+      color: #000;
+      border-color: var(--accent);
+    }
+
+    .action-btn-secondary {
+      background: var(--surface2);
+      color: var(--white);
+      border-color: var(--border);
+    }
+
+    .action-btn-wa {
+      background: #1a3a1a;
+      color: #4CAF50;
+      border-color: #2a4a2a;
+    }
+
+    .action-btn-icon {
+      margin-right: 8px;
+    }
+
+    /* ─── MOBILE ─────────────────────────────────────── */
+    @media (max-width: 768px) {
+      .sidebar {
+        transform: translateX(calc(-1 * var(--sidebar-w)));
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .topbar {
+        display: flex;
+      }
+
+      .main {
+        margin-left: 0;
+      }
+
+      .content {
+        padding: 20px 16px 40px;
+      }
+
+      .kpi-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .row-two {
+        grid-template-columns: 1fr;
+      }
+
+      .row-four {
+        grid-template-columns: 1fr;
+      }
+
+      .page-header h1 {
+        font-size: 28px;
+      }
+
+      .chart-area {
+        height: 130px;
+      }
+
+      .bar-value {
+        font-size: 10px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .kpi-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      .kpi-value {
+        font-size: 26px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Sidebar overlay for mobile -->
+<div class="sidebar-overlay" id="overlay"></div>
+
+<div class="layout">
+
+  <!-- ─── SIDEBAR ─────────────────────────────────────── -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="4" y="12" width="22" height="3" rx="1.5" fill="#FFC000"/>
+        <rect x="4" y="17" width="22" height="3" rx="1.5" fill="#FFC000"/>
+        <path d="M4 11C4 8.5 7 7 15 7C23 7 26 8.5 26 11H4Z" fill="#FFC000"/>
+        <rect x="2" y="22" width="26" height="3" rx="1.5" fill="#8E8E8E"/>
+        <ellipse cx="10" cy="22" rx="1.5" ry="1.5" fill="#FFC000"/>
+        <ellipse cx="20" cy="22" rx="1.5" ry="1.5" fill="#FFC000"/>
+      </svg>
+      <div class="sidebar-logo-text">
+        <span>Ishak's</span>
+        <span>Smash Burger</span>
+      </div>
+    </div>
+
+    <nav>
+      <div class="nav-item active">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1" fill="currentColor"/><rect x="9" y="1" width="6" height="6" rx="1" fill="currentColor"/><rect x="1" y="9" width="6" height="6" rx="1" fill="currentColor"/><rect x="9" y="9" width="6" height="6" rx="1" fill="currentColor"/></svg>
+        Översikt
+      </div>
+      <div class="nav-item">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 3h12M2 8h12M2 13h7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        Beställningar
+      </div>
+      <div class="nav-item">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/><path d="M8 5v3l2 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        Meny
+      </div>
+      <div class="nav-item">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 13V9M6 13V6M10 13V4M14 13V1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        Statistik
+      </div>
+      <div class="nav-item">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="2.5" stroke="currentColor" stroke-width="1.5"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M2.93 2.93l1.41 1.41M11.66 11.66l1.41 1.41M2.93 13.07l1.41-1.41M11.66 4.34l1.41-1.41" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        Inställningar
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-footer-name">Ishak's Smash Burger</div>
+      <span class="demo-badge">Demo-läge</span>
+    </div>
+  </aside>
+
+  <!-- ─── MAIN ─────────────────────────────────────────── -->
+  <div class="main">
+
+    <!-- Mobile topbar -->
+    <div class="topbar">
+      <span class="topbar-logo">Ishak's</span>
+      <button class="hamburger" id="menuBtn" aria-label="Öppna meny">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M3 6h16M3 11h16M3 16h16" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+
+    <div class="content">
+
+      <!-- ─── HEADER ─────────────────────────────── -->
+      <div class="page-header">
+        <div>
+          <h1>Översikt</h1>
+          <div class="page-header-sub">Måndag 23 nov 2026</div>
+        </div>
+        <div class="status-badge">
+          <span class="status-dot"></span>
+          <span class="status-label">Öppet nu</span>
+          <span class="status-hours">11:00 — 15:00</span>
+        </div>
+      </div>
+
+      <!-- ─── KPI CARDS ──────────────────────────── -->
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-label">Dagens intäkter</div>
+          <div class="kpi-value">3 240 kr</div>
+          <div class="kpi-meta">
+            <span class="kpi-trend">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 9L6 3L10 9" stroke="#4CAF50" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              +12%
+            </span>
+            vs igår
+          </div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Beställningar idag</div>
+          <div class="kpi-value">24 st</div>
+          <div class="kpi-meta">
+            <span class="kpi-trend">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 9L6 3L10 9" stroke="#4CAF50" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              +3
+            </span>
+            vs igår
+          </div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Genomsnittligt ordervärde</div>
+          <div class="kpi-value">135 kr</div>
+          <div class="kpi-meta" style="color: var(--muted);">Per beställning</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Mest beställd idag</div>
+          <div class="kpi-value" style="font-size: 22px; padding-top: 4px;">Smash&nbsp;3</div>
+          <div class="kpi-meta" style="color: var(--muted);">Smash Burger 3</div>
+        </div>
+      </div>
+
+      <!-- ─── ROW 2 ───────────────────────────────── -->
+      <div class="row-two">
+
+        <!-- Orders Table -->
+        <div class="card">
+          <div class="section-title">Senaste beställningar</div>
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>Order</th>
+                  <th>Tid</th>
+                  <th>Innehåll</th>
+                  <th>Totalt</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="order-id">#1024</td>
+                  <td class="order-time">14:32</td>
+                  <td class="order-items">Smash Burger 2 × 1, Fries × 1</td>
+                  <td class="order-total">185 kr</td>
+                  <td><span class="badge badge-klar">Klar</span></td>
+                </tr>
+                <tr>
+                  <td class="order-id">#1023</td>
+                  <td class="order-time">14:18</td>
+                  <td class="order-items">Smash Burger 3 × 2</td>
+                  <td class="order-total">300 kr</td>
+                  <td><span class="badge badge-klar">Klar</span></td>
+                </tr>
+                <tr>
+                  <td class="order-id">#1022</td>
+                  <td class="order-time">14:05</td>
+                  <td class="order-items">Barn Burger × 1, Nuggets × 1</td>
+                  <td class="order-total">220 kr</td>
+                  <td><span class="badge badge-klar">Klar</span></td>
+                </tr>
+                <tr>
+                  <td class="order-id">#1021</td>
+                  <td class="order-time">13:52</td>
+                  <td class="order-items">Smash Burger 1 × 1</td>
+                  <td class="order-total">150 kr</td>
+                  <td><span class="badge badge-klar">Klar</span></td>
+                </tr>
+                <tr>
+                  <td class="order-id">#1020</td>
+                  <td class="order-time">13:41</td>
+                  <td class="order-items">Smash Burger 5 × 2, Fries × 2</td>
+                  <td class="order-total">370 kr</td>
+                  <td><span class="badge badge-klar">Klar</span></td>
+                </tr>
+                <tr>
+                  <td class="order-id">#1019</td>
+                  <td class="order-time">13:28</td>
+                  <td class="order-items">Smash Burger 4 × 1</td>
+                  <td class="order-total">150 kr</td>
+                  <td><span class="badge badge-klar">Klar</span></td>
+                </tr>
+                <tr>
+                  <td class="order-id">#1018</td>
+                  <td class="order-time">13:15</td>
+                  <td class="order-items">Smash Burger 6 × 1, Nuggets × 1</td>
+                  <td class="order-total">260 kr</td>
+                  <td><span class="badge badge-iko">I kö</span></td>
+                </tr>
+                <tr>
+                  <td class="order-id">#1017</td>
+                  <td class="order-time">13:02</td>
+                  <td class="order-items">Barn Burger × 2</td>
+                  <td class="order-total">220 kr</td>
+                  <td><span class="badge badge-iko">I kö</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Popular Items -->
+        <div class="card">
+          <div class="section-title">Populärast idag</div>
+          <div class="popular-list">
+            <div class="popular-item">
+              <div class="popular-item-top">
+                <span class="popular-item-name">Smash Burger 3</span>
+                <span class="popular-item-pct">18%</span>
+              </div>
+              <div class="bar-track"><div class="bar-fill" style="width:90%"></div></div>
+            </div>
+            <div class="popular-item">
+              <div class="popular-item-top">
+                <span class="popular-item-name">Smash Burger 2</span>
+                <span class="popular-item-pct">15%</span>
+              </div>
+              <div class="bar-track"><div class="bar-fill" style="width:75%"></div></div>
+            </div>
+            <div class="popular-item">
+              <div class="popular-item-top">
+                <span class="popular-item-name">Smash Burger 5</span>
+                <span class="popular-item-pct">13%</span>
+              </div>
+              <div class="bar-track"><div class="bar-fill" style="width:65%"></div></div>
+            </div>
+            <div class="popular-item">
+              <div class="popular-item-top">
+                <span class="popular-item-name">Fries</span>
+                <span class="popular-item-pct">11%</span>
+              </div>
+              <div class="bar-track"><div class="bar-fill" style="width:55%"></div></div>
+            </div>
+            <div class="popular-item">
+              <div class="popular-item-top">
+                <span class="popular-item-name">Smash Burger 1</span>
+                <span class="popular-item-pct">10%</span>
+              </div>
+              <div class="bar-track"><div class="bar-fill" style="width:50%"></div></div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /row-two -->
+
+      <!-- ─── WEEKLY CHART ───────────────────────── -->
+      <div class="card chart-card">
+        <div class="section-title">Veckans intäkter</div>
+        <div class="chart-area" id="chartArea">
+          <div class="chart-baseline"></div>
+          <!-- Bars injected by JS -->
+        </div>
+      </div>
+
+      <!-- ─── ROW 4 ───────────────────────────────── -->
+      <div class="row-four">
+
+        <!-- Catering -->
+        <div class="card">
+          <div class="section-title">Catering-förfrågningar</div>
+          <div class="catering-list">
+            <div class="catering-item">
+              <div class="catering-info">
+                <div class="catering-title">Företagslunch</div>
+                <div class="catering-meta">
+                  <span>
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1a5 5 0 100 10A5 5 0 006 1zM6 3v3l2 2" stroke="#8E8E8E" stroke-width="1.2" stroke-linecap="round"/></svg>
+                    15 dec 2026
+                  </span>
+                  <span>
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M9 10H3a1 1 0 01-1-1V5a1 1 0 011-1h6a1 1 0 011 1v4a1 1 0 01-1 1zM4 4V3a2 2 0 014 0v1" stroke="#8E8E8E" stroke-width="1.2" stroke-linecap="round"/></svg>
+                    ICA Borlänge
+                  </span>
+                  <span>45 pers</span>
+                </div>
+              </div>
+              <span class="badge badge-kontakt">Kontaktad</span>
+            </div>
+            <div class="catering-item">
+              <div class="catering-info">
+                <div class="catering-title">Personalfest</div>
+                <div class="catering-meta">
+                  <span>
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1a5 5 0 100 10A5 5 0 006 1zM6 3v3l2 2" stroke="#8E8E8E" stroke-width="1.2" stroke-linecap="round"/></svg>
+                    28 jan 2027
+                  </span>
+                  <span>
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M9 10H3a1 1 0 01-1-1V5a1 1 0 011-1h6a1 1 0 011 1v4a1 1 0 01-1 1zM4 4V3a2 2 0 014 0v1" stroke="#8E8E8E" stroke-width="1.2" stroke-linecap="round"/></svg>
+                    Kupolen
+                  </span>
+                  <span>80 pers</span>
+                </div>
+              </div>
+              <span class="badge badge-ny">Ny förfrågan</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="card">
+          <div class="section-title">Snabbåtgärder</div>
+          <div class="actions-list">
+            <button class="action-btn action-btn-primary">
+              <span class="action-btn-icon">✏️</span> Uppdatera meny
+            </button>
+            <button class="action-btn action-btn-secondary">
+              <span class="action-btn-icon">📊</span> Exportera rapport
+            </button>
+            <button class="action-btn action-btn-wa">
+              <span class="action-btn-icon">💬</span> Öppna WhatsApp
+            </button>
+          </div>
+        </div>
+
+      </div><!-- /row-four -->
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /layout -->
+
+<script>
+  /* ─── MOBILE SIDEBAR ─────────────────────────────── */
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('overlay');
+  const menuBtn = document.getElementById('menuBtn');
+
+  function openSidebar() {
+    sidebar.classList.add('open');
+    overlay.classList.add('visible');
+  }
+
+  function closeSidebar() {
+    sidebar.classList.remove('open');
+    overlay.classList.remove('visible');
+  }
+
+  menuBtn.addEventListener('click', openSidebar);
+  overlay.addEventListener('click', closeSidebar);
+
+  /* ─── WEEKLY BAR CHART ───────────────────────────── */
+  const chartData = [
+    { day: 'Mån', value: 3240, current: true,  closed: false },
+    { day: 'Tis', value: 2890, current: false, closed: false },
+    { day: 'Ons', value: 3450, current: false, closed: false },
+    { day: 'Tor', value: 4120, current: false, closed: false },
+    { day: 'Fre', value: 5280, current: false, closed: false },
+    { day: 'Lör', value: 1200, current: false, closed: false, muted: true },
+    { day: 'Sön', value: 0,    current: false, closed: true  },
+  ];
+
+  const maxValue = Math.max(...chartData.map(d => d.value));
+  const chartArea = document.getElementById('chartArea');
+
+  chartData.forEach(d => {
+    const pct = maxValue > 0 ? (d.value / maxValue) * 100 : 0;
+
+    const col = document.createElement('div');
+    col.className = 'chart-col';
+
+    const inner = document.createElement('div');
+    inner.className = 'chart-col-inner';
+
+    // Value label
+    const valLabel = document.createElement('div');
+    valLabel.className = 'bar-value' + (d.current ? ' accent' : '');
+    valLabel.textContent = d.closed ? '' : d.value.toLocaleString('sv-SE') + ' kr';
+    inner.appendChild(valLabel);
+
+    // Bar
+    const bar = document.createElement('div');
+    bar.className = 'bar-block';
+    bar.style.height = d.closed ? '4px' : Math.max(pct, 2) + '%';
+
+    if (d.closed) {
+      bar.style.background = '#2a2a2a';
+      bar.style.borderRadius = '2px';
+    } else if (d.muted) {
+      bar.style.background = '#5a4800';
+    } else if (d.current) {
+      bar.style.background = '#FFC000';
+      bar.style.border = '2px solid #FFD84D';
+    } else {
+      bar.style.background = '#7a5c00';
+    }
+
+    inner.appendChild(bar);
+    col.appendChild(inner);
+
+    // Day label
+    const dayLabel = document.createElement('div');
+    dayLabel.className = 'bar-label' + (d.current ? ' accent' : '');
+    dayLabel.textContent = d.day;
+    col.appendChild(dayLabel);
+
+    // Sub label
+    if (d.closed) {
+      const sub = document.createElement('div');
+      sub.className = 'bar-sub';
+      sub.textContent = 'Stängt';
+      col.appendChild(sub);
+    } else if (d.muted) {
+      const sub = document.createElement('div');
+      sub.className = 'bar-sub';
+      col.appendChild(sub);
+    }
+
+    chartArea.appendChild(col);
+  });
+
+  /* ─── NAV ITEM CLICK (demo state) ─────────────── */
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', () => {
+      document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+      item.classList.add('active');
+      closeSidebar();
+    });
+  });
+</script>
+</body>
+</html>

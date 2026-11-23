@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tack för din beställning — Ishak's Smash Burger</title>
+  <meta name="description" content="Din beställning är mottagen. Vi bekräftar via WhatsApp inom några minuter." />
+  <meta name="robots" content="noindex, follow" />
+  <meta name="theme-color" content="#0A0A0A" />
+  <link rel="icon" type="image/png" href="assets/images/logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .confirm-page {
+      min-height: calc(100vh - 72px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 24px;
+    }
+
+    .confirm-inner {
+      text-align: center;
+      max-width: 560px;
+      width: 100%;
+    }
+
+    .confirm-check {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 28px;
+    }
+
+    .confirm-heading {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900;
+      font-size: clamp(32px, 6vw, 46px);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: #FFFFFF;
+      line-height: 1.1;
+      margin: 0 0 14px;
+    }
+
+    .confirm-subtitle {
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      line-height: 1.65;
+      color: #8E8E8E;
+      margin: 0 0 36px;
+    }
+
+    .confirm-info {
+      background: #141414;
+      border-left: 3px solid #FFC000;
+      text-align: left;
+      padding: 24px 28px;
+      margin-bottom: 36px;
+    }
+
+    .confirm-info-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      color: #CCCCCC;
+      line-height: 1.5;
+      padding: 6px 0;
+    }
+
+    .confirm-info-row + .confirm-info-row {
+      border-top: 1px solid #1E1E1E;
+    }
+
+    .confirm-info-label {
+      color: #FFC000;
+      font-weight: 600;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .confirm-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .confirm-btn-primary {
+      display: inline-block;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 800;
+      font-size: 16px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      text-decoration: none;
+      background: #FFC000;
+      color: #0A0A0A;
+      padding: 14px 28px;
+      border: 2px solid #FFC000;
+      transition: background 0.18s, border-color 0.18s;
+    }
+
+    .confirm-btn-primary:hover {
+      background: #e6ac00;
+      border-color: #e6ac00;
+    }
+
+    .confirm-btn-secondary {
+      display: inline-block;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 800;
+      font-size: 16px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      text-decoration: none;
+      background: transparent;
+      color: #FFFFFF;
+      padding: 14px 28px;
+      border: 2px solid #2A2A2A;
+      transition: border-color 0.18s, color 0.18s;
+    }
+
+    .confirm-btn-secondary:hover {
+      border-color: #FFC000;
+      color: #FFC000;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="site-nav">
+    <a href="index.html" class="nav-brand" aria-label="Startsida">
+      <img src="assets/images/logo.png" alt="Ishak's Smash Burger" />
+      <span class="nav-brand-title">ISHAK'S SMASH BURGER</span>
+    </a>
+    <div class="nav-links" id="navLinks">
+      <a href="menu.html">Meny</a>
+      <a href="om-oss.html">Om oss</a>
+      <a href="catering.html">Catering</a>
+      <a href="hitta-hit.html">Hitta hit</a>
+    </div>
+    <div class="nav-actions">
+      <a href="menu.html" class="btn-nav-order">Beställ online</a>
+      <button class="nav-hamburger" id="hamburger" aria-label="Meny">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- CONFIRMATION CONTENT -->
+  <main class="confirm-page">
+    <div class="confirm-inner">
+
+      <!-- Checkmark SVG -->
+      <div class="confirm-check">
+        <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle cx="32" cy="32" r="29" stroke="#FFC000" stroke-width="3" />
+          <polyline points="20,33 28,41 44,24" stroke="#FFC000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </div>
+
+      <h1 class="confirm-heading">Tack för din beställning!</h1>
+      <p class="confirm-subtitle">Vi bekräftar din order via WhatsApp inom några minuter.</p>
+
+      <div class="confirm-info">
+        <div class="confirm-info-row">
+          <span class="confirm-info-label">Avhämtning:</span>
+          <span>Hantverkargatan 5, Södra Backa, Borlänge</span>
+        </div>
+        <div class="confirm-info-row">
+          <span class="confirm-info-label">Öppettider:</span>
+          <span>Mån–Fre 11:00–15:00</span>
+        </div>
+        <div class="confirm-info-row">
+          <span class="confirm-info-label">Frågor?</span>
+          <span>Ring eller WhatsApp: <a href="tel:+46705491132" style="color:#FFC000; text-decoration:none;">+46 70 549 11 32</a></span>
+        </div>
+      </div>
+
+      <div class="confirm-actions">
+        <a href="menu.html" class="confirm-btn-primary">Beställ mer</a>
+        <a href="hitta-hit.html" class="confirm-btn-secondary">Hitta till oss</a>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

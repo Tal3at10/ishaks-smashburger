@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>404 — Sidan hittades inte | Ishak's Smash Burger</title>
+  <meta name="description" content="Sidan du letar efter finns inte. Gå tillbaka till Ishak's Smash Burger startsida." />
+  <meta name="robots" content="noindex, follow" />
+  <meta name="theme-color" content="#0A0A0A" />
+  <link rel="icon" type="image/png" href="assets/images/logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .error-page {
+      min-height: calc(100vh - 72px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 24px;
+    }
+
+    .error-inner {
+      text-align: center;
+      max-width: 520px;
+    }
+
+    .error-code {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900;
+      font-size: clamp(96px, 20vw, 148px);
+      line-height: 1;
+      color: #FFC000;
+      letter-spacing: -4px;
+      margin: 0 0 16px;
+    }
+
+    .error-heading {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 800;
+      font-size: 28px;
+      color: #FFFFFF;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin: 0 0 14px;
+    }
+
+    .error-body {
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      line-height: 1.65;
+      color: #8E8E8E;
+      margin: 0 0 36px;
+    }
+
+    .error-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .error-btn-primary {
+      display: inline-block;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 800;
+      font-size: 16px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      text-decoration: none;
+      background: #FFC000;
+      color: #0A0A0A;
+      padding: 14px 28px;
+      border: 2px solid #FFC000;
+      transition: background 0.18s, color 0.18s;
+    }
+
+    .error-btn-primary:hover {
+      background: #e6ac00;
+      border-color: #e6ac00;
+    }
+
+    .error-btn-secondary {
+      display: inline-block;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 800;
+      font-size: 16px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      text-decoration: none;
+      background: transparent;
+      color: #FFFFFF;
+      padding: 14px 28px;
+      border: 2px solid #2A2A2A;
+      transition: border-color 0.18s, color 0.18s;
+    }
+
+    .error-btn-secondary:hover {
+      border-color: #FFC000;
+      color: #FFC000;
+    }
+
+    .error-rule {
+      width: 48px;
+      height: 3px;
+      background: #FFC000;
+      margin: 0 auto 32px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="site-nav">
+    <a href="index.html" class="nav-brand" aria-label="Startsida">
+      <img src="assets/images/logo.png" alt="Ishak's Smash Burger" />
+      <span class="nav-brand-title">ISHAK'S SMASH BURGER</span>
+    </a>
+    <div class="nav-links" id="navLinks">
+      <a href="menu.html">Meny</a>
+      <a href="om-oss.html">Om oss</a>
+      <a href="catering.html">Catering</a>
+      <a href="hitta-hit.html">Hitta hit</a>
+    </div>
+    <div class="nav-actions">
+      <a href="menu.html" class="btn-nav-order">Beställ online</a>
+      <button class="nav-hamburger" id="hamburger" aria-label="Meny">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- 404 CONTENT -->
+  <main class="error-page">
+    <div class="error-inner">
+      <p class="error-code">404</p>
+      <div class="error-rule"></div>
+      <h1 class="error-heading">Sidan hittades inte</h1>
+      <p class="error-body">Den här sidan finns inte. Gå tillbaka till startsidan eller kolla menyn.</p>
+      <div class="error-actions">
+        <a href="index.html" class="error-btn-primary">Gå till startsidan</a>
+        <a href="menu.html" class="error-btn-secondary">Se menyn</a>
+      </div>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
