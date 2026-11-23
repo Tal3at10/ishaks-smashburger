@@ -572,6 +572,8 @@ h1, h2, h3, h4, .section-title, .hero-clean-title, .about-name, .menu-section-ti
   z-index: 100;
   overflow-x: auto;
   scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
 }
 .category-tabs::-webkit-scrollbar { display: none; }
 .category-tabs-inner {
@@ -589,6 +591,7 @@ h1, h2, h3, h4, .section-title, .hero-clean-title, .about-name, .menu-section-ti
   padding: 16px 16px;
   border-bottom: 2px solid transparent;
   white-space: nowrap;
+  transition: color 0.15s ease, border-color 0.15s ease;
 }
 .cat-tab.active {
   color: #fff;
