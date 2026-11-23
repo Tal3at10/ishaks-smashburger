@@ -4,34 +4,30 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Om oss — Ishak's Smash Burger</title>
-  <meta name="description" content="Historien bakom Ishak's Smash Burger — från Dalkurd FF till Borlänges krispigaste smashburgare." />
-  <meta name="theme-color" content="#11100E" />
+  <meta name="description" content="Historien bakom Ishak's Smash Burger vid Hantverkargatan 5 i Borlänge." />
   <link rel="icon" type="image/png" href="assets/images/logo.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
-  <!-- NAVIGATION -->
+  <!-- NAV -->
   <nav class="site-nav">
     <a href="index.html" class="nav-brand" aria-label="Startsida">
-      <img src="assets/images/logo.png" alt="" />
-      <div>
-        <div class="nav-brand-name">ISHAK'S</div>
-        <div class="nav-brand-city">Södra Backa · Borlänge</div>
-      </div>
+      <img src="assets/images/logo.png" alt="Ishak's Smash Burger" />
+      <span class="nav-brand-title">ISHAK'S SMASH BURGER</span>
     </a>
     <div class="nav-links" id="navLinks">
-      <a href="menu.html">Meny &amp; Beställ</a>
+      <a href="menu.html">Meny</a>
       <a href="om-oss.html" class="active">Om oss</a>
       <a href="catering.html">Catering</a>
       <a href="hitta-hit.html">Hitta hit</a>
     </div>
     <div class="nav-actions">
-      <a href="menu.html" class="btn-order-nav">Beställ online</a>
-      <button class="nav-hamburger" id="hamburger" aria-label="Meny" aria-expanded="false">
+      <a href="menu.html" class="btn-nav-order">Beställ online</a>
+      <button class="nav-hamburger" id="hamburger" aria-label="Meny">
         <span></span><span></span><span></span>
       </button>
     </div>
@@ -39,82 +35,43 @@
 
   <main class="page-top">
 
-    <!-- PAGE HERO -->
-    <section class="section" style="padding-bottom: 20px;">
+    <section class="section">
       <div class="container">
-        <div class="section-label">Vår historia</div>
-        <h1 class="section-title" style="margin-bottom: 24px;">Två bröder, ett genuint mathantverk</h1>
-        <p style="font-size: 16.5px; line-height: 1.8; color: var(--ink-muted); max-width: 760px;">
-          Allt startade med en enkel ambition: Borlänge förtjänade en kompromisslös smashburgare.
-          Inget halvfabrikat, inget förvärmt kött — bara färskt svenskt nötkött, extrem värme och respekt för råvarorna.
-        </p>
-      </div>
-    </section>
+        <div class="section-head">
+          <div class="section-tag">Historien</div>
+          <h1 class="section-title">Två bröder bakom grillen</h1>
+        </div>
 
-    <!-- PERSON SHOWCASE IN CONTAINER -->
-    <section class="section" style="padding-top: 10px;">
-      <div class="container">
-        
-        <!-- Ishak -->
-        <div class="person-row">
-          <img src="assets/images/ishak-portrait.jpg" alt="Ishak Abika" class="person-photo" />
-          <div class="person-body">
-            <div class="section-label">Grundare &amp; ägare</div>
-            <h2 style="font-family:var(--font-display);font-weight:800;font-size:clamp(32px,4vw,52px);text-transform:uppercase;line-height:1;margin-bottom:18px;">
-              Ishak Abika
-            </h2>
-            <p style="font-size:15px;color:var(--ink-muted);line-height:1.8;margin-bottom:14px;">
-              Född och uppvuxen i Borlänge. Ishak spelade fotboll på elitnivå med tre säsonger i Dalkurd FF och vidareutbildade sig inom IT vid Folkuniversitetet. Den disciplin och fokus han lärde sig på planen tog han med sig rakt in i truckens kök.
+        <div class="about-split" style="margin-bottom: 48px;">
+          <div class="about-photo">
+            <img src="assets/images/ishak-portrait.jpg" alt="Ishak Abika" />
+          </div>
+          <div class="about-text">
+            <h2 style="font-family:var(--font-display);font-weight:900;font-size:28px;text-transform:uppercase;margin-bottom:14px;">Ishak Abika</h2>
+            <p>
+              Ishak växte upp i Borlänge och spelade fotboll under tre säsonger för Dalkurd FF. Efter avslutad elitidrott och IT-studier vid Folkuniversitetet valde han att starta eget inom mat.
             </p>
-            <p style="font-size:15px;color:var(--ink-muted);line-height:1.8;">
-              "Jag ville bygga ett ställe där folk vet exakt vad de får: den krispiga ytan, den rökiga steksmaken och ett mjukt briochebröd som håller ihop allt. Vi gör det med stolthet varje dag."
+            <p>
+              Tillsammans med sin bror Mustafa spenderades månader på att ta fram rätt recept, rätt leverantörer av svenskt nötkött och rätt bageri för briochebröden.
             </p>
           </div>
         </div>
 
-        <!-- Mustafa -->
-        <div class="person-row person-row-alt">
-          <div class="person-body">
-            <div class="section-label">Medgrundare &amp; kock</div>
-            <h2 style="font-family:var(--font-display);font-weight:800;font-size:clamp(32px,4vw,52px);text-transform:uppercase;line-height:1;margin-bottom:18px;">
-              Mustafa Abika
-            </h2>
-            <p style="font-size:15px;color:var(--ink-muted);line-height:1.8;margin-bottom:14px;">
-              Ishaks bror och ryggraden vid stekbordet. Mustafa ansvarar för att varje enskild smash uppfyller samma strikta krav på temperatur, karamellisering och kryddning oavsett rusning.
-            </p>
-            <p style="font-size:15px;color:var(--ink-muted);line-height:1.8;">
-              "När 50 hungriga lunchgäster står utanför foodtrucken finns det inget utrymme för misstag. Varje burgare ska smaka som vår allra bästa."
-            </p>
+        <div class="about-split">
+          <div class="about-photo">
+            <img src="assets/images/chefs-truck.jpg" alt="Mustafa och Ishak i foodtrucken" />
           </div>
-          <img src="assets/images/chefs-truck.jpg" alt="Mustafa och Ishak i foodtrucken" class="person-photo" />
-        </div>
-
-      </div>
-    </section>
-
-    <!-- TECHNIQUE SECTION -->
-    <section class="section" style="padding-top: 10px;">
-      <div class="container">
-        <div class="story-card">
-          <div class="story-img-wrap">
-            <img src="assets/images/grill-smash.jpg" alt="Smash på grillen" />
-          </div>
-          <div class="story-content">
-            <div class="section-label">Varför smash fungerar</div>
-            <h2 class="section-title" style="margin-bottom: 20px;">Maillard-effekten i praktiken</h2>
-            <p class="story-body" style="margin-bottom: 16px;">
-              När färskt kött trycks med full kraft mot en 220-gradig stålplatta startar Maillard-reaktionen omedelbart.
-              Aminosyror och sockerarter karamelliseras och skapar hundratals djupa aromer som aldrig uppstår på ett vanligt galler.
+          <div class="about-text">
+            <h2 style="font-family:var(--font-display);font-weight:900;font-size:28px;text-transform:uppercase;margin-bottom:14px;">Mustafa Abika</h2>
+            <p>
+              Mustafa leder det dagliga arbetet vid stekbordet i trucken på Södra Backa. Han ser till att varje puck pressas med rätt teknik och att stekytan blir jämnt karamelliserad under lunchrusningen.
             </p>
-            <p class="story-body">
-              Det ger den karakteristiska frasiga kanten och behåller alla naturliga köttsafter inuti.
-              Ett nyrostat briochebröd absorberar smakerna utan att bli blött.
+            <p>
+              Hos Ishak's tillagas allt direkt vid beställning. Inget kött varmhålls och varje portion lämnar luckan rykande färsk.
             </p>
-            <div style="margin-top: 24px;">
-              <a href="menu.html" class="btn-hero-primary">Prova menyn</a>
-            </div>
           </div>
         </div>
+
       </div>
     </section>
 
@@ -123,27 +80,20 @@
   <!-- FOOTER -->
   <footer class="site-footer">
     <div class="container">
-      <div class="footer-grid">
-        <div class="footer-brand">
-          <div class="nav-brand-name">ISHAK'S SMASH BURGER</div>
-          <p>Äkta smashburgare på svenskt nötkött och färskt briochebröd.<br>Hantverkargatan 5, Södra Backa, Borlänge.</p>
+      <div class="footer-row">
+        <div>
+          <span style="font-family:var(--font-display);font-weight:900;font-size:18px;">ISHAK'S SMASH BURGER</span>
+          <p style="font-size:13px;color:#8E8E8E;margin-top:4px;">Hantverkargatan 5, Södra Backa, Borlänge</p>
         </div>
-        <div class="footer-col">
-          <h4>Navigering</h4>
-          <a href="menu.html">Meny &amp; Beställ</a>
+        <div style="display:flex;gap:18px;font-size:13px;font-weight:600;text-transform:uppercase;">
+          <a href="menu.html">Meny</a>
           <a href="om-oss.html">Om oss</a>
           <a href="catering.html">Catering</a>
           <a href="hitta-hit.html">Hitta hit</a>
         </div>
-        <div class="footer-col">
-          <h4>Kontakt &amp; Tider</h4>
-          <a href="tel:+46705491132">070-549 11 32</a>
-          <a href="https://www.instagram.com/ishaks_smashburger/" target="_blank" rel="noopener">Instagram</a>
-          <p>Mån–Fre 11:00–15:00</p>
-        </div>
       </div>
-      <div class="footer-bottom">
-        <p>&copy; 2025 Ishak's Smash Burger</p>
+      <div class="footer-copy">
+        &copy; 2025 Ishak's Smash Burger.
       </div>
     </div>
   </footer>

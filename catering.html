@@ -3,35 +3,31 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Catering &amp; Event — Ishak's Smash Burger</title>
-  <meta name="description" content="Boka Ishak's Smash Burger foodtruck till ert event i Dalarna. Från 30 till 300+ gäster. Företagsevent, festivaler, bröllop." />
-  <meta name="theme-color" content="#11100E" />
+  <title>Catering — Ishak's Smash Burger</title>
+  <meta name="description" content="Boka Ishak's Smash Burger foodtruck till ert event i Dalarna. Från 30 gäster och uppåt." />
   <link rel="icon" type="image/png" href="assets/images/logo.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
-  <!-- NAVIGATION -->
+  <!-- NAV -->
   <nav class="site-nav">
-    <a href="index.html" class="nav-brand">
-      <img src="assets/images/logo.png" alt="" />
-      <div>
-        <div class="nav-brand-name">ISHAK'S</div>
-        <div class="nav-brand-city">Södra Backa · Borlänge</div>
-      </div>
+    <a href="index.html" class="nav-brand" aria-label="Startsida">
+      <img src="assets/images/logo.png" alt="Ishak's Smash Burger" />
+      <span class="nav-brand-title">ISHAK'S SMASH BURGER</span>
     </a>
     <div class="nav-links" id="navLinks">
-      <a href="menu.html">Meny &amp; Beställ</a>
+      <a href="menu.html">Meny</a>
       <a href="om-oss.html">Om oss</a>
       <a href="catering.html" class="active">Catering</a>
       <a href="hitta-hit.html">Hitta hit</a>
     </div>
     <div class="nav-actions">
-      <a href="menu.html" class="btn-order-nav">Beställ online</a>
-      <button class="nav-hamburger" id="hamburger" aria-label="Meny" aria-expanded="false">
+      <a href="menu.html" class="btn-nav-order">Beställ online</a>
+      <button class="nav-hamburger" id="hamburger" aria-label="Meny">
         <span></span><span></span><span></span>
       </button>
     </div>
@@ -39,106 +35,60 @@
 
   <main class="page-top">
 
-    <!-- PAGE HEADER -->
-    <section class="section" style="padding-bottom: 24px;">
+    <section class="section">
       <div class="container">
-        <div class="section-label">Foodtruck till ert event</div>
-        <h1 class="section-title">Vi rullar ut till er fest eller företag</h1>
-        <p style="font-size: 16px; color: var(--ink-muted); max-width: 680px; line-height: 1.7; margin-top: 14px;">
-          Festivaler, firmafester, bröllop eller större luncher — vi tar med oss hela köket och serverar rykande färska smashburgare på plats i Borlänge, Falun och hela Dalarna.
-        </p>
-      </div>
-    </section>
-
-    <!-- PHOTO BANNER IN CONTAINER -->
-    <div class="container" style="margin-bottom: 40px;">
-      <div style="position:relative;border-radius:var(--radius-lg);overflow:hidden;height:380px;border:1px solid var(--border);">
-        <img src="assets/images/event-5mans.jpg" alt="Ishak's Smash Burger på event vid 5mans Bryggeri" style="width:100%;height:100%;object-fit:cover;" />
-        <div style="position:absolute;inset:0;background:linear-gradient(to top, rgba(17,16,14,0.85) 0%, transparent 60%);"></div>
-        <div style="position:absolute;bottom:28px;left:32px;">
-          <span class="hero-pill" style="margin-bottom:0;">Live-event vid 5mans Bryggeri</span>
+        <div class="section-head">
+          <div class="section-tag">Event &amp; Företag</div>
+          <h1 class="section-title">Boka foodtrucken till ert event</h1>
         </div>
-      </div>
-    </div>
 
-    <!-- FEATURES IN CONTAINER -->
-    <section class="section" style="padding: 0 0 60px;">
-      <div class="container">
-        <div class="section-label">Fördelar</div>
-        <h2 class="section-title">Hur det fungerar</h2>
+        <div class="about-split" style="margin-bottom: 48px;">
+          <div>
+            <p style="font-size:16px;color:var(--ink-muted);line-height:1.7;margin-bottom:20px;">
+              Vi kör ut med vår foodtruck till företagsluncher, festivaler, föreningsfester och privata tillställningar i Borlänge, Falun och övriga Dalarna.
+            </p>
+            <div class="quick-info-row" style="grid-template-columns:1fr;gap:12px;">
+              <div class="quick-info-col" style="padding:16px;">
+                <div class="quick-info-label">Kapacitet</div>
+                <div class="quick-info-val">Från 30 gäster upp till 300+ med snabb servering.</div>
+              </div>
+              <div class="quick-info-col" style="padding:16px;">
+                <div class="quick-info-label">Allt ingår</div>
+                <div class="quick-info-val">Truck, personal, gasol, råvaror och servering.</div>
+              </div>
+            </div>
+          </div>
 
-        <div class="catering-features">
-          <div class="feature-card">
-            <div class="feature-num">30+</div>
-            <div class="feature-title">Gäster som minimum</div>
-            <div class="feature-desc">Passar både intima företagskvällar och stora publika tillställningar med hundratals besökare.</div>
-          </div>
-          <div class="feature-card">
-            <div class="feature-num">Allt</div>
-            <div class="feature-title">Ingår i upplägget</div>
-            <div class="feature-desc">Truck, gasol, personal, förberedelser och städning. Ni väljer menyn — vi sköter hela driften.</div>
-          </div>
-          <div class="feature-card">
-            <div class="feature-num">100%</div>
-            <div class="feature-title">Färskt på plats</div>
-            <div class="feature-desc">Varje burgare smashas när gästen beställer. Inga färdiga varmhållna lådor.</div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:28px;">
+            <h2 style="font-family:var(--font-display);font-weight:800;font-size:22px;text-transform:uppercase;margin-bottom:18px;">Skicka förfrågan via WhatsApp</h2>
+            <form id="cateringForm">
+              <div class="form-group">
+                <label class="form-label" for="c-name">Ditt namn</label>
+                <input type="text" id="c-name" class="form-control" placeholder="Förnamn Efternamn" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="c-phone">Telefonnummer</label>
+                <input type="tel" id="c-phone" class="form-control" placeholder="070-XXX XX XX" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="c-date">Datum för eventet</label>
+                <input type="date" id="c-date" class="form-control" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="c-guests">Antal personer (ca)</label>
+                <input type="number" id="c-guests" class="form-control" placeholder="T.ex. 50" min="30" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="c-place">Plats / Stad</label>
+                <input type="text" id="c-place" class="form-control" placeholder="T.ex. Borlänge" required />
+              </div>
+              <button type="submit" class="btn-whatsapp" style="width:100%;margin-top:10px;">
+                <span>Skicka förfrågan</span>
+              </button>
+            </form>
           </div>
         </div>
-      </div>
-    </section>
 
-    <!-- BOOKING FORM -->
-    <section class="section" style="padding-top: 0;">
-      <div class="container" style="max-width: 780px;">
-        <div class="section-label">Bokningsförfrågan</div>
-        <h2 class="section-title" style="margin-bottom: 28px;">Berätta om ert event</h2>
-
-        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:44px 36px;">
-          <form id="cateringForm">
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
-              <div>
-                <label class="form-label" for="f-name">Ditt namn</label>
-                <input type="text" id="f-name" class="form-control" placeholder="Förnamn Efternamn" required />
-              </div>
-              <div>
-                <label class="form-label" for="f-org">Företag / privat</label>
-                <input type="text" id="f-org" class="form-control" placeholder="T.ex. Företag AB" />
-              </div>
-            </div>
-
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
-              <div>
-                <label class="form-label" for="f-phone">Telefonnummer</label>
-                <input type="tel" id="f-phone" class="form-control" placeholder="070-XXX XX XX" required />
-              </div>
-              <div>
-                <label class="form-label" for="f-date">Önskat datum</label>
-                <input type="date" id="f-date" class="form-control" required />
-              </div>
-            </div>
-
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
-              <div>
-                <label class="form-label" for="f-guests">Uppskattat antal gäster</label>
-                <input type="number" id="f-guests" class="form-control" placeholder="Minst 30 st" min="30" required />
-              </div>
-              <div>
-                <label class="form-label" for="f-location">Plats för eventet</label>
-                <input type="text" id="f-location" class="form-control" placeholder="T.ex. Borlänge, Falun..." required />
-              </div>
-            </div>
-
-            <div style="margin-bottom:24px;">
-              <label class="form-label" for="f-msg">Ytterligare önskemål eller tider</label>
-              <textarea id="f-msg" class="form-control" style="min-height:90px;" placeholder="T.ex. önskemål om meny, serveringstid..."></textarea>
-            </div>
-
-            <button type="submit" class="btn-whatsapp" style="width:100%;">
-              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.998 2C6.473 2 2 6.473 2 11.998c0 1.763.456 3.422 1.252 4.864L2 22l5.283-1.237A9.957 9.957 0 0012 22c5.525 0 10-4.473 10-9.998C22 6.473 17.525 2 11.998 2z"/></svg>
-              <span>Skicka förfrågan direkt via WhatsApp</span>
-            </button>
-          </form>
-        </div>
       </div>
     </section>
 
@@ -147,27 +97,20 @@
   <!-- FOOTER -->
   <footer class="site-footer">
     <div class="container">
-      <div class="footer-grid">
-        <div class="footer-brand">
-          <div class="nav-brand-name">ISHAK'S SMASH BURGER</div>
-          <p>Äkta smashburgare på svenskt nötkött och färskt briochebröd.<br>Hantverkargatan 5, Södra Backa, Borlänge.</p>
+      <div class="footer-row">
+        <div>
+          <span style="font-family:var(--font-display);font-weight:900;font-size:18px;">ISHAK'S SMASH BURGER</span>
+          <p style="font-size:13px;color:#8E8E8E;margin-top:4px;">Hantverkargatan 5, Södra Backa, Borlänge</p>
         </div>
-        <div class="footer-col">
-          <h4>Navigering</h4>
-          <a href="menu.html">Meny &amp; Beställ</a>
+        <div style="display:flex;gap:18px;font-size:13px;font-weight:600;text-transform:uppercase;">
+          <a href="menu.html">Meny</a>
           <a href="om-oss.html">Om oss</a>
           <a href="catering.html">Catering</a>
           <a href="hitta-hit.html">Hitta hit</a>
         </div>
-        <div class="footer-col">
-          <h4>Kontakt &amp; Tider</h4>
-          <a href="tel:+46705491132">070-549 11 32</a>
-          <a href="https://www.instagram.com/ishaks_smashburger/" target="_blank" rel="noopener">Instagram</a>
-          <p>Mån–Fre 11:00–15:00</p>
-        </div>
       </div>
-      <div class="footer-bottom">
-        <p>&copy; 2025 Ishak's Smash Burger</p>
+      <div class="footer-copy">
+        &copy; 2025 Ishak's Smash Burger.
       </div>
     </div>
   </footer>
@@ -176,25 +119,13 @@
   <script>
     document.getElementById('cateringForm').addEventListener('submit', function(e) {
       e.preventDefault();
-      const name = document.getElementById('f-name').value.trim();
-      const org = document.getElementById('f-org').value.trim();
-      const phone = document.getElementById('f-phone').value.trim();
-      const date = document.getElementById('f-date').value;
-      const guests = document.getElementById('f-guests').value;
-      const location = document.getElementById('f-location').value.trim();
-      const msg = document.getElementById('f-msg').value.trim();
+      const name = document.getElementById('c-name').value.trim();
+      const phone = document.getElementById('c-phone').value.trim();
+      const date = document.getElementById('c-date').value;
+      const guests = document.getElementById('c-guests').value;
+      const place = document.getElementById('c-place').value.trim();
 
-      let text = `*FÖRFRÅGAN: BOKNING AV FOODTRUCK*\n`;
-      text += `━━━━━━━━━━━━━━━━━━━━━\n`;
-      text += `*Namn:* ${name}\n`;
-      if (org) text += `*Organisation/Företag:* ${org}\n`;
-      text += `*Telefon:* ${phone}\n`;
-      text += `*Önskat datum:* ${date}\n`;
-      text += `*Antal gäster:* ca ${guests} st\n`;
-      text += `*Plats:* ${location}\n`;
-      if (msg) text += `*Övrigt:* ${msg}\n`;
-      text += `━━━━━━━━━━━━━━━━━━━━━\n`;
-
+      const text = `Hej Ishak! Jag vill boka foodtrucken.\nNamn: ${name}\nTelefon: ${phone}\nDatum: ${date}\nAntal gäster: ca ${guests}\nPlats: ${place}`;
       window.open(`https://wa.me/46705491132?text=${encodeURIComponent(text)}`, '_blank');
     });
   </script>

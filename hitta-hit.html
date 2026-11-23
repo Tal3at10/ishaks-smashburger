@@ -3,35 +3,31 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hitta hit — Ishak's Smash Burger, Borlänge</title>
-  <meta name="description" content="Ishak's Smash Burger — Hantverkargatan 5, Södra Backa, 781 71 Borlänge. Öppet måndag–fredag 11:00–15:00." />
-  <meta name="theme-color" content="#11100E" />
+  <title>Hitta hit — Ishak's Smash Burger</title>
+  <meta name="description" content="Hitta till Ishak's Smash Burger vid Hantverkargatan 5 i Borlänge. Öppet mån–fre 11:00–15:00." />
   <link rel="icon" type="image/png" href="assets/images/logo.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
-  <!-- NAVIGATION -->
+  <!-- NAV -->
   <nav class="site-nav">
-    <a href="index.html" class="nav-brand">
-      <img src="assets/images/logo.png" alt="" />
-      <div>
-        <div class="nav-brand-name">ISHAK'S</div>
-        <div class="nav-brand-city">Södra Backa · Borlänge</div>
-      </div>
+    <a href="index.html" class="nav-brand" aria-label="Startsida">
+      <img src="assets/images/logo.png" alt="Ishak's Smash Burger" />
+      <span class="nav-brand-title">ISHAK'S SMASH BURGER</span>
     </a>
     <div class="nav-links" id="navLinks">
-      <a href="menu.html">Meny &amp; Beställ</a>
+      <a href="menu.html">Meny</a>
       <a href="om-oss.html">Om oss</a>
       <a href="catering.html">Catering</a>
       <a href="hitta-hit.html" class="active">Hitta hit</a>
     </div>
     <div class="nav-actions">
-      <a href="menu.html" class="btn-order-nav">Beställ online</a>
-      <button class="nav-hamburger" id="hamburger" aria-label="Meny" aria-expanded="false">
+      <a href="menu.html" class="btn-nav-order">Beställ online</a>
+      <button class="nav-hamburger" id="hamburger" aria-label="Meny">
         <span></span><span></span><span></span>
       </button>
     </div>
@@ -39,131 +35,79 @@
 
   <main class="page-top">
 
-    <!-- PAGE TITLE -->
-    <section class="section" style="padding-bottom: 24px;">
+    <section class="section">
       <div class="container">
-        <div class="section-label">Plats &amp; öppettider</div>
-        <h1 class="section-title">Hitta till foodtrucken</h1>
-        <p style="font-size: 16px; color: var(--ink-muted); max-width: 680px; line-height: 1.7; margin-top: 14px;">
-          Du hittar oss parkerade vid Hantverkargatan 5 i industriområdet Södra Backa i Borlänge. Fri parkering finns precis intill.
-        </p>
-      </div>
-    </section>
+        <div class="section-head">
+          <div class="section-tag">Plats &amp; Tider</div>
+          <h1 class="section-title">Hitta till foodtrucken</h1>
+        </div>
 
-    <!-- MAP + INFO LAYOUT IN CONTAINER -->
-    <div class="container" style="margin-bottom: 60px;">
-      <div class="hitta-layout">
-        
-        <div class="info-panel">
-          <div class="info-row">
-            <div class="info-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            </div>
-            <div>
-              <div style="font-size:11.5px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:4px;">Adress</div>
-              <div style="font-size:15px;line-height:1.6;">
-                Hantverkargatan 5<br>
-                Södra Backa<br>
-                781 71 Borlänge
+        <div class="about-split" style="margin-bottom: 40px;">
+          <div>
+            <div class="quick-info-row" style="grid-template-columns:1fr;gap:16px;">
+              <div class="quick-info-col">
+                <div class="quick-info-label">Adress</div>
+                <div class="quick-info-val">
+                  Hantverkargatan 5<br>
+                  Södra Backa, 781 71 Borlänge<br>
+                  <span style="font-size:12px;color:#8E8E8E;">Parkering finns intill foodtrucken</span>
+                </div>
+              </div>
+              <div class="quick-info-col">
+                <div class="quick-info-label">Öppettider</div>
+                <div class="quick-info-val">
+                  Måndag – Fredag: <strong>11:00 – 15:00</strong><br>
+                  Lördag – Söndag: <strong>Stängt</strong>
+                </div>
+              </div>
+              <div class="quick-info-col">
+                <div class="quick-info-label">Telefon &amp; Swish</div>
+                <div class="quick-info-val">
+                  <a href="tel:+46705491132" style="font-size:17px;font-weight:700;color:var(--yellow);">070-549 11 32</a><br>
+                  <span>Mottagare: Ishak Abika</span>
+                </div>
               </div>
             </div>
           </div>
 
-          <div class="info-row">
-            <div class="info-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            </div>
-            <div style="flex:1;">
-              <div style="font-size:11.5px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:6px;">Öppettider</div>
-              <table class="hours-table" id="hoursTable">
-                <tbody>
-                  <tr><td>Måndag</td><td>11:00 – 15:00</td></tr>
-                  <tr><td>Tisdag</td><td>11:00 – 15:00</td></tr>
-                  <tr><td>Onsdag</td><td>11:00 – 15:00</td></tr>
-                  <tr><td>Torsdag</td><td>11:00 – 15:00</td></tr>
-                  <tr><td>Fredag</td><td>11:00 – 15:00</td></tr>
-                  <tr><td>Lördag</td><td>Stängt</td></tr>
-                  <tr><td>Söndag</td><td>Stängt</td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          <div class="info-row">
-            <div class="info-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
-            </div>
-            <div>
-              <div style="font-size:11.5px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:4px;">Telefon &amp; Swish</div>
-              <div style="font-size:15px;"><a href="tel:+46705491132" style="color:var(--ink);font-weight:600;">070-549 11 32</a></div>
-            </div>
-          </div>
-
-          <div style="display:flex;gap:12px;margin-top:14px;flex-wrap:wrap;">
-            <a href="tel:+46705491132" class="btn-hero-primary" style="font-size:13px;padding:10px 20px;">Ring oss</a>
-            <a href="https://wa.me/46705491132" target="_blank" rel="noopener" class="btn-hero-ghost" style="font-size:13px;padding:10px 20px;">WhatsApp</a>
+          <div style="border-radius:8px;overflow:hidden;border:1px solid var(--border);min-height:360px;">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1941.4!2d15.4310!3d60.4800!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sHantverkargatan+5%2C+781+71+Borl%C3%A4nge!5e0!3m2!1ssv!2sse!4v1700000000000!5m2!1ssv!2sse"
+              style="width:100%;height:100%;min-height:360px;border:none;display:block;"
+              allowfullscreen=""
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+              title="Karta till Hantverkargatan 5"
+            ></iframe>
           </div>
         </div>
 
-        <div class="map-col">
-          <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1941.4!2d15.4310!3d60.4800!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sHantverkargatan+5%2C+781+71+Borl%C3%A4nge!5e0!3m2!1ssv!2sse!4v1700000000000!5m2!1ssv!2sse"
-            allowfullscreen=""
-            loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade"
-            title="Karta till Hantverkargatan 5"
-          ></iframe>
-        </div>
-
       </div>
-    </div>
-
-    <!-- LOCATION PHOTO IN CONTAINER -->
-    <div class="container" style="margin-bottom: 60px;">
-      <div style="border-radius:var(--radius-lg);overflow:hidden;height:340px;border:1px solid var(--border);">
-        <img src="assets/images/street-flag.jpg" alt="Ishak's flagga vid Hantverkargatan" style="width:100%;height:100%;object-fit:cover;" />
-      </div>
-    </div>
+    </section>
 
   </main>
 
   <!-- FOOTER -->
   <footer class="site-footer">
     <div class="container">
-      <div class="footer-grid">
-        <div class="footer-brand">
-          <div class="nav-brand-name">ISHAK'S SMASH BURGER</div>
-          <p>Äkta smashburgare på svenskt nötkött och färskt briochebröd.<br>Hantverkargatan 5, Södra Backa, Borlänge.</p>
+      <div class="footer-row">
+        <div>
+          <span style="font-family:var(--font-display);font-weight:900;font-size:18px;">ISHAK'S SMASH BURGER</span>
+          <p style="font-size:13px;color:#8E8E8E;margin-top:4px;">Hantverkargatan 5, Södra Backa, Borlänge</p>
         </div>
-        <div class="footer-col">
-          <h4>Navigering</h4>
-          <a href="menu.html">Meny &amp; Beställ</a>
+        <div style="display:flex;gap:18px;font-size:13px;font-weight:600;text-transform:uppercase;">
+          <a href="menu.html">Meny</a>
           <a href="om-oss.html">Om oss</a>
           <a href="catering.html">Catering</a>
           <a href="hitta-hit.html">Hitta hit</a>
         </div>
-        <div class="footer-col">
-          <h4>Kontakt &amp; Tider</h4>
-          <a href="tel:+46705491132">070-549 11 32</a>
-          <a href="https://www.instagram.com/ishaks_smashburger/" target="_blank" rel="noopener">Instagram</a>
-          <p>Mån–Fre 11:00–15:00</p>
-        </div>
       </div>
-      <div class="footer-bottom">
-        <p>&copy; 2025 Ishak's Smash Burger</p>
+      <div class="footer-copy">
+        &copy; 2025 Ishak's Smash Burger.
       </div>
     </div>
   </footer>
 
   <script src="app.js"></script>
-  <script>
-    const days = ['Söndag','Måndag','Tisdag','Onsdag','Torsdag','Fredag','Lördag'];
-    const today = days[new Date().getDay()];
-    document.querySelectorAll('.hours-table tr').forEach(row => {
-      if (row.cells[0] && row.cells[0].textContent === today) {
-        row.classList.add('today');
-      }
-    });
-  </script>
 </body>
 </html>

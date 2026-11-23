@@ -4,40 +4,30 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ishak's Smash Burger — Södra Backa, Borlänge</title>
-  <meta name="description" content="Äkta smashburgare på svenskt nötkött och färskt briochebröd. Foodtruck vid Hantverkargatan 5, Borlänge. Öppet mån–fre 11:00–15:00." />
-  <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="Ishak's Smash Burger" />
-  <meta property="og:title" content="Ishak's Smash Burger — Södra Backa, Borlänge" />
-  <meta property="og:description" content="Äkta smashburgare på 100% svenskt nötkött, karamelliserad stekyta och nybakat brioche. Beställ för avhämtning." />
-  <meta property="og:url" content="https://tal3at10.github.io/ishaks-smashburger/" />
-  <meta property="og:image" content="https://tal3at10.github.io/ishaks-smashburger/assets/images/smash-burger-1-real.jpg" />
-  <meta name="theme-color" content="#11100E" />
+  <meta name="description" content="Äkta smashburgare på svenskt nötkött vid Hantverkargatan 5, Borlänge. Öppet mån–fre 11:00–15:00." />
   <link rel="icon" type="image/png" href="assets/images/logo.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
-  <!-- NAVIGATION -->
+  <!-- NAV -->
   <nav class="site-nav">
     <a href="index.html" class="nav-brand" aria-label="Startsida">
       <img src="assets/images/logo.png" alt="Ishak's Smash Burger" />
-      <div>
-        <div class="nav-brand-name">ISHAK'S</div>
-        <div class="nav-brand-city">Södra Backa · Borlänge</div>
-      </div>
+      <span class="nav-brand-title">ISHAK'S SMASH BURGER</span>
     </a>
     <div class="nav-links" id="navLinks">
-      <a href="menu.html">Meny &amp; Beställ</a>
+      <a href="menu.html">Meny</a>
       <a href="om-oss.html">Om oss</a>
       <a href="catering.html">Catering</a>
       <a href="hitta-hit.html">Hitta hit</a>
     </div>
     <div class="nav-actions">
-      <a href="menu.html" class="btn-order-nav">Beställ online</a>
-      <button class="nav-hamburger" id="hamburger" aria-label="Meny" aria-expanded="false">
+      <a href="menu.html" class="btn-nav-order">Beställ online</a>
+      <button class="nav-hamburger" id="hamburger" aria-label="Meny">
         <span></span><span></span><span></span>
       </button>
     </div>
@@ -45,174 +35,100 @@
 
   <main class="page-top">
 
-    <!-- HERO SECTION (CRAFT BURGER SHOWCASE) -->
-    <section class="hero-craft">
-      <div class="hero-craft-bg"></div>
+    <!-- HERO -->
+    <section class="hero-clean">
       <div class="container">
-        <div class="hero-grid">
-          
-          <!-- Content Left -->
-          <div class="hero-craft-content">
-            <div class="hero-pill">
-              <span class="hero-pill-dot"></span>
-              <span>Öppet mån–fre 11:00–15:00 · Södra Backa</span>
-            </div>
-
-            <h1 class="hero-craft-title">
-              Äkta smashburgare <span class="highlight">gjorda rätt</span>
-            </h1>
-
-            <p class="hero-craft-desc">
-              Hög värme, 100% svenskt nötkött och krispigt karamelliserad stekyta som låser in saften.
-              Serveras med färskrostat briochebröd — alltid lagat direkt på beställning vid Hantverkargatan 5.
+        <div class="hero-clean-grid">
+          <div>
+            <div class="hero-clean-tag">Södra Backa · Borlänge</div>
+            <h1 class="hero-clean-title">Äkta smashburgare på beställning</h1>
+            <p class="hero-clean-desc">
+              Svenskt nötkött stekt på hög värme mot plattan för krispig yta och saftigt inre.
+              Serveras med färskt briochebröd, pommes frites och 33 cl dryck i vår foodtruck vid Hantverkargatan 5.
             </p>
-
-            <div class="hero-craft-actions">
-              <a href="menu.html" class="btn-hero-primary">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
-                <span>Se meny &amp; beställ</span>
-              </a>
-              <a href="catering.html" class="btn-hero-ghost">
-                <span>Boka foodtruck</span>
-              </a>
+            <div class="hero-clean-actions">
+              <a href="menu.html" class="btn-black-yellow">Se meny &amp; beställ</a>
+              <a href="catering.html" class="btn-black-outline">Boka catering</a>
             </div>
-
-            <div class="hero-meta-strip">
-              <div class="hero-meta-item">
+            <div class="hero-clean-meta">
+              <div>
                 <strong>Hantverkargatan 5</strong>
                 <span>781 71 Borlänge</span>
               </div>
-              <div class="hero-meta-item">
-                <strong>Pommes + Dryck ingår</strong>
-                <span>I alla våra menyer</span>
+              <div>
+                <strong>Mån–Fre 11:00–15:00</strong>
+                <span>Lunch &amp; avhämtning</span>
               </div>
-              <div class="hero-meta-item">
+              <div>
                 <strong>070-549 11 32</strong>
-                <span>Avhämtning &amp; Swish</span>
+                <span>Swish &amp; WhatsApp</span>
               </div>
             </div>
           </div>
 
-          <!-- Showcase Card Right -->
-          <div class="hero-craft-showcase">
-            <div class="hero-card-showcase">
-              <div class="hero-card-img-wrap">
-                <span class="hero-card-tag">Signaturmenyn</span>
-                <img src="assets/images/smash-burger-2.jpg" alt="Ishak's Smash Burger med dubbel patty, cheddar och karamelliserad lök" />
-              </div>
-              <div class="hero-card-info">
-                <div>
-                  <div class="hero-card-title">Ishak's Smash</div>
-                  <div class="hero-card-sub">Dubbel smashad patty, cheddar, rostad lök, brioche · Pommes + dryck ingår</div>
-                </div>
-                <div class="hero-card-price">150 kr</div>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- STORY / ABOUT SECTION -->
-    <section class="section" style="padding-top: 20px;">
-      <div class="container">
-        <div class="section-label">Hantverket bakom</div>
-        <h2 class="section-title">Från Dalkurd FF till Borlänges krispigaste smash</h2>
-
-        <div class="story-card">
-          <div class="story-img-wrap">
-            <img src="assets/images/chefs-truck.jpg" alt="Ishak och Mustafa i foodtrucken" loading="lazy" />
-          </div>
-          <div class="story-content">
-            <p class="story-lead">
-              Efter tre säsonger i <strong>Dalkurd FF</strong> och IT-studier vid Folkuniversitetet
-              bestämde sig Ishak för att ta samma disciplin in i köket.
-            </p>
-            <p class="story-body">
-              Det tog bröderna tre månaders receptutveckling och hundratals provgrillningar innan de var nöjda.
-              Tekniken bygger på den äkta smashtekniken: bollar av färskt nötkött trycks hårt mot en 220-gradig stekplatta
-              så att Maillard-reaktionen bildar en krispig, djup stekyta medan insidan förblir mör och saftig.
-            </p>
-            <div class="stats-grid">
-              <div class="stat-item">
-                <div class="stat-num">3 mån</div>
-                <div class="stat-label">Receptutveckling</div>
-              </div>
-              <div class="stat-item">
-                <div class="stat-num">100%</div>
-                <div class="stat-label">På beställning</div>
-              </div>
-              <div class="stat-item">
-                <div class="stat-num">4.7★</div>
-                <div class="stat-label">Betyg på Foodora</div>
-              </div>
-            </div>
+          <div class="hero-clean-img-wrap">
+            <img src="assets/images/smash-burger-2.jpg" alt="Smashburger från Ishak's vid foodtrucken" />
           </div>
         </div>
       </div>
     </section>
 
-    <!-- PHOTO GALLERY -->
-    <section class="section" style="padding-top: 0;">
+    <!-- ABOUT SECTION -->
+    <section class="section">
       <div class="container">
-        <div class="section-label">Verkstan i bild</div>
-        <h2 class="section-title">Från stekplattan till servering</h2>
-
-        <div class="gallery-grid">
-          <div class="gallery-item">
-            <img src="assets/images/grill-smash.jpg" alt="Smash på plattan" loading="lazy" />
+        <div class="about-split">
+          <div class="about-photo">
+            <img src="assets/images/foodtruck-exterior.jpg" alt="Ishak Abika vid sin foodtruck i Borlänge" />
           </div>
-          <div class="gallery-item">
-            <img src="assets/images/boxes-prep.jpg" alt="Klart i boxar" loading="lazy" />
-          </div>
-          <div class="gallery-item">
-            <img src="assets/images/foodtruck-exterior.jpg" alt="Foodtrucken i Södra Backa" loading="lazy" />
-          </div>
-          <div class="gallery-item">
-            <img src="assets/images/event-5mans.jpg" alt="Event vid 5mans Bryggeri" loading="lazy" />
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- CATERING BANNER (ELEGANT CRAFT CARD) -->
-    <section class="section" style="padding: 0;">
-      <div class="container">
-        <div class="catering-banner-card">
-          <div class="catering-banner-text">
-            <div class="section-label">Foodtruck &amp; Event</div>
-            <h2 class="section-title">Vill du ha trucken till ditt event?</h2>
+          <div class="about-text">
+            <div class="section-tag">Bakgrunden</div>
+            <h2 class="section-title" style="margin-bottom: 20px;">Från fotbollsplanen till stekbordet</h2>
             <p>
-              Vi kör ut till festivaler, företagsevent, studenter och privata fester i Dalarna.
-              Från 30 till 300+ gäster med snabb servering och samma höga kvalitet som vid Hantverkargatan.
+              Efter tre säsonger i Dalkurd FF och IT-studier vid Folkuniversitetet grundade <strong>Ishak Abika</strong> restaurangvagnen tillsammans med sin bror <strong>Mustafa</strong>.
             </p>
-          </div>
-          <div class="catering-banner-actions">
-            <a href="catering.html" class="btn-hero-primary">Läs mer &amp; boka</a>
+            <p>
+              Målet var enkelt: att servera Borlänge en kompromisslös smashburgare gjord från grunden utan genvägar. Köttet pressas direkt mot den heta stålplattan för att skapa en karamelliserad stekskorpa som låser in saften.
+            </p>
+            <p>
+              Varje meny inkluderar nystekta pommes och valfri 33 cl burkdryck för 150 kr.
+            </p>
+            <div style="margin-top: 24px;">
+              <a href="om-oss.html" class="btn-black-outline">Läs hela historien &rarr;</a>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- LOCATION INFO STRIP -->
-    <section class="section" style="padding-top: 20px;">
+    <!-- QUICK INFO -->
+    <section class="section">
       <div class="container">
-        <div class="info-strip">
-          <div class="info-strip-col">
-            <h4>Plats</h4>
-            <p><strong>Hantverkargatan 5</strong><br>Södra Backa, 781 71 Borlänge</p>
+        <div class="section-head">
+          <div class="section-tag">Information</div>
+          <h2 class="section-title">Hitta hit &amp; öppettider</h2>
+        </div>
+        <div class="quick-info-row">
+          <div class="quick-info-col">
+            <div class="quick-info-label">Adress</div>
+            <div class="quick-info-val">
+              Hantverkargatan 5<br>
+              Södra Backa, 781 71 Borlänge<br>
+              <span style="font-size:12px;color:#8E8E8E;">Fri parkering utanför</span>
+            </div>
           </div>
-          <div class="info-strip-col">
-            <h4>Öppettider</h4>
-            <p>Måndag – Fredag<br><strong>11:00 – 15:00</strong></p>
+          <div class="quick-info-col">
+            <div class="quick-info-label">Öppettider</div>
+            <div class="quick-info-val">
+              Måndag – Fredag: <strong>11:00 – 15:00</strong><br>
+              Lördag – Söndag: <strong>Stängt</strong>
+            </div>
           </div>
-          <div class="info-strip-col">
-            <h4>Kontakt</h4>
-            <p><a href="tel:+46705491132"><strong>070-549 11 32</strong></a><br><a href="https://www.instagram.com/ishaks_smashburger/" target="_blank" rel="noopener">@ishaks_smashburger</a></p>
-          </div>
-          <div class="info-strip-col" style="display:flex;align-items:center;">
-            <a href="hitta-hit.html" class="btn-hero-ghost" style="width:100%;justify-content:center;">Hitta till trucken &rarr;</a>
+          <div class="quick-info-col">
+            <div class="quick-info-label">Kontakt &amp; Swish</div>
+            <div class="quick-info-val">
+              Telefon: <a href="tel:+46705491132">070-549 11 32</a><br>
+              Instagram: <a href="https://www.instagram.com/ishaks_smashburger/" target="_blank" rel="noopener">@ishaks_smashburger</a>
+            </div>
           </div>
         </div>
       </div>
@@ -223,35 +139,20 @@
   <!-- FOOTER -->
   <footer class="site-footer">
     <div class="container">
-      <div class="footer-grid">
-        <div class="footer-brand">
-          <div class="nav-brand-name">ISHAK'S SMASH BURGER</div>
-          <p>Äkta smashburgare på svenskt nötkött och färskt briochebröd.<br>Hantverkargatan 5, Södra Backa, Borlänge.</p>
+      <div class="footer-row">
+        <div>
+          <span style="font-family:var(--font-display);font-weight:900;font-size:18px;">ISHAK'S SMASH BURGER</span>
+          <p style="font-size:13px;color:#8E8E8E;margin-top:4px;">Hantverkargatan 5, Södra Backa, Borlänge</p>
         </div>
-        <div class="footer-col">
-          <h4>Navigering</h4>
-          <a href="menu.html">Meny &amp; Beställ</a>
+        <div style="display:flex;gap:18px;font-size:13px;font-weight:600;text-transform:uppercase;">
+          <a href="menu.html">Meny</a>
           <a href="om-oss.html">Om oss</a>
           <a href="catering.html">Catering</a>
           <a href="hitta-hit.html">Hitta hit</a>
         </div>
-        <div class="footer-col">
-          <h4>Kontakt &amp; Tider</h4>
-          <a href="tel:+46705491132">070-549 11 32</a>
-          <a href="https://www.instagram.com/ishaks_smashburger/" target="_blank" rel="noopener">Instagram</a>
-          <p>Mån–Fre 11:00–15:00</p>
-        </div>
       </div>
-      <div class="footer-bottom">
-        <p>&copy; 2025 Ishak's Smash Burger. Alla rättigheter förbehållna.</p>
-        <div class="footer-social">
-          <a href="https://www.instagram.com/ishaks_smashburger/" target="_blank" rel="noopener" aria-label="Instagram">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-          </a>
-          <a href="https://www.foodora.se/en/restaurant/wka5/ishaks-smashburger" target="_blank" rel="noopener" aria-label="Foodora">
-            <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
-          </a>
-        </div>
+      <div class="footer-copy">
+        &copy; 2025 Ishak's Smash Burger.
       </div>
     </div>
   </footer>
