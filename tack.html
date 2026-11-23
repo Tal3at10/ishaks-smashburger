@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tack för din beställning — Ishak's Smash Burger</title>
-  <meta name="description" content="Din beställning är mottagen. Vi bekräftar via WhatsApp inom några minuter." />
+  <meta name="description" content="Din beställning är mottagen vid foodtrucken på Hantverkargatan 5 i Borlänge." />
   <meta name="robots" content="noindex, follow" />
   <meta name="theme-color" content="#0A0A0A" />
   <link rel="icon" type="image/png" href="assets/images/logo.png" />
@@ -14,16 +14,16 @@
   <link rel="stylesheet" href="styles.css" />
   <style>
     .confirm-page {
-      min-height: calc(100vh - 72px);
+      min-height: calc(100vh - var(--nav-h));
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 48px 24px;
+      padding: calc(var(--nav-h) + 40px) 24px 60px;
     }
 
     .confirm-inner {
       text-align: center;
-      max-width: 560px;
+      max-width: 540px;
       width: 100%;
     }
 
@@ -31,56 +31,60 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 0 auto 28px;
+      margin: 0 auto 24px;
     }
 
     .confirm-heading {
-      font-family: 'Barlow Condensed', sans-serif;
+      font-family: var(--font-display);
       font-weight: 900;
-      font-size: clamp(32px, 6vw, 46px);
+      font-size: clamp(32px, 6vw, 44px);
       text-transform: uppercase;
       letter-spacing: 0.03em;
       color: #FFFFFF;
       line-height: 1.1;
-      margin: 0 0 14px;
+      margin: 0 0 10px;
     }
 
     .confirm-subtitle {
-      font-family: 'Inter', sans-serif;
+      font-family: var(--font-body);
       font-size: 15px;
-      line-height: 1.65;
-      color: #8E8E8E;
-      margin: 0 0 36px;
+      line-height: 1.6;
+      color: var(--ink-muted);
+      margin: 0 0 28px;
     }
 
-    .confirm-info {
-      background: #141414;
-      border-left: 3px solid #FFC000;
+    .confirm-receipt {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 22px 24px;
+      margin-bottom: 24px;
       text-align: left;
-      padding: 24px 28px;
-      margin-bottom: 36px;
     }
 
     .confirm-info-row {
       display: flex;
       align-items: flex-start;
       gap: 10px;
-      font-family: 'Inter', sans-serif;
-      font-size: 14px;
-      color: #CCCCCC;
+      font-family: var(--font-body);
+      font-size: 13.5px;
+      color: #CCC;
       line-height: 1.5;
       padding: 6px 0;
     }
 
     .confirm-info-row + .confirm-info-row {
-      border-top: 1px solid #1E1E1E;
+      border-top: 1px solid var(--border);
     }
 
     .confirm-info-label {
-      color: #FFC000;
-      font-weight: 600;
+      color: var(--yellow);
+      font-weight: 700;
       white-space: nowrap;
       flex-shrink: 0;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
     .confirm-actions {
@@ -92,17 +96,18 @@
 
     .confirm-btn-primary {
       display: inline-block;
-      font-family: 'Barlow Condensed', sans-serif;
+      font-family: var(--font-display);
       font-weight: 800;
       font-size: 16px;
       letter-spacing: 0.06em;
       text-transform: uppercase;
       text-decoration: none;
-      background: #FFC000;
+      background: var(--yellow);
       color: #0A0A0A;
-      padding: 14px 28px;
-      border: 2px solid #FFC000;
-      transition: background 0.18s, border-color 0.18s;
+      padding: 12px 28px;
+      border: 2px solid var(--yellow);
+      border-radius: 4px;
+      transition: background 0.15s;
     }
 
     .confirm-btn-primary:hover {
@@ -112,7 +117,7 @@
 
     .confirm-btn-secondary {
       display: inline-block;
-      font-family: 'Barlow Condensed', sans-serif;
+      font-family: var(--font-display);
       font-weight: 800;
       font-size: 16px;
       letter-spacing: 0.06em;
@@ -120,14 +125,15 @@
       text-decoration: none;
       background: transparent;
       color: #FFFFFF;
-      padding: 14px 28px;
-      border: 2px solid #2A2A2A;
-      transition: border-color 0.18s, color 0.18s;
+      padding: 12px 28px;
+      border: 2px solid var(--border);
+      border-radius: 4px;
+      transition: border-color 0.15s, color 0.15s;
     }
 
     .confirm-btn-secondary:hover {
-      border-color: #FFC000;
-      color: #FFC000;
+      border-color: var(--yellow);
+      color: var(--yellow);
     }
   </style>
 </head>
@@ -166,31 +172,108 @@
       </div>
 
       <h1 class="confirm-heading">Tack för din beställning!</h1>
-      <p class="confirm-subtitle">Vi bekräftar din order via WhatsApp inom några minuter.</p>
+      <p class="confirm-subtitle">Din order har skickats direkt till stekbordet i trucken.</p>
 
-      <div class="confirm-info">
+      <!-- DYNAMIC RECEIPT BOX -->
+      <div id="dynamicOrderBox" style="display:none;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:24px;text-align:left;">
+        <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);padding-bottom:12px;margin-bottom:14px;">
+          <div>
+            <span style="font-family:var(--font-display);font-weight:900;font-size:22px;color:var(--yellow);" id="tackOrderRef">ORDER</span>
+            <div style="font-size:12px;color:var(--ink-muted);" id="tackCustomerName"></div>
+          </div>
+          <span style="background:#0d2b1a;color:#2ecc71;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;" id="tackPaymentBadge">Betald via Swish</span>
+        </div>
+        <div id="tackOrderItems" style="font-size:13px;line-height:1.7;margin-bottom:14px;color:#ccc;"></div>
+        <div style="display:flex;justify-content:space-between;font-weight:700;font-size:15px;border-top:1px solid var(--border);padding-top:10px;">
+          <span>Totalt</span>
+          <span style="color:var(--yellow);" id="tackOrderTotal">0 kr</span>
+        </div>
+      </div>
+
+      <div class="confirm-receipt">
         <div class="confirm-info-row">
           <span class="confirm-info-label">Avhämtning:</span>
-          <span>Hantverkargatan 5, Södra Backa, Borlänge</span>
+          <span>Hantverkargatan 5, Södra Backa, Borlänge (vid Byggmax)</span>
         </div>
         <div class="confirm-info-row">
-          <span class="confirm-info-label">Öppettider:</span>
-          <span>Mån–Fre 11:00–15:00</span>
+          <span class="confirm-info-label">Tid:</span>
+          <span id="tackPickupTime">Klar om ca 15–20 minuter</span>
         </div>
         <div class="confirm-info-row">
           <span class="confirm-info-label">Frågor?</span>
-          <span>Ring eller WhatsApp: <a href="tel:+46705491132" style="color:#FFC000; text-decoration:none;">+46 70 549 11 32</a></span>
+          <span>Ring eller WhatsApp: <a href="tel:+46705491132" style="color:var(--yellow); text-decoration:none;">070-549 11 32</a></span>
         </div>
       </div>
 
       <div class="confirm-actions">
         <a href="menu.html" class="confirm-btn-primary">Beställ mer</a>
-        <a href="hitta-hit.html" class="confirm-btn-secondary">Hitta till oss</a>
+        <a href="hitta-hit.html" class="confirm-btn-secondary">Hitta till trucken</a>
       </div>
 
     </div>
   </main>
 
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-row">
+        <div>
+          <span style="font-family:var(--font-display);font-weight:900;font-size:18px;">ISHAK'S SMASH BURGER</span>
+          <p style="font-size:13px;color:#8E8E8E;margin-top:4px;">Hantverkargatan 5, Södra Backa, Borlänge</p>
+        </div>
+        <div style="display:flex;gap:18px;font-size:13px;font-weight:600;text-transform:uppercase;">
+          <a href="menu.html">Meny</a>
+          <a href="om-oss.html">Om oss</a>
+          <a href="catering.html">Catering</a>
+          <a href="hitta-hit.html">Hitta hit</a>
+        </div>
+      </div>
+      <div class="footer-copy">
+        &copy; 2026 Ishak's Smash Burger.
+      </div>
+    </div>
+  </footer>
+
   <script src="app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      try {
+        const raw = sessionStorage.getItem('ishaks_last_order');
+        if (raw) {
+          const order = JSON.parse(raw);
+          const box = document.getElementById('dynamicOrderBox');
+          if (box) {
+            box.style.display = 'block';
+            document.getElementById('tackOrderRef').textContent = order.id || 'BESTÄLLNING';
+            document.getElementById('tackCustomerName').textContent = `${order.name} · ${order.time}`;
+            document.getElementById('tackOrderTotal').textContent = `${order.total} kr`;
+            
+            const badge = document.getElementById('tackPaymentBadge');
+            if (badge) {
+              badge.textContent = order.payment === 'Swish Direkt' ? 'Betald via Swish ✓' : 'Beställd via WhatsApp';
+              if (order.payment !== 'Swish Direkt') {
+                badge.style.background = '#1a3a2a';
+                badge.style.color = '#25D366';
+              }
+            }
+
+            const itemsEl = document.getElementById('tackOrderItems');
+            if (itemsEl && order.items) {
+              itemsEl.innerHTML = order.items.map(it => `
+                <div style="display:flex;justify-content:space-between;padding:3px 0;">
+                  <span><strong>${it.qty}×</strong> ${it.name} ${it.mods?.length ? '<span style="font-size:11px;color:#888;">(' + it.mods.join(', ') + ')</span>' : ''}</span>
+                  <span>${it.price * it.qty} kr</span>
+                </div>
+              `).join('');
+            }
+
+            if (order.time) {
+              document.getElementById('tackPickupTime').textContent = order.time;
+            }
+          }
+        }
+      } catch (e) {}
+    });
+  </script>
 </body>
 </html>

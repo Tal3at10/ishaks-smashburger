@@ -271,6 +271,12 @@ input:focus,select:focus,textarea:focus{border-color:#444}
       </div>
     </div>
     <div style="display:flex;align-items:center;gap:10px">
+      <a href="kds.html" class="action-btn primary" style="width:auto;margin:0;padding:7px 14px;font-size:12px;background:var(--yellow);color:#000;">
+        🔥 Köksskärm (KDS)
+      </a>
+      <a href="qr.html" class="action-btn" style="width:auto;margin:0;padding:7px 14px;font-size:12px;border:1px solid #333;color:#fff;">
+        🖨 QR-Affisch
+      </a>
       <div class="status-pill open" id="statusPill">
         <span class="dot pulse"></span>
         <span id="statusText">Öppet nu</span>
@@ -362,13 +368,17 @@ input:focus,select:focus,textarea:focus{border-color:#444}
 
           <div class="card">
             <div class="card-title">Snabbåtgärder</div>
-            <button class="action-btn primary" onclick="goToPage('meny')">
+            <a href="kds.html" class="action-btn primary" style="text-decoration:none;">
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/><path d="M8 12h8M12 8v8"/></svg>
+              Öppna köksskärm (KDS)
+            </a>
+            <a href="qr.html" class="action-btn" style="text-decoration:none;">
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 7h3v3H7zM14 7h3v3h-3zM7 14h3v3H7z"/></svg>
+              Skriv ut QR-affisch för luckan
+            </a>
+            <button class="action-btn" onclick="goToPage('meny')">
               <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-              Uppdatera meny
-            </button>
-            <button class="action-btn" onclick="goToPage('statistik')">
-              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
-              Se fullständig statistik
+              Uppdatera meny &amp; priser
             </button>
             <button class="action-btn wa" onclick="window.open('https://wa.me/46705491132','_blank')">
               <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.994 2C6.472 2 2 6.472 2 11.994c0 1.978.572 3.818 1.56 5.372L2 22l4.792-1.527A9.964 9.964 0 0011.994 22C17.516 22 22 17.528 22 12.006 22 6.484 17.516 2 11.994 2z"/></svg>
@@ -860,11 +870,17 @@ function renderOrders() {
       </ul>
       ${o.note ? `<div style="padding:8px;background:#1a1a1a;border-radius:4px;border-left:3px solid var(--yellow)"><strong style="color:#fff">Not:</strong> ${o.note}</div>` : ''}
       <div style="margin-top:10px;display:flex;gap:8px">
-        ${o.status==='kö' ? `<button class="badge badge-green" onclick="markDone('${o.id}')">✓ Klar</button>` : ''}
+        ${o.status==='kö' ? `<button class="badge badge-green" onclick="markDone('${o.id}')">✓ Markera klar vid luckan</button>` : ''}
         <button class="badge badge-red" onclick="cancelOrder('${o.id}')">✕ Avbryt</button>
-        <a href="https://wa.me/46705491132" target="_blank" class="badge badge-muted">WhatsApp →</a>
+        <button class="badge badge-muted" onclick="event.stopPropagation();pingCustomerWhatsApp('${o.id}')">💬 Pinga kund (WhatsApp)</button>
       </div>
     </div></td></tr>`).join('');
+}
+
+function pingCustomerWhatsApp(id) {
+  const o = ORDERS.find(x => x.id === id);
+  const msg = encodeURIComponent(`Hej! Din beställning ${id} från Ishak's Smash Burger är nu klar vid luckan. Varmt välkommen att hämta! 🍔`);
+  window.open(`https://wa.me/46705491132?text=${msg}`, '_blank');
 }
 
 function toggleOrderDetail(id) {
@@ -883,7 +899,7 @@ function setOrderFilter(el, val) {
 
 function markDone(id) {
   const o = ORDERS.find(x => x.id === id);
-  if (o) { o.status = 'klar'; renderOrders(); renderOverview(); updatePendingCount(); showToast(`Order ${id} markerad som klar!`); }
+  if (o) { o.status = 'klar'; renderOrders(); renderOverview(); updatePendingCount(); showToast(`Order ${id} klar vid luckan!`); }
 }
 
 function cancelOrder(id) {
@@ -897,8 +913,8 @@ function updatePendingCount() {
 }
 
 function statusBadge(s) {
-  if (s === 'klar') return '<span class="badge badge-green">Klar</span>';
-  if (s === 'kö') return '<span class="badge badge-yellow">I kö</span>';
+  if (s === 'klar') return '<span class="badge badge-green">Klar vid luckan</span>';
+  if (s === 'kö') return '<span class="badge badge-yellow">På stekbordet</span>';
   return '<span class="badge badge-red">Avbruten</span>';
 }
 

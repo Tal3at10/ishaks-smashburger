@@ -493,61 +493,66 @@ window.changeQty = function(key, delta) {
 
 function initMobileDrawer() {
   const trigger = document.getElementById('mobileCartTrigger');
-  const drawer = document.getElementById('mobileDrawer');
-  const overlay = document.getElementById('drawerOverlay');
-  const closeBtn = document.getElementById('closeDrawer');
-  const drawerKassa = document.getElementById('btnDrawerKassa');
-
-  if (!drawer) return;
-
-  window.openMobileDrawer = function() {
-    drawer.classList.add('open');
-    overlay.classList.add('open');
-  };
-
-  function closeMobileDrawer() {
-    drawer.classList.remove('open');
-    overlay.classList.remove('open');
-  }
-
-  if (trigger) trigger.addEventListener('click', openMobileDrawer);
-  if (closeBtn) closeBtn.addEventListener('click', closeMobileDrawer);
-  if (overlay) overlay.addEventListener('click', closeMobileDrawer);
-
-  if (drawerKassa) {
-    drawerKassa.addEventListener('click', () => {
-      closeMobileDrawer();
+  if (trigger) {
+    trigger.addEventListener('click', () => {
       openCheckoutModal();
     });
   }
 }
+
+window.setPayMethod = function(method) {
+  const tabSwish = document.getElementById('tabSwish');
+  const tabWhatsApp = document.getElementById('tabWhatsApp');
+  const swishBox = document.getElementById('swishContainer');
+  const waBox = document.getElementById('whatsappContainer');
+
+  if (method === 'swish') {
+    if (tabSwish) tabSwish.classList.add('active');
+    if (tabWhatsApp) tabWhatsApp.classList.remove('active');
+    if (swishBox) swishBox.style.display = 'flex';
+    if (waBox) waBox.style.display = 'none';
+  } else {
+    if (tabSwish) tabSwish.classList.remove('active');
+    if (tabWhatsApp) tabWhatsApp.classList.add('active');
+    if (swishBox) swishBox.style.display = 'none';
+    if (waBox) waBox.style.display = 'block';
+  }
+};
 
 function initCheckout() {
   const btnKassa = document.getElementById('btnKassa');
   const checkoutModal = document.getElementById('checkoutModal');
   const btnCancel = document.getElementById('btnCancelCheckout');
   const btnSend = document.getElementById('btnSendOrder');
+  const btnSwish = document.getElementById('btnSimulateSwish');
 
   if (!checkoutModal) return;
 
   window.openCheckoutModal = function() {
-    if (cart.length === 0) return;
+    if (cart.length === 0) {
+      showToast('Din varukorg är tom');
+      return;
+    }
 
     const listEl = document.getElementById('checkoutItemsList');
     const totalEl = document.getElementById('checkoutTotalAmount');
     const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+    const ref = 'ISHAK-' + Math.floor(1000 + Math.random() * 9000);
+    const refEl = document.getElementById('swishOrderRef');
+    if (refEl) refEl.textContent = ref;
 
     listEl.innerHTML = cart.map(item => `
       <div class="checkout-item">
         <div>
-          <div><strong>${item.qty}x</strong> ${item.name}</div>
-          ${item.mods.length > 0 ? `<div style="font-size:11px;color:var(--ink-dim);">${item.mods.join(', ')}</div>` : ''}
+          <div class="checkout-item-name">${item.qty}× ${item.name}</div>
+          ${item.mods.length > 0 ? `<div class="checkout-item-mods">${item.mods.join(' · ')}</div>` : ''}
         </div>
-        <span>${item.price * item.qty} kr</span>
+        <span class="checkout-item-price">${item.price * item.qty} kr</span>
       </div>
     `).join('');
 
     totalEl.textContent = `${totalPrice} kr`;
+    setPayMethod('swish');
     checkoutModal.classList.add('open');
   };
 
@@ -561,6 +566,61 @@ function initCheckout() {
     if (e.target === checkoutModal) checkoutModal.classList.remove('open');
   });
 
+  // SWISH SIMULATION
+  if (btnSwish) {
+    btnSwish.addEventListener('click', () => {
+      const nameInput = document.getElementById('orderName');
+      const timeSelect = document.getElementById('orderTime');
+      const notesInput = document.getElementById('orderNotes');
+
+      const name = nameInput.value.trim();
+      if (!name) {
+        nameInput.focus();
+        showToast('Vänligen ange ditt namn för avhämtning');
+        return;
+      }
+
+      const time = timeSelect.value;
+      const notes = notesInput ? notesInput.value.trim() : '';
+      const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+      const ref = document.getElementById('swishOrderRef')?.textContent || ('ISHAK-' + Math.floor(1000 + Math.random() * 9000));
+
+      btnSwish.classList.add('processing');
+      btnSwish.innerHTML = '<span>Ansluter till Swish...</span>';
+
+      setTimeout(() => {
+        btnSwish.classList.remove('processing');
+        btnSwish.classList.add('success');
+        btnSwish.innerHTML = '<span>✓ Betalning godkänd (' + totalPrice + ' kr)</span>';
+
+        const orderData = {
+          id: ref,
+          name: name,
+          time: time,
+          notes: notes,
+          items: cart.map(i => ({ name: i.name, qty: i.qty, price: i.price, mods: i.mods })),
+          total: totalPrice,
+          payment: 'Swish Direkt',
+          date: new Date().toLocaleTimeString('sv-SE', { hour: '2-digit', minute: '2-digit' })
+        };
+
+        try {
+          sessionStorage.setItem('ishaks_last_order', JSON.stringify(orderData));
+        } catch (e) {}
+
+        cart = [];
+        saveCart();
+        updateCartUI();
+
+        setTimeout(() => {
+          checkoutModal.classList.remove('open');
+          window.location.href = 'tack.html';
+        }, 600);
+      }, 700);
+    });
+  }
+
+  // WHATSAPP DISPATCH
   if (btnSend) {
     btnSend.addEventListener('click', () => {
       const nameInput = document.getElementById('orderName');
@@ -570,37 +630,53 @@ function initCheckout() {
       const name = nameInput.value.trim();
       if (!name) {
         nameInput.focus();
-        showToast('Vänligen ange ditt namn');
+        showToast('Vänligen ange ditt namn för avhämtning');
         return;
       }
 
       const time = timeSelect.value;
       const notes = notesInput.value.trim();
       const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+      const ref = document.getElementById('swishOrderRef')?.textContent || ('ISHAK-' + Math.floor(1000 + Math.random() * 9000));
 
-      let text = `*NY BESTÄLLNING — ISHAK'S SMASH BURGER*\n`;
+      let text = `*NY BESTÄLLNING [${ref}] — ISHAK'S SMASH BURGER*\n`;
       text += `━━━━━━━━━━━━━━━━━━━━━\n`;
       text += `*Kund:* ${name}\n`;
       text += `*Upphämtning:* ${time}\n`;
       text += `━━━━━━━━━━━━━━━━━━━━━\n\n`;
-      text += `*ARTIKLAR:*\n`;
+      text += `*BESTÄLLNING:*\n`;
 
       cart.forEach((item, idx) => {
-        text += `${idx + 1}. *${item.qty}x ${item.name}* (${item.price * item.qty} kr)\n`;
+        text += `${idx + 1}. *${item.qty}× ${item.name}* (${item.price * item.qty} kr)\n`;
         if (item.mods.length > 0) {
           text += `   ↳ _${item.mods.join(', ')}_\n`;
         }
       });
 
       text += `\n━━━━━━━━━━━━━━━━━━━━━\n`;
-      text += `*TOTALT ATT BETALA:* ${totalPrice} kr\n`;
-      text += `*Betalning:* Swish till 070-549 11 32 (Ishak Abika)\n`;
+      text += `*TOTALT:* ${totalPrice} kr\n`;
+      text += `*Betalsätt:* Vid luckan / Swish vid hämtning\n`;
 
       if (notes) {
-        text += `\n*Övrigt:* ${notes}\n`;
+        text += `\n*Önskemål:* ${notes}\n`;
       }
       text += `━━━━━━━━━━━━━━━━━━━━━\n`;
       text += `Beställning lagd via hemsidan.`;
+
+      const orderData = {
+        id: ref,
+        name: name,
+        time: time,
+        notes: notes,
+        items: cart.map(i => ({ name: i.name, qty: i.qty, price: i.price, mods: i.mods })),
+        total: totalPrice,
+        payment: 'WhatsApp / Vid luckan',
+        date: new Date().toLocaleTimeString('sv-SE', { hour: '2-digit', minute: '2-digit' })
+      };
+
+      try {
+        sessionStorage.setItem('ishaks_last_order', JSON.stringify(orderData));
+      } catch (e) {}
 
       // Clear cart
       cart = [];
@@ -608,12 +684,25 @@ function initCheckout() {
       updateCartUI();
       checkoutModal.classList.remove('open');
 
-      // Dispatch WhatsApp
+      // Dispatch WhatsApp & redirect
       const waUrl = `https://wa.me/46705491132?text=${encodeURIComponent(text)}`;
       window.open(waUrl, '_blank');
+      window.location.href = 'tack.html';
     });
   }
 }
+
+// Global click to close nav
+document.addEventListener('click', (e) => {
+  const hamburger = document.getElementById('hamburger');
+  const navLinks = document.getElementById('navLinks');
+  if (navLinks && navLinks.classList.contains('open')) {
+    if (!navLinks.contains(e.target) && !hamburger?.contains(e.target)) {
+      navLinks.classList.remove('open');
+      hamburger?.setAttribute('aria-expanded', 'false');
+    }
+  }
+});
 
 function showToast(msg) {
   const toast = document.getElementById('toast');
