@@ -4,1131 +4,1087 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin — Ishak's Smash Burger</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" type="image/png" href="../assets/images/logo.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
-
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --bg:        #0A0A0A;
-      --surface:   #121212;
-      --surface2:  #181818;
-      --border:    #222222;
-      --accent:    #FFC000;
-      --white:     #FFFFFF;
-      --muted:     #8E8E8E;
-      --green:     #4CAF50;
-      --sidebar-w: 220px;
-    }
-
-    html, body {
-      height: 100%;
-      background: var(--bg);
-      color: var(--white);
-      font-family: 'Inter', sans-serif;
-      font-size: 14px;
-      line-height: 1.5;
-    }
-
-    /* ─── LAYOUT ─────────────────────────────────────── */
-    .layout {
-      display: flex;
-      min-height: 100vh;
-    }
-
-    /* ─── SIDEBAR ────────────────────────────────────── */
-    .sidebar {
-      width: var(--sidebar-w);
-      background: var(--surface);
-      border-right: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      position: fixed;
-      top: 0;
-      left: 0;
-      height: 100vh;
-      z-index: 100;
-      transition: transform 0.25s ease;
-    }
-
-    .sidebar-logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 22px 20px 20px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .sidebar-logo svg {
-      flex-shrink: 0;
-    }
-
-    .sidebar-logo-text {
-      display: flex;
-      flex-direction: column;
-      line-height: 1.1;
-    }
-
-    .sidebar-logo-text span:first-child {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-weight: 900;
-      font-size: 16px;
-      color: var(--accent);
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-    }
-
-    .sidebar-logo-text span:last-child {
-      font-size: 11px;
-      color: var(--muted);
-      font-weight: 400;
-      letter-spacing: 0.3px;
-    }
-
-    nav {
-      flex: 1;
-      padding: 16px 0;
-    }
-
-    .nav-item {
-      display: flex;
-      align-items: center;
-      gap: 11px;
-      padding: 10px 20px;
-      cursor: pointer;
-      color: var(--muted);
-      font-size: 13.5px;
-      font-weight: 500;
-      border-left: 3px solid transparent;
-      transition: color 0.15s, background 0.15s;
-      user-select: none;
-    }
-
-    .nav-item:hover {
-      color: var(--white);
-      background: rgba(255,255,255,0.03);
-    }
-
-    .nav-item.active {
-      color: var(--white);
-      border-left-color: var(--accent);
-      background: rgba(255, 192, 0, 0.05);
-    }
-
-    .nav-item svg {
-      flex-shrink: 0;
-      opacity: 0.7;
-    }
-
-    .nav-item.active svg {
-      opacity: 1;
-    }
-
-    .sidebar-footer {
-      padding: 16px 20px;
-      border-top: 1px solid var(--border);
-    }
-
-    .sidebar-footer-name {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--white);
-      margin-bottom: 6px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .demo-badge {
-      display: inline-block;
-      background: var(--accent);
-      color: #000;
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 0.8px;
-      text-transform: uppercase;
-      padding: 2px 8px;
-      border-radius: 3px;
-    }
-
-    /* ─── MAIN ───────────────────────────────────────── */
-    .main {
-      margin-left: var(--sidebar-w);
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      min-width: 0;
-    }
-
-    /* ─── TOPBAR (mobile only) ───────────────────────── */
-    .topbar {
-      display: none;
-      align-items: center;
-      justify-content: space-between;
-      padding: 14px 20px;
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      position: sticky;
-      top: 0;
-      z-index: 90;
-    }
-
-    .topbar-logo {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-weight: 900;
-      font-size: 18px;
-      color: var(--accent);
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-    }
-
-    .hamburger {
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 4px;
-      color: var(--white);
-    }
-
-    /* ─── MOBILE SIDEBAR OVERLAY ─────────────────────── */
-    .sidebar-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.6);
-      z-index: 99;
-    }
-
-    .sidebar-overlay.visible { display: block; }
-
-    /* ─── CONTENT ─────────────────────────────────────── */
-    .content {
-      padding: 32px 32px 48px;
-      max-width: 1300px;
-      width: 100%;
-    }
-
-    /* ─── HEADER ─────────────────────────────────────── */
-    .page-header {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      margin-bottom: 28px;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-
-    .page-header h1 {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-weight: 900;
-      font-size: 36px;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-      line-height: 1;
-      color: var(--white);
-    }
-
-    .page-header-sub {
-      font-size: 13px;
-      color: var(--muted);
-      margin-top: 5px;
-      font-weight: 400;
-    }
-
-    .status-badge {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      padding: 8px 14px;
-      border-radius: 6px;
-    }
-
-    .status-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--green);
-      flex-shrink: 0;
-      animation: pulse 2.5s ease-in-out infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.4; }
-    }
-
-    .status-label {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--green);
-    }
-
-    .status-hours {
-      font-size: 13px;
-      color: var(--muted);
-      border-left: 1px solid var(--border);
-      padding-left: 8px;
-      margin-left: 2px;
-    }
-
-    /* ─── SECTION TITLE ──────────────────────────────── */
-    .section-title {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-weight: 800;
-      font-size: 20px;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-      color: var(--white);
-      margin-bottom: 14px;
-    }
-
-    /* ─── KPI CARDS ──────────────────────────────────── */
-    .kpi-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 14px;
-      margin-bottom: 28px;
-    }
-
-    .kpi-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 20px 22px;
-    }
-
-    .kpi-label {
-      font-size: 12px;
-      color: var(--muted);
-      font-weight: 500;
-      letter-spacing: 0.3px;
-      margin-bottom: 10px;
-      text-transform: uppercase;
-    }
-
-    .kpi-value {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-weight: 900;
-      font-size: 34px;
-      color: var(--accent);
-      letter-spacing: 0.5px;
-      line-height: 1;
-    }
-
-    .kpi-meta {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      margin-top: 8px;
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    .kpi-trend {
-      color: var(--green);
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 2px;
-    }
-
-    /* ─── ROW 2 ──────────────────────────────────────── */
-    .row-two {
-      display: grid;
-      grid-template-columns: 60fr 40fr;
-      gap: 14px;
-      margin-bottom: 28px;
-    }
-
-    /* ─── CARD WRAPPER ───────────────────────────────── */
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 22px 24px;
-    }
-
-    /* ─── TABLE ──────────────────────────────────────── */
-    .table-scroll {
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      white-space: nowrap;
-    }
-
-    thead th {
-      text-align: left;
-      font-size: 11px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: var(--muted);
-      padding: 0 12px 12px 0;
-      border-bottom: 1px solid var(--border);
-    }
-
-    thead th:last-child { padding-right: 0; }
-
-    tbody tr {
-      border-bottom: 1px solid var(--border);
-      transition: background 0.1s;
-      cursor: default;
-    }
-
-    tbody tr:last-child { border-bottom: none; }
-
-    tbody tr:hover { background: #1e1e1e; }
-
-    tbody td {
-      padding: 11px 12px 11px 0;
-      font-size: 13px;
-      color: var(--white);
-    }
-
-    tbody td:last-child { padding-right: 0; }
-
-    .order-id {
-      font-weight: 600;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .order-time {
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .order-items {
-      color: var(--white);
-      max-width: 240px;
-      white-space: normal;
-      line-height: 1.4;
-    }
-
-    .order-total {
-      font-weight: 600;
-      color: var(--white);
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 3px 9px;
-      border-radius: 20px;
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.2px;
-    }
-
-    .badge-klar {
-      background: #1a3a1a;
-      color: #4CAF50;
-    }
-
-    .badge-iko {
-      background: #3a2a00;
-      color: var(--accent);
-    }
-
-    /* ─── POPULAR LIST ───────────────────────────────── */
-    .popular-list {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    .popular-item {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-    }
-
-    .popular-item-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-    }
-
-    .popular-item-name {
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--white);
-    }
-
-    .popular-item-pct {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--muted);
-    }
-
-    .bar-track {
-      height: 5px;
-      background: var(--border);
-      border-radius: 3px;
-      overflow: hidden;
-    }
-
-    .bar-fill {
-      height: 100%;
-      background: var(--accent);
-      border-radius: 3px;
-    }
-
-    /* ─── WEEKLY CHART ───────────────────────────────── */
-    .chart-card {
-      margin-bottom: 28px;
-    }
-
-    .chart-area {
-      display: flex;
-      align-items: flex-end;
-      gap: 10px;
-      height: 160px;
-      padding-top: 28px; /* room for value labels */
-      position: relative;
-    }
-
-    .chart-col {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-      height: 100%;
-      justify-content: flex-end;
-    }
-
-    .chart-col-inner {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-end;
-      flex: 1;
-    }
-
-    .bar-value {
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--muted);
-      margin-bottom: 4px;
-      white-space: nowrap;
-    }
-
-    .bar-value.accent { color: var(--accent); }
-
-    .bar-block {
-      width: 100%;
-      border-radius: 4px 4px 0 0;
-      transition: opacity 0.2s;
-    }
-
-    .chart-col:hover .bar-block { opacity: 0.85; }
-
-    .bar-label {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--muted);
-      text-align: center;
-    }
-
-    .bar-label.accent { color: var(--white); }
-
-    .bar-sub {
-      font-size: 10px;
-      color: var(--muted);
-      margin-top: 2px;
-      font-style: italic;
-    }
-
-    .chart-baseline {
-      position: absolute;
-      bottom: 32px; /* height of label row */
-      left: 0; right: 0;
-      height: 1px;
-      background: var(--border);
-    }
-
-    /* ─── ROW 4 ──────────────────────────────────────── */
-    .row-four {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-    }
-
-    /* ─── CATERING ───────────────────────────────────── */
-    .catering-list {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .catering-item {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 14px 16px;
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 12px;
-    }
-
-    .catering-info { flex: 1; min-width: 0; }
-
-    .catering-title {
-      font-weight: 600;
-      font-size: 14px;
-      color: var(--white);
-      margin-bottom: 4px;
-    }
-
-    .catering-meta {
-      font-size: 12px;
-      color: var(--muted);
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .catering-meta span {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .badge-kontakt {
-      background: #1a2a3a;
-      color: #5B9BD5;
-    }
-
-    .badge-ny {
-      background: #3a2a00;
-      color: var(--accent);
-    }
-
-    /* ─── QUICK ACTIONS ──────────────────────────────── */
-    .actions-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .action-btn {
-      display: block;
-      width: 100%;
-      padding: 14px 20px;
-      border-radius: 6px;
-      font-family: 'Inter', sans-serif;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      border: 1px solid transparent;
-      text-align: left;
-      transition: opacity 0.15s, background 0.15s;
-      text-decoration: none;
-    }
-
-    .action-btn:hover { opacity: 0.85; }
-
-    .action-btn-primary {
-      background: var(--accent);
-      color: #000;
-      border-color: var(--accent);
-    }
-
-    .action-btn-secondary {
-      background: var(--surface2);
-      color: var(--white);
-      border-color: var(--border);
-    }
-
-    .action-btn-wa {
-      background: #1a3a1a;
-      color: #4CAF50;
-      border-color: #2a4a2a;
-    }
-
-    .action-btn-icon {
-      margin-right: 8px;
-    }
-
-    /* ─── MOBILE ─────────────────────────────────────── */
-    @media (max-width: 768px) {
-      .sidebar {
-        transform: translateX(calc(-1 * var(--sidebar-w)));
-      }
-
-      .sidebar.open {
-        transform: translateX(0);
-      }
-
-      .topbar {
-        display: flex;
-      }
-
-      .main {
-        margin-left: 0;
-      }
-
-      .content {
-        padding: 20px 16px 40px;
-      }
-
-      .kpi-grid {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .row-two {
-        grid-template-columns: 1fr;
-      }
-
-      .row-four {
-        grid-template-columns: 1fr;
-      }
-
-      .page-header h1 {
-        font-size: 28px;
-      }
-
-      .chart-area {
-        height: 130px;
-      }
-
-      .bar-value {
-        font-size: 10px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .kpi-grid {
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
-      }
-
-      .kpi-value {
-        font-size: 26px;
-      }
-    }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0A0A0A;--surface:#111111;--surface-2:#181818;--border:#222;
+  --ink:#fff;--muted:#8E8E8E;--yellow:#FFC000;--yellow-dim:#3a2900;
+  --green:#2ecc71;--green-dim:#0d2b1a;--red:#e74c3c;--red-dim:#2b0d0d;
+  --sidebar:220px;--font-d:'Barlow Condensed',sans-serif;--font-b:'Inter',system-ui,sans-serif;
+}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-b);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;display:flex;min-height:100vh}
+a{text-decoration:none;color:inherit}button{cursor:pointer;border:none;background:none;font:inherit;color:inherit}
+input,select,textarea{font:inherit;color:inherit;background:var(--surface-2);border:1px solid var(--border);border-radius:6px;padding:8px 12px;width:100%;outline:none;transition:border-color .15s}
+input:focus,select:focus,textarea:focus{border-color:#444}
+
+/* SIDEBAR */
+.sidebar{
+  width:var(--sidebar);min-width:var(--sidebar);background:var(--surface);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:200;transition:transform .25s;
+}
+.sidebar-logo{padding:20px 20px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.sidebar-logo svg{flex-shrink:0}
+.sidebar-logo-text{font-family:var(--font-d);font-weight:900;font-size:16px;line-height:1.1;text-transform:uppercase}
+.sidebar-logo-text span{display:block;font-size:11px;font-weight:500;text-transform:none;color:var(--muted)}
+.sidebar-nav{flex:1;padding:12px 0;overflow-y:auto}
+.nav-item{
+  display:flex;align-items:center;gap:10px;padding:10px 20px;font-size:13px;font-weight:500;
+  color:var(--muted);cursor:pointer;border-left:3px solid transparent;transition:all .15s;
+}
+.nav-item:hover{color:#fff;background:var(--surface-2)}
+.nav-item.active{color:#fff;border-color:var(--yellow);background:rgba(255,192,0,.06)}
+.nav-item svg{flex-shrink:0;opacity:.7}
+.nav-item.active svg{opacity:1}
+.sidebar-footer{padding:16px 20px;border-top:1px solid var(--border)}
+.sidebar-footer-name{font-size:12px;font-weight:600;margin-bottom:6px}
+.demo-badge{display:inline-block;background:var(--yellow);color:#000;font-family:var(--font-d);font-weight:800;font-size:11px;text-transform:uppercase;padding:3px 8px;border-radius:3px;letter-spacing:.5px}
+
+/* MAIN */
+.main{margin-left:var(--sidebar);flex:1;display:flex;flex-direction:column;min-height:100vh}
+.topbar{
+  position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--border);
+  padding:0 28px;height:60px;display:flex;align-items:center;justify-content:space-between;gap:16px;
+}
+.topbar-left{display:flex;align-items:center;gap:14px}
+.topbar-title{font-family:var(--font-d);font-weight:900;font-size:22px;text-transform:uppercase}
+.topbar-sub{font-size:12px;color:var(--muted)}
+.status-pill{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;padding:6px 12px;border-radius:20px;border:1px solid var(--border)}
+.status-pill.open{border-color:#1a4a2a;background:#0a1f12;color:var(--green)}
+.status-pill.closed{border-color:#3a1a1a;background:#1f0a0a;color:var(--red)}
+.dot{width:7px;height:7px;border-radius:50%;background:currentColor}
+.dot.pulse{animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.mobile-menu-btn{display:none;padding:8px;border-radius:6px;border:1px solid var(--border)}
+
+/* CONTENT */
+.content{padding:28px;flex:1}
+.page{display:none}.page.active{display:block}
+
+/* KPI GRID */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+.kpi-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:20px}
+.kpi-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:10px}
+.kpi-value{font-family:var(--font-d);font-weight:900;font-size:32px;color:var(--yellow);line-height:1}
+.kpi-trend{margin-top:8px;font-size:12px;color:var(--muted);display:flex;align-items:center;gap:4px}
+.kpi-trend.up{color:#4CAF50}.kpi-trend.down{color:var(--red)}
+
+/* SECTION CARDS */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:20px}
+.card-title{font-family:var(--font-d);font-weight:800;font-size:16px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between}
+
+/* TABLES */
+.data-table{width:100%;border-collapse:collapse}
+.data-table th{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);padding:8px 12px;text-align:left;border-bottom:1px solid var(--border)}
+.data-table td{padding:11px 12px;border-bottom:1px solid #1a1a1a;font-size:13px;vertical-align:middle}
+.data-table tr:last-child td{border:none}
+.data-table tbody tr{transition:background .1s}
+.data-table tbody tr:hover{background:var(--surface-2)}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;text-transform:uppercase;letter-spacing:.3px}
+.badge-green{background:var(--green-dim);color:var(--green)}
+.badge-yellow{background:var(--yellow-dim);color:var(--yellow)}
+.badge-red{background:var(--red-dim);color:var(--red)}
+.badge-muted{background:#1e1e1e;color:var(--muted)}
+
+/* BARS */
+.bar-wrap{margin-bottom:14px}
+.bar-label{display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px}
+.bar-track{background:#1e1e1e;border-radius:3px;height:6px;overflow:hidden}
+.bar-fill{height:100%;background:var(--yellow);border-radius:3px;transition:width .6s ease}
+
+/* WEEKLY CHART */
+.chart-wrap{display:flex;align-items:flex-end;gap:8px;height:140px;padding-bottom:28px;position:relative}
+.chart-bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:0;position:relative}
+.chart-bar{width:100%;border-radius:4px 4px 0 0;min-height:4px;transition:height .4s ease;position:relative}
+.chart-bar.active-day{outline:2px solid var(--yellow);outline-offset:1px}
+.chart-bar-val{font-size:11px;color:var(--muted);position:absolute;top:-18px;white-space:nowrap;left:50%;transform:translateX(-50%)}
+.chart-day{font-size:11px;color:var(--muted);margin-top:6px;position:absolute;bottom:-22px}
+.chart-closed{font-size:10px;color:#444;position:absolute;bottom:-34px}
+
+/* TWO COL */
+.two-col{display:grid;grid-template-columns:1.6fr 1fr;gap:20px}
+.three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+
+/* CATERING ITEM */
+.catering-item{padding:12px;background:var(--surface-2);border-radius:6px;border:1px solid var(--border);margin-bottom:10px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.catering-name{font-weight:600;font-size:13px;margin-bottom:3px}
+.catering-meta{font-size:12px;color:var(--muted)}
+
+/* QUICK ACTIONS */
+.action-btn{display:flex;align-items:center;gap:10px;padding:13px 16px;border-radius:6px;border:1px solid var(--border);font-size:13px;font-weight:600;width:100%;margin-bottom:10px;transition:all .15s}
+.action-btn:hover{border-color:#444;background:var(--surface-2)}
+.action-btn.primary{background:var(--yellow);color:#000;border-color:var(--yellow)}
+.action-btn.primary:hover{background:#E5AC00;border-color:#E5AC00}
+.action-btn.wa{background:#0d2b1a;color:var(--green);border-color:#1a4a2a}
+.action-btn.wa:hover{background:#0f3520}
+
+/* ORDER FILTERS */
+.filter-tabs{display:flex;gap:4px;margin-bottom:16px;border-bottom:1px solid var(--border);padding-bottom:0}
+.filter-tab{font-family:var(--font-d);font-weight:800;font-size:13px;text-transform:uppercase;letter-spacing:.5px;padding:10px 16px;color:var(--muted);border-bottom:2px solid transparent;cursor:pointer;transition:all .15s;white-space:nowrap}
+.filter-tab.active{color:#fff;border-color:var(--yellow)}
+.filter-tab:hover{color:#fff}
+.search-row{display:flex;gap:10px;margin-bottom:16px}
+.search-row input{max-width:280px}
+
+/* ORDER DETAIL EXPAND */
+.order-detail{background:var(--surface-2);padding:14px 12px;border-top:1px solid var(--border);font-size:12px;color:var(--muted);display:none}
+.order-detail.open{display:block}
+.order-items-list{list-style:none;margin:6px 0 10px}
+.order-items-list li{padding:3px 0;display:flex;justify-content:space-between}
+
+/* MENU ADMIN */
+.menu-admin-tabs{display:flex;gap:4px;margin-bottom:20px;flex-wrap:wrap}
+.menu-admin-tab{font-family:var(--font-d);font-weight:800;font-size:13px;text-transform:uppercase;padding:8px 14px;border-radius:4px;border:1px solid var(--border);color:var(--muted);cursor:pointer;transition:all .15s}
+.menu-admin-tab.active{background:var(--yellow);color:#000;border-color:var(--yellow)}
+.menu-row{display:grid;grid-template-columns:52px 1fr auto auto;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid #1a1a1a}
+.menu-row:last-child{border:none}
+.menu-row-img{width:52px;height:40px;border-radius:5px;object-fit:cover;border:1px solid var(--border)}
+.menu-row-name{font-weight:600;font-size:13px}
+.menu-row-desc{font-size:12px;color:var(--muted);margin-top:2px}
+.price-input{width:80px;text-align:center;font-family:var(--font-d);font-weight:800;font-size:16px;color:var(--yellow)}
+.toggle{position:relative;width:38px;height:21px;cursor:pointer}
+.toggle input{opacity:0;width:0;height:0;position:absolute}
+.toggle-track{position:absolute;top:0;left:0;right:0;bottom:0;background:#333;border-radius:21px;transition:.2s}
+.toggle input:checked+.toggle-track{background:var(--yellow)}
+.toggle-thumb{position:absolute;height:15px;width:15px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.2s}
+.toggle input:checked~.toggle-thumb{transform:translateX(17px)}
+
+/* STATISTIK CHARTS */
+.stat-kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}
+.period-tabs{display:flex;gap:4px;margin-bottom:20px}
+.period-tab{font-size:12px;font-weight:600;padding:6px 14px;border-radius:4px;border:1px solid var(--border);color:var(--muted);cursor:pointer}
+.period-tab.active{background:var(--surface-2);color:#fff;border-color:#333}
+.heatmap{display:grid;grid-template-columns:40px repeat(5,1fr);gap:3px}
+.heatmap-label{font-size:11px;color:var(--muted);display:flex;align-items:center}
+.heatmap-cell{height:32px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600}
+.heatmap-header{font-size:11px;color:var(--muted);text-align:center;padding:4px 0}
+.tall-chart{height:180px;display:flex;align-items:flex-end;gap:6px;padding-bottom:24px;position:relative;margin-top:8px}
+.tall-bar-col{flex:1;display:flex;flex-direction:column;align-items:center;position:relative}
+.tall-bar{width:100%;border-radius:3px 3px 0 0;min-height:2px;position:relative;transition:height .5s ease}
+.tall-bar-val{position:absolute;top:-16px;font-size:10px;color:var(--muted);left:50%;transform:translateX(-50%);white-space:nowrap}
+.tall-day{font-size:10px;color:var(--muted);position:absolute;bottom:-18px}
+
+/* INSTELLNINGAR */
+.settings-section{margin-bottom:28px}
+.settings-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:8px;display:block}
+.settings-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px}
+.hours-row{display:grid;grid-template-columns:120px 1fr 1fr 60px;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid #1a1a1a}
+.hours-day{font-size:13px;font-weight:600}
+.save-btn{background:var(--yellow);color:#000;font-family:var(--font-d);font-weight:800;font-size:14px;text-transform:uppercase;letter-spacing:.5px;padding:10px 24px;border-radius:5px;transition:background .15s}
+.save-btn:hover{background:#E5AC00}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;background:#1e1e1e;border:1px solid var(--border);border-left:3px solid var(--green);border-radius:6px;padding:12px 18px;font-size:13px;font-weight:500;z-index:9999;transform:translateY(80px);opacity:0;transition:all .3s;pointer-events:none;max-width:280px}
+.toast.show{transform:translateY(0);opacity:1}
+
+/* OVERLAY */
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:190}
+
+/* STAT CARD */
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:18px}
+.stat-card-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:8px}
+.stat-card-val{font-family:var(--font-d);font-weight:900;font-size:28px;color:var(--yellow)}
+.stat-card-sub{font-size:12px;color:var(--muted);margin-top:4px}
+
+/* ORDER COUNT BADGE */
+.nav-count{margin-left:auto;background:var(--yellow-dim);color:var(--yellow);font-size:11px;font-weight:700;padding:2px 7px;border-radius:10px}
+
+@media(max-width:900px){
+  .kpi-grid{grid-template-columns:repeat(2,1fr)}
+  .two-col{grid-template-columns:1fr}
+  .stat-kpi-grid{grid-template-columns:repeat(2,1fr)}
+  .three-col{grid-template-columns:1fr}
+}
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .sidebar-overlay.open{display:block}
+  .main{margin-left:0}
+  .mobile-menu-btn{display:flex}
+  .content{padding:16px}
+  .kpi-grid{grid-template-columns:repeat(2,1fr);gap:12px}
+  .settings-row{grid-template-columns:1fr}
+  .hours-row{grid-template-columns:1fr 1fr 1fr 50px}
+  .menu-row{grid-template-columns:40px 1fr auto auto;gap:10px}
+}
+</style>
 </head>
 <body>
 
-<!-- Sidebar overlay for mobile -->
 <div class="sidebar-overlay" id="overlay"></div>
 
-<div class="layout">
-
-  <!-- ─── SIDEBAR ─────────────────────────────────────── -->
-  <aside class="sidebar" id="sidebar">
-    <div class="sidebar-logo">
-      <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="4" y="12" width="22" height="3" rx="1.5" fill="#FFC000"/>
-        <rect x="4" y="17" width="22" height="3" rx="1.5" fill="#FFC000"/>
-        <path d="M4 11C4 8.5 7 7 15 7C23 7 26 8.5 26 11H4Z" fill="#FFC000"/>
-        <rect x="2" y="22" width="26" height="3" rx="1.5" fill="#8E8E8E"/>
-        <ellipse cx="10" cy="22" rx="1.5" ry="1.5" fill="#FFC000"/>
-        <ellipse cx="20" cy="22" rx="1.5" ry="1.5" fill="#FFC000"/>
-      </svg>
-      <div class="sidebar-logo-text">
-        <span>Ishak's</span>
-        <span>Smash Burger</span>
-      </div>
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <svg width="30" height="30" viewBox="0 0 30 30" fill="none">
+      <circle cx="15" cy="15" r="15" fill="#FFC000"/>
+      <ellipse cx="15" cy="18" rx="8" ry="4" fill="#8B4513"/>
+      <ellipse cx="15" cy="15" rx="7" ry="3" fill="#CD853F"/>
+      <ellipse cx="15" cy="12" rx="8" ry="2.5" fill="#228B22" opacity=".8"/>
+      <ellipse cx="15" cy="10" rx="7" ry="2" fill="#DEB887"/>
+    </svg>
+    <div class="sidebar-logo-text">
+      Ishak's<span>Smash Burger</span>
     </div>
+  </div>
 
-    <nav>
-      <div class="nav-item active">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1" fill="currentColor"/><rect x="9" y="1" width="6" height="6" rx="1" fill="currentColor"/><rect x="1" y="9" width="6" height="6" rx="1" fill="currentColor"/><rect x="9" y="9" width="6" height="6" rx="1" fill="currentColor"/></svg>
-        Översikt
-      </div>
-      <div class="nav-item">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 3h12M2 8h12M2 13h7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-        Beställningar
-      </div>
-      <div class="nav-item">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/><path d="M8 5v3l2 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-        Meny
-      </div>
-      <div class="nav-item">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 13V9M6 13V6M10 13V4M14 13V1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-        Statistik
-      </div>
-      <div class="nav-item">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="2.5" stroke="currentColor" stroke-width="1.5"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M2.93 2.93l1.41 1.41M11.66 11.66l1.41 1.41M2.93 13.07l1.41-1.41M11.66 4.34l1.41-1.41" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-        Inställningar
-      </div>
-    </nav>
-
-    <div class="sidebar-footer">
-      <div class="sidebar-footer-name">Ishak's Smash Burger</div>
-      <span class="demo-badge">Demo-läge</span>
+  <nav class="sidebar-nav">
+    <div class="nav-item active" data-page="oversikt">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Översikt
     </div>
-  </aside>
+    <div class="nav-item" data-page="bestallningar">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>
+      Beställningar
+      <span class="nav-count" id="pendingCount">2</span>
+    </div>
+    <div class="nav-item" data-page="meny">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/><path d="M8 12h8M12 8v8"/></svg>
+      Meny
+    </div>
+    <div class="nav-item" data-page="statistik">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+      Statistik
+    </div>
+    <div class="nav-item" data-page="installningar">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+      Inställningar
+    </div>
+  </nav>
 
-  <!-- ─── MAIN ─────────────────────────────────────────── -->
-  <div class="main">
+  <div class="sidebar-footer">
+    <div class="sidebar-footer-name">Ishak's Smash Burger</div>
+    <span class="demo-badge">Demo-läge</span>
+  </div>
+</aside>
 
-    <!-- Mobile topbar -->
-    <div class="topbar">
-      <span class="topbar-logo">Ishak's</span>
-      <button class="hamburger" id="menuBtn" aria-label="Öppna meny">
-        <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M3 6h16M3 11h16M3 16h16" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg>
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <button class="mobile-menu-btn" id="menuBtn" aria-label="Meny">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
       </button>
-    </div>
-
-    <div class="content">
-
-      <!-- ─── HEADER ─────────────────────────────── -->
-      <div class="page-header">
-        <div>
-          <h1>Översikt</h1>
-          <div class="page-header-sub">Måndag 23 nov 2026</div>
-        </div>
-        <div class="status-badge">
-          <span class="status-dot"></span>
-          <span class="status-label">Öppet nu</span>
-          <span class="status-hours">11:00 — 15:00</span>
-        </div>
+      <div>
+        <div class="topbar-title" id="pageTitle">Översikt</div>
+        <div class="topbar-sub" id="pageDate"></div>
       </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <div class="status-pill open" id="statusPill">
+        <span class="dot pulse"></span>
+        <span id="statusText">Öppet nu</span>
+        <span style="color:var(--muted)">11:00 — 15:00</span>
+      </div>
+    </div>
+  </div>
 
-      <!-- ─── KPI CARDS ──────────────────────────── -->
+  <div class="content">
+
+    <!-- PAGE: ÖVERSIKT -->
+    <div class="page active" id="page-oversikt">
       <div class="kpi-grid">
         <div class="kpi-card">
           <div class="kpi-label">Dagens intäkter</div>
           <div class="kpi-value">3 240 kr</div>
-          <div class="kpi-meta">
-            <span class="kpi-trend">
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 9L6 3L10 9" stroke="#4CAF50" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              +12%
-            </span>
-            vs igår
-          </div>
+          <div class="kpi-trend up">▲ +12% vs igår</div>
         </div>
         <div class="kpi-card">
           <div class="kpi-label">Beställningar idag</div>
           <div class="kpi-value">24 st</div>
-          <div class="kpi-meta">
-            <span class="kpi-trend">
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 9L6 3L10 9" stroke="#4CAF50" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              +3
-            </span>
-            vs igår
-          </div>
+          <div class="kpi-trend up">▲ +3 vs igår</div>
         </div>
         <div class="kpi-card">
           <div class="kpi-label">Genomsnittligt ordervärde</div>
           <div class="kpi-value">135 kr</div>
-          <div class="kpi-meta" style="color: var(--muted);">Per beställning</div>
+          <div class="kpi-trend" style="color:var(--muted)">Per beställning</div>
         </div>
         <div class="kpi-card">
           <div class="kpi-label">Mest beställd idag</div>
-          <div class="kpi-value" style="font-size: 22px; padding-top: 4px;">Smash&nbsp;3</div>
-          <div class="kpi-meta" style="color: var(--muted);">Smash Burger 3</div>
+          <div class="kpi-value" style="font-size:22px">Smash 3</div>
+          <div class="kpi-trend" style="color:var(--muted)">8 portioner</div>
         </div>
       </div>
 
-      <!-- ─── ROW 2 ───────────────────────────────── -->
-      <div class="row-two">
-
-        <!-- Orders Table -->
-        <div class="card">
-          <div class="section-title">Senaste beställningar</div>
-          <div class="table-scroll">
-            <table>
-              <thead>
-                <tr>
-                  <th>Order</th>
-                  <th>Tid</th>
-                  <th>Innehåll</th>
-                  <th>Totalt</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td class="order-id">#1024</td>
-                  <td class="order-time">14:32</td>
-                  <td class="order-items">Smash Burger 2 × 1, Fries × 1</td>
-                  <td class="order-total">185 kr</td>
-                  <td><span class="badge badge-klar">Klar</span></td>
-                </tr>
-                <tr>
-                  <td class="order-id">#1023</td>
-                  <td class="order-time">14:18</td>
-                  <td class="order-items">Smash Burger 3 × 2</td>
-                  <td class="order-total">300 kr</td>
-                  <td><span class="badge badge-klar">Klar</span></td>
-                </tr>
-                <tr>
-                  <td class="order-id">#1022</td>
-                  <td class="order-time">14:05</td>
-                  <td class="order-items">Barn Burger × 1, Nuggets × 1</td>
-                  <td class="order-total">220 kr</td>
-                  <td><span class="badge badge-klar">Klar</span></td>
-                </tr>
-                <tr>
-                  <td class="order-id">#1021</td>
-                  <td class="order-time">13:52</td>
-                  <td class="order-items">Smash Burger 1 × 1</td>
-                  <td class="order-total">150 kr</td>
-                  <td><span class="badge badge-klar">Klar</span></td>
-                </tr>
-                <tr>
-                  <td class="order-id">#1020</td>
-                  <td class="order-time">13:41</td>
-                  <td class="order-items">Smash Burger 5 × 2, Fries × 2</td>
-                  <td class="order-total">370 kr</td>
-                  <td><span class="badge badge-klar">Klar</span></td>
-                </tr>
-                <tr>
-                  <td class="order-id">#1019</td>
-                  <td class="order-time">13:28</td>
-                  <td class="order-items">Smash Burger 4 × 1</td>
-                  <td class="order-total">150 kr</td>
-                  <td><span class="badge badge-klar">Klar</span></td>
-                </tr>
-                <tr>
-                  <td class="order-id">#1018</td>
-                  <td class="order-time">13:15</td>
-                  <td class="order-items">Smash Burger 6 × 1, Nuggets × 1</td>
-                  <td class="order-total">260 kr</td>
-                  <td><span class="badge badge-iko">I kö</span></td>
-                </tr>
-                <tr>
-                  <td class="order-id">#1017</td>
-                  <td class="order-time">13:02</td>
-                  <td class="order-items">Barn Burger × 2</td>
-                  <td class="order-total">220 kr</td>
-                  <td><span class="badge badge-iko">I kö</span></td>
-                </tr>
-              </tbody>
+      <div class="two-col">
+        <div>
+          <div class="card">
+            <div class="card-title">
+              Senaste beställningar
+              <button class="badge badge-yellow" onclick="goToPage('bestallningar')" style="cursor:pointer">Visa alla →</button>
+            </div>
+            <table class="data-table">
+              <thead><tr>
+                <th>Order</th><th>Tid</th><th>Innehåll</th><th>Totalt</th><th>Status</th>
+              </tr></thead>
+              <tbody id="overviewOrders"></tbody>
             </table>
           </div>
-        </div>
 
-        <!-- Popular Items -->
-        <div class="card">
-          <div class="section-title">Populärast idag</div>
-          <div class="popular-list">
-            <div class="popular-item">
-              <div class="popular-item-top">
-                <span class="popular-item-name">Smash Burger 3</span>
-                <span class="popular-item-pct">18%</span>
-              </div>
-              <div class="bar-track"><div class="bar-fill" style="width:90%"></div></div>
-            </div>
-            <div class="popular-item">
-              <div class="popular-item-top">
-                <span class="popular-item-name">Smash Burger 2</span>
-                <span class="popular-item-pct">15%</span>
-              </div>
-              <div class="bar-track"><div class="bar-fill" style="width:75%"></div></div>
-            </div>
-            <div class="popular-item">
-              <div class="popular-item-top">
-                <span class="popular-item-name">Smash Burger 5</span>
-                <span class="popular-item-pct">13%</span>
-              </div>
-              <div class="bar-track"><div class="bar-fill" style="width:65%"></div></div>
-            </div>
-            <div class="popular-item">
-              <div class="popular-item-top">
-                <span class="popular-item-name">Fries</span>
-                <span class="popular-item-pct">11%</span>
-              </div>
-              <div class="bar-track"><div class="bar-fill" style="width:55%"></div></div>
-            </div>
-            <div class="popular-item">
-              <div class="popular-item-top">
-                <span class="popular-item-name">Smash Burger 1</span>
-                <span class="popular-item-pct">10%</span>
-              </div>
-              <div class="bar-track"><div class="bar-fill" style="width:50%"></div></div>
+          <div class="card">
+            <div class="card-title">Veckans intäkter</div>
+            <div style="padding-top:20px">
+              <div class="chart-wrap" id="weekChart"></div>
             </div>
           </div>
         </div>
 
-      </div><!-- /row-two -->
+        <div>
+          <div class="card">
+            <div class="card-title">Populärast idag</div>
+            <div id="popularItems"></div>
+          </div>
 
-      <!-- ─── WEEKLY CHART ───────────────────────── -->
-      <div class="card chart-card">
-        <div class="section-title">Veckans intäkter</div>
-        <div class="chart-area" id="chartArea">
-          <div class="chart-baseline"></div>
-          <!-- Bars injected by JS -->
+          <div class="card">
+            <div class="card-title">Catering-förfrågningar</div>
+            <div class="catering-item">
+              <div>
+                <div class="catering-name">Företagslunch — ICA Borlänge</div>
+                <div class="catering-meta">📅 15 dec 2026 &nbsp;·&nbsp; 👥 45 pers</div>
+              </div>
+              <span class="badge badge-muted">Kontaktad</span>
+            </div>
+            <div class="catering-item">
+              <div>
+                <div class="catering-name">Personalfest — Kupolen</div>
+                <div class="catering-meta">📅 28 jan 2027 &nbsp;·&nbsp; 👥 80 pers</div>
+              </div>
+              <span class="badge badge-yellow">Ny förfrågan</span>
+            </div>
+            <div class="catering-item">
+              <div>
+                <div class="catering-name">Skolavslutning — Lugnetgymnasiet</div>
+                <div class="catering-meta">📅 12 jun 2027 &nbsp;·&nbsp; 👥 120 pers</div>
+              </div>
+              <span class="badge badge-yellow">Ny förfrågan</span>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">Snabbåtgärder</div>
+            <button class="action-btn primary" onclick="goToPage('meny')">
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              Uppdatera meny
+            </button>
+            <button class="action-btn" onclick="goToPage('statistik')">
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+              Se fullständig statistik
+            </button>
+            <button class="action-btn wa" onclick="window.open('https://wa.me/46705491132','_blank')">
+              <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.994 2C6.472 2 2 6.472 2 11.994c0 1.978.572 3.818 1.56 5.372L2 22l4.792-1.527A9.964 9.964 0 0011.994 22C17.516 22 22 17.528 22 12.006 22 6.484 17.516 2 11.994 2z"/></svg>
+              Öppna WhatsApp
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE: BESTÄLLNINGAR -->
+    <div class="page" id="page-bestallningar">
+      <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:20px">
+        <div class="kpi-card">
+          <div class="kpi-label">Totalt idag</div>
+          <div class="kpi-value">24 st</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">I kö nu</div>
+          <div class="kpi-value" style="color:var(--yellow)">2 st</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Klara idag</div>
+          <div class="kpi-value" style="color:var(--green)">22 st</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Totalt inkl. igår</div>
+          <div class="kpi-value">45 st</div>
         </div>
       </div>
 
-      <!-- ─── ROW 4 ───────────────────────────────── -->
-      <div class="row-four">
+      <div class="card">
+        <div class="search-row">
+          <input type="text" placeholder="Sök order, innehåll..." id="orderSearch" oninput="filterOrders()" />
+          <select onchange="filterOrders()" id="orderStatusFilter" style="width:160px">
+            <option value="all">Alla statusar</option>
+            <option value="kö">I kö</option>
+            <option value="klar">Klar</option>
+            <option value="avbruten">Avbruten</option>
+          </select>
+        </div>
+        <div class="filter-tabs">
+          <div class="filter-tab active" data-filter="all" onclick="setOrderFilter(this,'all')">Alla <span style="color:var(--muted)">(24)</span></div>
+          <div class="filter-tab" data-filter="kö" onclick="setOrderFilter(this,'kö')">I kö <span style="color:var(--muted)">(2)</span></div>
+          <div class="filter-tab" data-filter="klar" onclick="setOrderFilter(this,'klar')">Klar <span style="color:var(--muted)">(22)</span></div>
+          <div class="filter-tab" data-filter="avbruten" onclick="setOrderFilter(this,'avbruten')">Avbruten <span style="color:var(--muted)">(0)</span></div>
+        </div>
+        <table class="data-table" id="ordersTable">
+          <thead><tr>
+            <th></th><th>Order#</th><th>Tid</th><th>Innehåll</th><th>Kanal</th><th>Totalt</th><th>Status</th><th>Åtgärd</th>
+          </tr></thead>
+          <tbody id="ordersBody"></tbody>
+        </table>
+      </div>
+    </div>
 
-        <!-- Catering -->
+    <!-- PAGE: MENY -->
+    <div class="page" id="page-meny">
+      <div class="three-col" style="margin-bottom:20px">
+        <div class="kpi-card">
+          <div class="kpi-label">Aktiva rätter</div>
+          <div class="kpi-value" id="activeItems">12</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Pausade rätter</div>
+          <div class="kpi-value" style="color:var(--muted)" id="pausedItems">0</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Senast uppdaterad</div>
+          <div class="kpi-value" style="font-size:18px">Idag 11:04</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          Menyredigering
+          <button class="save-btn" onclick="saveMenu()">Spara ändringar</button>
+        </div>
+        <div class="menu-admin-tabs" id="menuAdminTabs"></div>
+        <div id="menuAdminContent"></div>
+      </div>
+    </div>
+
+    <!-- PAGE: STATISTIK -->
+    <div class="page" id="page-statistik">
+      <div class="period-tabs">
+        <div class="period-tab active" onclick="setPeriod(this,'week')">Denna vecka</div>
+        <div class="period-tab" onclick="setPeriod(this,'month')">Denna månad</div>
+        <div class="period-tab" onclick="setPeriod(this,'3month')">Senaste 3 mån</div>
+      </div>
+
+      <div class="stat-kpi-grid">
+        <div class="stat-card">
+          <div class="stat-card-label">Total omsättning</div>
+          <div class="stat-card-val" id="statRevenue">20 180 kr</div>
+          <div class="stat-card-sub" id="statRevSub">▲ +18% vs förra veckan</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-label">Antal beställningar</div>
+          <div class="stat-card-val" id="statOrders">149 st</div>
+          <div class="stat-card-sub" id="statOrdSub">▲ +21 vs förra veckan</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-label">Snittordervärde</div>
+          <div class="stat-card-val" id="statAvg">135 kr</div>
+          <div class="stat-card-sub" id="statAvgSub">Stabilt</div>
+        </div>
+      </div>
+
+      <div class="two-col">
         <div class="card">
-          <div class="section-title">Catering-förfrågningar</div>
-          <div class="catering-list">
-            <div class="catering-item">
-              <div class="catering-info">
-                <div class="catering-title">Företagslunch</div>
-                <div class="catering-meta">
-                  <span>
-                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1a5 5 0 100 10A5 5 0 006 1zM6 3v3l2 2" stroke="#8E8E8E" stroke-width="1.2" stroke-linecap="round"/></svg>
-                    15 dec 2026
-                  </span>
-                  <span>
-                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M9 10H3a1 1 0 01-1-1V5a1 1 0 011-1h6a1 1 0 011 1v4a1 1 0 01-1 1zM4 4V3a2 2 0 014 0v1" stroke="#8E8E8E" stroke-width="1.2" stroke-linecap="round"/></svg>
-                    ICA Borlänge
-                  </span>
-                  <span>45 pers</span>
-                </div>
-              </div>
-              <span class="badge badge-kontakt">Kontaktad</span>
+          <div class="card-title">Omsättning per dag</div>
+          <div class="tall-chart" id="statChart"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Bästsäljare</div>
+          <div id="statBest"></div>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="card">
+          <div class="card-title">Topptimmar (beställningar)</div>
+          <div id="heatmapWrap" style="margin-top:4px"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Betalningsmetod</div>
+          <div id="paymentChart" style="margin-top:8px"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE: INSTÄLLNINGAR -->
+    <div class="page" id="page-installningar">
+      <div class="two-col">
+        <div>
+          <div class="card">
+            <div class="card-title">Restauranginformation</div>
+            <div class="settings-section">
+              <label class="settings-label">Namn</label>
+              <input type="text" value="Ishak's Smash Burger" />
             </div>
-            <div class="catering-item">
-              <div class="catering-info">
-                <div class="catering-title">Personalfest</div>
-                <div class="catering-meta">
-                  <span>
-                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1a5 5 0 100 10A5 5 0 006 1zM6 3v3l2 2" stroke="#8E8E8E" stroke-width="1.2" stroke-linecap="round"/></svg>
-                    28 jan 2027
-                  </span>
-                  <span>
-                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M9 10H3a1 1 0 01-1-1V5a1 1 0 011-1h6a1 1 0 011 1v4a1 1 0 01-1 1zM4 4V3a2 2 0 014 0v1" stroke="#8E8E8E" stroke-width="1.2" stroke-linecap="round"/></svg>
-                    Kupolen
-                  </span>
-                  <span>80 pers</span>
-                </div>
+            <div class="settings-row">
+              <div>
+                <label class="settings-label">Gatuadress</label>
+                <input type="text" value="Hantverkargatan 5" />
               </div>
-              <span class="badge badge-ny">Ny förfrågan</span>
+              <div>
+                <label class="settings-label">Postnummer</label>
+                <input type="text" value="781 71 Borlänge" />
+              </div>
             </div>
+            <div class="settings-row">
+              <div>
+                <label class="settings-label">Telefon / Swish</label>
+                <input type="text" value="+46 70 549 11 32" />
+              </div>
+              <div>
+                <label class="settings-label">WhatsApp-nummer</label>
+                <input type="text" value="46705491132" />
+              </div>
+            </div>
+            <div class="settings-section">
+              <label class="settings-label">Instagram</label>
+              <input type="text" value="@ishaks_smashburger" />
+            </div>
+            <button class="save-btn" onclick="showToast('Restauranginformation sparad!')">Spara</button>
+          </div>
+
+          <div class="card">
+            <div class="card-title">Meddelandetext (WhatsApp-kvitto)</div>
+            <div class="settings-section">
+              <label class="settings-label">Intro-text</label>
+              <textarea rows="3" style="resize:vertical">Tack för din beställning hos Ishak's Smash Burger! 🍔 Vi bekräftar strax.</textarea>
+            </div>
+            <div class="settings-section">
+              <label class="settings-label">Avslutningstext</label>
+              <textarea rows="2" style="resize:vertical">Vi ses vid luckan på Hantverkargatan 5. Swish: 070-549 11 32</textarea>
+            </div>
+            <button class="save-btn" onclick="showToast('Meddelandetext sparad!')">Spara</button>
           </div>
         </div>
 
-        <!-- Quick Actions -->
-        <div class="card">
-          <div class="section-title">Snabbåtgärder</div>
-          <div class="actions-list">
-            <button class="action-btn action-btn-primary">
-              <span class="action-btn-icon">✏️</span> Uppdatera meny
-            </button>
-            <button class="action-btn action-btn-secondary">
-              <span class="action-btn-icon">📊</span> Exportera rapport
-            </button>
-            <button class="action-btn action-btn-wa">
-              <span class="action-btn-icon">💬</span> Öppna WhatsApp
-            </button>
+        <div>
+          <div class="card">
+            <div class="card-title">Öppettider</div>
+            <div id="hoursEditor"></div>
+            <div style="margin-top:16px">
+              <button class="save-btn" onclick="showToast('Öppettider sparade!')">Spara öppettider</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">Leveransinställningar</div>
+            <div class="settings-section">
+              <label class="settings-label">Beräknad väntetid</label>
+              <select>
+                <option>10–15 min</option>
+                <option selected>15–20 min</option>
+                <option>20–25 min</option>
+                <option>25–30 min</option>
+              </select>
+            </div>
+            <div class="settings-section">
+              <label class="settings-label">Ordertyp</label>
+              <select>
+                <option selected>Avhämtning (Hämta-själv)</option>
+                <option>WhatsApp-beställning + avhämtning</option>
+              </select>
+            </div>
+            <div class="settings-section" style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-top:1px solid var(--border)">
+              <span style="font-weight:600;font-size:13px">Ta emot beställningar</span>
+              <label class="toggle" style="margin-left:auto">
+                <input type="checkbox" checked id="acceptOrders" />
+                <span class="toggle-track"></span>
+                <span class="toggle-thumb"></span>
+              </label>
+            </div>
+            <button class="save-btn" onclick="showToast('Inställningar sparade!')">Spara</button>
+          </div>
+
+          <div class="card">
+            <div class="card-title">Systeminfo</div>
+            <div style="font-size:12px;color:var(--muted);line-height:2">
+              <div>Version: <span style="color:#fff">1.0.0 (Demo)</span></div>
+              <div>GitHub Pages: <a href="https://tal3at10.github.io/ishaks-smashburger/" target="_blank" style="color:var(--yellow)">tal3at10.github.io/ishaks-smashburger</a></div>
+              <div>Publikt site: <span style="color:#fff">Aktiv ✓</span></div>
+              <div>WhatsApp API: <span style="color:#fff">Konfigurerad ✓</span></div>
+            </div>
           </div>
         </div>
+      </div>
+    </div>
 
-      </div><!-- /row-four -->
+  </div><!-- /content -->
+</div><!-- /main -->
 
-    </div><!-- /content -->
-  </div><!-- /main -->
-</div><!-- /layout -->
+<div class="toast" id="toast"></div>
 
 <script>
-  /* ─── MOBILE SIDEBAR ─────────────────────────────── */
-  const sidebar = document.getElementById('sidebar');
-  const overlay = document.getElementById('overlay');
-  const menuBtn = document.getElementById('menuBtn');
+// ===== DATA =====
+const ORDERS = [
+  {id:'#1024',tid:'14:32',items:'Smash Burger 2 × 1, Fries × 1',kanal:'WhatsApp',total:185,status:'klar',details:['Smash Burger 2 × 1 — 150 kr','Pommes Frites × 1 — 35 kr'],extras:'Dubbelkött',note:''},
+  {id:'#1023',tid:'14:18',items:'Smash Burger 3 × 2',kanal:'WhatsApp',total:300,status:'klar',details:['Smash Burger 3 × 2 — 300 kr'],extras:'',note:'Extra sås'},
+  {id:'#1022',tid:'14:05',items:'Barn Burger × 1, Nuggets × 1',kanal:'Foodora',total:220,status:'klar',details:['Barn Burger × 1 — 110 kr','Chicken Nuggets × 1 — 110 kr'],extras:'',note:''},
+  {id:'#1021',tid:'13:52',items:'Smash Burger 1 × 1',kanal:'WhatsApp',total:150,status:'klar',details:['Smash Burger 1 × 1 — 150 kr'],extras:'',note:'Utan lök'},
+  {id:'#1020',tid:'13:41',items:'Smash Burger 5 × 2, Fries × 2',kanal:'WhatsApp',total:370,status:'klar',details:['Smash Burger 5 × 2 — 300 kr','Pommes Frites × 2 — 70 kr'],extras:'',note:''},
+  {id:'#1019',tid:'13:28',items:'Smash Burger 4 × 1',kanal:'Foodora',total:150,status:'klar',details:['Smash Burger 4 × 1 — 150 kr'],extras:'Glutenfritt',note:''},
+  {id:'#1018',tid:'13:15',items:'Smash Burger 6 × 1, Nuggets × 1',kanal:'WhatsApp',total:260,status:'kö',details:['Smash Burger 6 × 1 — 150 kr','Chicken Nuggets × 1 — 110 kr'],extras:'',note:'Snälla ta bort jalapeños'},
+  {id:'#1017',tid:'13:02',items:'Barn Burger × 2',kanal:'WhatsApp',total:220,status:'kö',details:['Barn Burger × 2 — 220 kr'],extras:'',note:'Till barn, lugnt med krydda'},
+  {id:'#1016',tid:'12:48',items:'Smash Burger 1 × 3',kanal:'Foodora',total:450,status:'klar',details:['Smash Burger 1 × 3 — 450 kr'],extras:'',note:''},
+  {id:'#1015',tid:'12:33',items:'Smash Burger 2 × 2, Dips × 2',kanal:'WhatsApp',total:320,status:'klar',details:['Smash Burger 2 × 2 — 300 kr','Dippsåser × 2 — 20 kr'],extras:'',note:''},
+  {id:'#1014',tid:'12:20',items:'Smash Burger 3 × 1, Chili × 2',kanal:'WhatsApp',total:210,status:'klar',details:['Smash Burger 3 × 1 — 150 kr','Chili Cheese Nuggets × 2 — 60 kr'],extras:'',note:''},
+  {id:'#1013',tid:'12:11',items:'Nuggets × 2',kanal:'Foodora',total:220,status:'klar',details:['Chicken Nuggets × 2 — 220 kr'],extras:'',note:''},
+];
 
-  function openSidebar() {
-    sidebar.classList.add('open');
-    overlay.classList.add('visible');
-  }
+const MENU_DATA = [
+  {cat:'Smash Burgers',items:[
+    {id:'sb1',name:'Smash Burger 1',desc:'Dubbel patty, cheddar, karamelliserad lök, pickles',price:150,active:true,img:'../assets/images/smash-burger-2.jpg'},
+    {id:'sb2',name:'Smash Burger 2',desc:'Dubbel patty, bacon, cheddar, jalapeño, chipotle-majo',price:150,active:true,img:'../assets/images/smash-burger-3.jpg'},
+    {id:'sb3',name:'Smash Burger 3',desc:'Trippel smash, trippel cheddar, pickles, lök',price:150,active:true,img:'../assets/images/smash-burger-5.jpg'},
+    {id:'sb4',name:'Smash Burger 4',desc:'Dubbel patty, gruyère, karamelliserad lök, dijon',price:150,active:true,img:'../assets/images/smash-burger-2.jpg'},
+    {id:'sb5',name:'Smash Burger 5',desc:'Smashad patty, blåmögelost, knaprig bacon',price:150,active:true,img:'../assets/images/smash-burger-5.jpg'},
+    {id:'sb6',name:'Smash Burger 6',desc:'Kycklingpatty, picklade jalapeños, pico de gallo',price:150,active:true,img:'../assets/images/smash-burger-3.jpg'},
+  ]},
+  {cat:'Klassiker',items:[
+    {id:'barn',name:'Barn Burger',desc:'Enkel patty, cheddar, ketchup, senap, lök',price:110,active:true,img:'../assets/images/barn-burger.jpg'},
+    {id:'nuggets',name:'Chicken Nuggets',desc:'8 knapriga kycklingnuggets, valfri dippsås',price:110,active:true,img:'../assets/images/chicken-nuggets.jpg'},
+  ]},
+  {cat:'Smårätter',items:[
+    {id:'fries',name:'Pommes Frites',desc:'Nyfriterade pommes, havssalt',price:35,active:true,img:'../assets/images/fries.jpg'},
+    {id:'chili',name:'Chili Cheese Nuggets',desc:'6 st — krämig ostfyllning, chiliskorpa',price:30,active:true,img:'../assets/images/chili-cheese.jpg'},
+    {id:'dips',name:'Dippsåser',desc:'Tryffelmajo · Srirachamajo · Ketchup',price:10,active:true,img:'../assets/images/dips.jpg'},
+  ]},
+  {cat:'Drycker',items:[
+    {id:'drink',name:'Dryck 33 cl',desc:'Coca-Cola, Zero, Fanta, Sprite',price:15,active:true,img:'../assets/images/drinks.jpg'},
+  ]},
+];
 
-  function closeSidebar() {
-    sidebar.classList.remove('open');
-    overlay.classList.remove('visible');
-  }
+const WEEK_DATA = {
+  week:{days:['Mån','Tis','Ons','Tor','Fre','Lör','Sön'],vals:[3240,2890,3450,4120,5280,1200,0],cur:0},
+  month:{days:['V44','V45','V46','V47'],vals:[18200,20400,19800,22100],cur:3},
+  '3month':{days:['Sep','Okt','Nov'],vals:[71000,84000,62000],cur:2},
+};
 
-  menuBtn.addEventListener('click', openSidebar);
-  overlay.addEventListener('click', closeSidebar);
+const HOURS_DATA = [
+  {day:'Måndag',open:true,start:'11:00',end:'15:00'},
+  {day:'Tisdag',open:true,start:'11:00',end:'15:00'},
+  {day:'Onsdag',open:true,start:'11:00',end:'15:00'},
+  {day:'Torsdag',open:true,start:'11:00',end:'15:00'},
+  {day:'Fredag',open:true,start:'11:00',end:'15:00'},
+  {day:'Lördag',open:false,start:'',end:''},
+  {day:'Söndag',open:false,start:'',end:''},
+];
 
-  /* ─── WEEKLY BAR CHART ───────────────────────────── */
-  const chartData = [
-    { day: 'Mån', value: 3240, current: true,  closed: false },
-    { day: 'Tis', value: 2890, current: false, closed: false },
-    { day: 'Ons', value: 3450, current: false, closed: false },
-    { day: 'Tor', value: 4120, current: false, closed: false },
-    { day: 'Fre', value: 5280, current: false, closed: false },
-    { day: 'Lör', value: 1200, current: false, closed: false, muted: true },
-    { day: 'Sön', value: 0,    current: false, closed: true  },
-  ];
+const BEST_SELLERS = [
+  {name:'Smash Burger 3',pct:18,count:43},
+  {name:'Smash Burger 2',pct:15,count:36},
+  {name:'Smash Burger 5',pct:13,count:31},
+  {name:'Pommes Frites',pct:11,count:26},
+  {name:'Smash Burger 1',pct:10,count:24},
+  {name:'Chicken Nuggets',pct:8,count:19},
+  {name:'Barn Burger',pct:7,count:17},
+];
 
-  const maxValue = Math.max(...chartData.map(d => d.value));
-  const chartArea = document.getElementById('chartArea');
+const HEATMAP = {
+  hours:['11','12','13','14','15'],
+  days:['Mån','Tis','Ons','Tor','Fre'],
+  data:[
+    [2,8,12,9,3],
+    [1,7,10,8,2],
+    [3,9,13,10,4],
+    [2,8,14,11,3],
+    [4,11,16,12,5],
+  ]
+};
 
-  chartData.forEach(d => {
-    const pct = maxValue > 0 ? (d.value / maxValue) * 100 : 0;
+// ===== STATE =====
+let currentPage = 'oversikt';
+let orderFilterTab = 'all';
+let currentPeriod = 'week';
+let menuCat = 0;
+let menuState = JSON.parse(JSON.stringify(MENU_DATA));
 
-    const col = document.createElement('div');
-    col.className = 'chart-col';
+// ===== INIT =====
+document.addEventListener('DOMContentLoaded', () => {
+  setDate();
+  checkOpen();
+  renderOverview();
+  renderOrders();
+  renderMenu();
+  renderStats('week');
+  renderHours();
+  setupNav();
+  setupMobileMenu();
+});
 
-    const inner = document.createElement('div');
-    inner.className = 'chart-col-inner';
+function setDate() {
+  const d = new Date();
+  const days = ['Söndag','Måndag','Tisdag','Onsdag','Torsdag','Fredag','Lördag'];
+  const months = ['jan','feb','mar','apr','maj','jun','jul','aug','sep','okt','nov','dec'];
+  document.getElementById('pageDate').textContent =
+    `${days[d.getDay()]} ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+}
 
-    // Value label
-    const valLabel = document.createElement('div');
-    valLabel.className = 'bar-value' + (d.current ? ' accent' : '');
-    valLabel.textContent = d.closed ? '' : d.value.toLocaleString('sv-SE') + ' kr';
-    inner.appendChild(valLabel);
+function checkOpen() {
+  const h = new Date().getHours();
+  const isOpen = h >= 11 && h < 15;
+  const pill = document.getElementById('statusPill');
+  const txt = document.getElementById('statusText');
+  pill.className = 'status-pill ' + (isOpen ? 'open' : 'closed');
+  txt.textContent = isOpen ? 'Öppet nu' : 'Stängt';
+  pill.querySelector('.dot').className = 'dot' + (isOpen ? ' pulse' : '');
+}
 
-    // Bar
-    const bar = document.createElement('div');
-    bar.className = 'bar-block';
-    bar.style.height = d.closed ? '4px' : Math.max(pct, 2) + '%';
-
-    if (d.closed) {
-      bar.style.background = '#2a2a2a';
-      bar.style.borderRadius = '2px';
-    } else if (d.muted) {
-      bar.style.background = '#5a4800';
-    } else if (d.current) {
-      bar.style.background = '#FFC000';
-      bar.style.border = '2px solid #FFD84D';
-    } else {
-      bar.style.background = '#7a5c00';
-    }
-
-    inner.appendChild(bar);
-    col.appendChild(inner);
-
-    // Day label
-    const dayLabel = document.createElement('div');
-    dayLabel.className = 'bar-label' + (d.current ? ' accent' : '');
-    dayLabel.textContent = d.day;
-    col.appendChild(dayLabel);
-
-    // Sub label
-    if (d.closed) {
-      const sub = document.createElement('div');
-      sub.className = 'bar-sub';
-      sub.textContent = 'Stängt';
-      col.appendChild(sub);
-    } else if (d.muted) {
-      const sub = document.createElement('div');
-      sub.className = 'bar-sub';
-      col.appendChild(sub);
-    }
-
-    chartArea.appendChild(col);
-  });
-
-  /* ─── NAV ITEM CLICK (demo state) ─────────────── */
-  document.querySelectorAll('.nav-item').forEach(item => {
-    item.addEventListener('click', () => {
-      document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-      item.classList.add('active');
+// ===== NAVIGATION =====
+function setupNav() {
+  document.querySelectorAll('.nav-item').forEach(el => {
+    el.addEventListener('click', () => {
+      const page = el.dataset.page;
+      window.location.hash = page;
+      goToPage(page);
       closeSidebar();
     });
   });
+
+  window.addEventListener('hashchange', () => {
+    const hash = window.location.hash.replace('#', '');
+    if (hash && ['oversikt', 'bestallningar', 'meny', 'statistik', 'installningar'].includes(hash)) {
+      goToPage(hash);
+    }
+  });
+
+  const initHash = window.location.hash.replace('#', '');
+  if (initHash && ['oversikt', 'bestallningar', 'meny', 'statistik', 'installningar'].includes(initHash)) {
+    goToPage(initHash);
+  }
+}
+
+function goToPage(page) {
+  document.querySelectorAll('.nav-item').forEach(el =>
+    el.classList.toggle('active', el.dataset.page === page));
+  document.querySelectorAll('.page').forEach(el =>
+    el.classList.toggle('active', el.id === 'page-' + page));
+  const titles = {
+    oversikt:'Översikt', bestallningar:'Beställningar',
+    meny:'Meny', statistik:'Statistik', installningar:'Inställningar'
+  };
+  document.getElementById('pageTitle').textContent = titles[page] || '';
+  currentPage = page;
+}
+
+// ===== MOBILE =====
+function setupMobileMenu() {
+  const btn = document.getElementById('menuBtn');
+  const overlay = document.getElementById('overlay');
+  btn.addEventListener('click', () => document.getElementById('sidebar').classList.add('open'));
+  overlay.addEventListener('click', closeSidebar);
+  document.addEventListener('click', e => {
+    if (!e.target.closest('#sidebar') && !e.target.closest('#menuBtn'))
+      closeSidebar();
+  });
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('open');
+}
+
+// ===== OVERVIEW =====
+function renderOverview() {
+  // Recent orders (last 6)
+  const tbody = document.getElementById('overviewOrders');
+  tbody.innerHTML = ORDERS.slice(0,6).map(o => `
+    <tr>
+      <td style="font-weight:700;color:var(--muted)">${o.id}</td>
+      <td style="color:var(--muted)">${o.tid}</td>
+      <td>${o.items}</td>
+      <td style="font-weight:700">${o.total} kr</td>
+      <td>${statusBadge(o.status)}</td>
+    </tr>`).join('');
+
+  // Popular items
+  const pop = document.getElementById('popularItems');
+  pop.innerHTML = BEST_SELLERS.slice(0,5).map(b => `
+    <div class="bar-wrap">
+      <div class="bar-label"><span>${b.name}</span><span style="color:var(--muted)">${b.pct}%</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:${b.pct * 5.5}%"></div></div>
+    </div>`).join('');
+
+  // Week chart
+  renderWeekChart('weekChart', WEEK_DATA.week, false);
+}
+
+function renderWeekChart(containerId, data, tall) {
+  const wrap = document.getElementById(containerId);
+  if (!wrap) return;
+  const max = Math.max(...data.vals, 1);
+  const height = tall ? 160 : 120;
+  wrap.style.height = (height + 40) + 'px';
+  wrap.innerHTML = data.days.map((day, i) => {
+    const val = data.vals[i];
+    const h = val === 0 ? 4 : Math.round((val / max) * height);
+    const isCurrent = i === data.cur;
+    const isClosed = val === 0;
+    const color = isClosed ? '#252525' : (isCurrent ? '#FFC000' : '#5a4000');
+    return `
+      <div class="chart-bar-col">
+        <div class="chart-bar${isCurrent ? ' active-day' : ''}"
+          style="height:${h}px;background:${color};width:100%">
+          <span class="chart-bar-val">${val > 0 ? val.toLocaleString('sv-SE') + ' kr' : ''}</span>
+        </div>
+        <span class="chart-day">${day}</span>
+        ${isClosed ? '<span class="chart-closed">Stängt</span>' : ''}
+      </div>`;
+  }).join('');
+}
+
+// ===== ORDERS =====
+function renderOrders() {
+  const tbody = document.getElementById('ordersBody');
+  const search = (document.getElementById('orderSearch')?.value || '').toLowerCase();
+  const statusF = document.getElementById('orderStatusFilter')?.value || 'all';
+
+  let filtered = ORDERS.filter(o => {
+    const matchSearch = !search || o.id.toLowerCase().includes(search) || o.items.toLowerCase().includes(search);
+    const matchStatus = statusF === 'all' || o.status === statusF;
+    const matchTab = orderFilterTab === 'all' || o.status === orderFilterTab;
+    return matchSearch && matchStatus && matchTab;
+  });
+
+  tbody.innerHTML = filtered.map(o => `
+    <tr onclick="toggleOrderDetail('detail-${o.id.replace('#','')}')" style="cursor:pointer">
+      <td><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></td>
+      <td style="font-weight:700;color:var(--yellow)">${o.id}</td>
+      <td style="color:var(--muted)">${o.tid}</td>
+      <td style="max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${o.items}</td>
+      <td><span class="badge ${o.kanal==='Foodora'?'badge-muted':'badge-green'}" style="font-size:10px">${o.kanal}</span></td>
+      <td style="font-weight:700">${o.total} kr</td>
+      <td>${statusBadge(o.status)}</td>
+      <td>
+        ${o.status === 'kö' ? `<button class="badge badge-green" onclick="event.stopPropagation();markDone('${o.id}')">✓ Markera klar</button>` : ''}
+      </td>
+    </tr>
+    <tr><td colspan="8" style="padding:0"><div class="order-detail" id="detail-${o.id.replace('#','')}">
+      <strong style="color:#fff">Orderinnehåll:</strong>
+      <ul class="order-items-list">
+        ${o.details.map(d => `<li><span>${d}</span></li>`).join('')}
+        ${o.extras ? `<li><span style="color:var(--yellow)">+ ${o.extras}</span></li>` : ''}
+      </ul>
+      ${o.note ? `<div style="padding:8px;background:#1a1a1a;border-radius:4px;border-left:3px solid var(--yellow)"><strong style="color:#fff">Not:</strong> ${o.note}</div>` : ''}
+      <div style="margin-top:10px;display:flex;gap:8px">
+        ${o.status==='kö' ? `<button class="badge badge-green" onclick="markDone('${o.id}')">✓ Klar</button>` : ''}
+        <button class="badge badge-red" onclick="cancelOrder('${o.id}')">✕ Avbryt</button>
+        <a href="https://wa.me/46705491132" target="_blank" class="badge badge-muted">WhatsApp →</a>
+      </div>
+    </div></td></tr>`).join('');
+}
+
+function toggleOrderDetail(id) {
+  const el = document.getElementById(id);
+  if (el) el.classList.toggle('open');
+}
+
+function filterOrders() { renderOrders(); }
+
+function setOrderFilter(el, val) {
+  document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  orderFilterTab = val;
+  renderOrders();
+}
+
+function markDone(id) {
+  const o = ORDERS.find(x => x.id === id);
+  if (o) { o.status = 'klar'; renderOrders(); renderOverview(); updatePendingCount(); showToast(`Order ${id} markerad som klar!`); }
+}
+
+function cancelOrder(id) {
+  const o = ORDERS.find(x => x.id === id);
+  if (o) { o.status = 'avbruten'; renderOrders(); updatePendingCount(); showToast(`Order ${id} avbruten.`); }
+}
+
+function updatePendingCount() {
+  const n = ORDERS.filter(o => o.status === 'kö').length;
+  document.getElementById('pendingCount').textContent = n;
+}
+
+function statusBadge(s) {
+  if (s === 'klar') return '<span class="badge badge-green">Klar</span>';
+  if (s === 'kö') return '<span class="badge badge-yellow">I kö</span>';
+  return '<span class="badge badge-red">Avbruten</span>';
+}
+
+// ===== MENU =====
+function renderMenu() {
+  const tabs = document.getElementById('menuAdminTabs');
+  tabs.innerHTML = menuState.map((cat, i) => `
+    <div class="menu-admin-tab ${i===menuCat?'active':''}" onclick="switchMenuCat(${i})">${cat.cat} (${cat.items.length})</div>`).join('');
+
+  const content = document.getElementById('menuAdminContent');
+  const cat = menuState[menuCat];
+  content.innerHTML = cat.items.map((item, i) => `
+    <div class="menu-row">
+      <img class="menu-row-img" src="${item.img}" alt="${item.name}" onerror="this.style.background='#1e1e1e'" />
+      <div>
+        <div class="menu-row-name">${item.name}</div>
+        <div class="menu-row-desc">${item.desc}</div>
+      </div>
+      <div>
+        <label class="settings-label" style="margin-bottom:3px">Pris (kr)</label>
+        <input type="number" class="price-input" value="${item.price}" min="0" step="5"
+          onchange="updatePrice(${menuCat},${i},this.value)" />
+      </div>
+      <div style="text-align:center">
+        <label class="settings-label" style="margin-bottom:6px">${item.active ? 'Aktiv' : 'Pausad'}</label>
+        <label class="toggle">
+          <input type="checkbox" ${item.active ? 'checked' : ''} onchange="toggleItem(${menuCat},${i},this.checked)" />
+          <span class="toggle-track"></span>
+          <span class="toggle-thumb"></span>
+        </label>
+      </div>
+    </div>`).join('');
+
+  updateMenuCounts();
+}
+
+function switchMenuCat(i) {
+  menuCat = i;
+  renderMenu();
+}
+
+function updatePrice(catI, itemI, val) {
+  menuState[catI].items[itemI].price = parseInt(val) || 0;
+}
+
+function toggleItem(catI, itemI, active) {
+  menuState[catI].items[itemI].active = active;
+  updateMenuCounts();
+}
+
+function updateMenuCounts() {
+  let total = 0, active = 0;
+  menuState.forEach(c => c.items.forEach(it => { total++; if(it.active) active++; }));
+  document.getElementById('activeItems').textContent = active;
+  document.getElementById('pausedItems').textContent = total - active;
+}
+
+function saveMenu() { showToast('Meny sparad och publicerad!'); }
+
+// ===== STATS =====
+function renderStats(period) {
+  currentPeriod = period;
+  const d = WEEK_DATA[period] || WEEK_DATA.week;
+
+  const totals = { week:{rev:'20 180 kr',ord:'149 st',avg:'135 kr',rsub:'▲ +18% vs förra veckan',osub:'▲ +21 vs förra veckan',asub:'Stabilt'},
+    month:{rev:'82 400 kr',ord:'612 st',avg:'134 kr',rsub:'▲ +9% vs föregående månad',osub:'▲ +48 vs föregående månad',asub:'▲ +1 kr'},
+    '3month':{rev:'217 000 kr',ord:'1 608 st',avg:'135 kr',rsub:'▲ +24% vs föregående period',osub:'▲ +198 vs föregående period',asub:'Stabilt'} };
+
+  const t = totals[period];
+  document.getElementById('statRevenue').textContent = t.rev;
+  document.getElementById('statOrders').textContent = t.ord;
+  document.getElementById('statAvg').textContent = t.avg;
+  document.getElementById('statRevSub').textContent = t.rsub;
+  document.getElementById('statOrdSub').textContent = t.osub;
+  document.getElementById('statAvgSub').textContent = t.asub;
+
+  // Chart
+  const chart = document.getElementById('statChart');
+  chart.innerHTML = '';
+  const max = Math.max(...d.vals, 1);
+  d.days.forEach((day, i) => {
+    const val = d.vals[i];
+    const h = val === 0 ? 3 : Math.round((val / max) * 160);
+    const isCur = i === d.cur;
+    const col = document.createElement('div');
+    col.className = 'tall-bar-col';
+    col.innerHTML = `
+      <div class="tall-bar${isCur ? ' active-day' : ''}" style="height:${h}px;background:${val===0?'#252525':isCur?'#FFC000':'#5a4000'}">
+        <span class="tall-bar-val">${val > 0 ? val.toLocaleString('sv-SE') : ''}</span>
+      </div>
+      <span class="tall-day">${day}</span>`;
+    chart.appendChild(col);
+  });
+
+  // Best sellers
+  const best = document.getElementById('statBest');
+  best.innerHTML = BEST_SELLERS.map(b => `
+    <div class="bar-wrap">
+      <div class="bar-label">
+        <span>${b.name}</span>
+        <span style="color:var(--muted)">${b.count} st &nbsp;·&nbsp; ${b.pct}%</span>
+      </div>
+      <div class="bar-track"><div class="bar-fill" style="width:${b.pct * 5.5}%"></div></div>
+    </div>`).join('');
+
+  renderHeatmap();
+  renderPayment();
+}
+
+function renderHeatmap() {
+  const wrap = document.getElementById('heatmapWrap');
+  const max = Math.max(...HEATMAP.data.flatMap(r => r), 1);
+  let html = '<div class="heatmap">';
+  html += '<div></div>';
+  HEATMAP.hours.forEach(h => html += `<div class="heatmap-header">${h}:00</div>`);
+  HEATMAP.days.forEach((day, di) => {
+    html += `<div class="heatmap-label">${day}</div>`;
+    HEATMAP.data[di].forEach(val => {
+      const pct = val / max;
+      const bg = pct > .8 ? '#FFC000' : pct > .6 ? '#a07800' : pct > .4 ? '#5a4000' : pct > .2 ? '#2a1e00' : '#1a1a1a';
+      const fg = pct > .6 ? '#000' : '#fff';
+      html += `<div class="heatmap-cell" style="background:${bg};color:${fg}">${val}</div>`;
+    });
+  });
+  html += '</div>';
+  wrap.innerHTML = html;
+}
+
+function renderPayment() {
+  const data = [{label:'WhatsApp',val:68,color:'var(--yellow)'},{label:'Foodora',val:24,color:'#5a4000'},{label:'Swish direkt',val:8,color:'#333'}];
+  const pc = document.getElementById('paymentChart');
+  pc.innerHTML = data.map(d => `
+    <div class="bar-wrap">
+      <div class="bar-label"><span>${d.label}</span><span style="color:var(--muted)">${d.val}%</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:${d.val}%;background:${d.color}"></div></div>
+    </div>`).join('');
+}
+
+function setPeriod(el, period) {
+  document.querySelectorAll('.period-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  renderStats(period);
+}
+
+// ===== HOURS =====
+function renderHours() {
+  const el = document.getElementById('hoursEditor');
+  el.innerHTML = HOURS_DATA.map((h, i) => `
+    <div class="hours-row">
+      <div class="hours-day">${h.day}</div>
+      <input type="time" value="${h.open ? h.start : ''}" ${!h.open ? 'disabled' : ''} style="text-align:center" />
+      <input type="time" value="${h.open ? h.end : ''}" ${!h.open ? 'disabled' : ''} style="text-align:center" />
+      <label class="toggle" style="margin-left:auto">
+        <input type="checkbox" ${h.open ? 'checked' : ''} onchange="toggleHour(${i},this.checked)" />
+        <span class="toggle-track"></span>
+        <span class="toggle-thumb"></span>
+      </label>
+    </div>`).join('');
+}
+
+function toggleHour(i, open) {
+  HOURS_DATA[i].open = open;
+  renderHours();
+}
+
+// ===== TOAST =====
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3200);
+}
+
+// Animate bars on load
+setTimeout(() => {
+  document.querySelectorAll('.bar-fill').forEach(el => {
+    const w = el.style.width; el.style.width = '0';
+    requestAnimationFrame(() => { el.style.width = w; });
+  });
+}, 100);
 </script>
 </body>
 </html>
