@@ -14,7 +14,7 @@
 :root{
   --bg:#0A0A0A;--surface:#111111;--surface-2:#181818;--border:#222;
   --ink:#fff;--muted:#8E8E8E;--yellow:#FFC000;--yellow-dim:#3a2900;
-  --green:#2ecc71;--green-dim:#0d2b1a;--red:#e74c3c;--red-dim:#2b0d0d;
+  --green:#4caf50;--green-dim:#132416;--red:#e57373;--red-dim:#2b1111;
   --sidebar:220px;--font-d:'Barlow Condensed',sans-serif;--font-b:'Inter',system-ui,sans-serif;
 }
 body{background:var(--bg);color:var(--ink);font-family:var(--font-b);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;display:flex;min-height:100vh}
@@ -202,6 +202,8 @@ input:focus,select:focus,textarea:focus{border-color:#444}
 /* ORDER COUNT BADGE */
 .nav-count{margin-left:auto;background:var(--yellow-dim);color:var(--yellow);font-size:11px;font-weight:700;padding:2px 7px;border-radius:10px}
 
+.table-responsive{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+
 @media(max-width:900px){
   .kpi-grid{grid-template-columns:repeat(2,1fr)}
   .two-col{grid-template-columns:1fr}
@@ -214,11 +216,29 @@ input:focus,select:focus,textarea:focus{border-color:#444}
   .sidebar-overlay.open{display:block}
   .main{margin-left:0}
   .mobile-menu-btn{display:flex}
-  .content{padding:16px}
-  .kpi-grid{grid-template-columns:repeat(2,1fr);gap:12px}
+  .topbar{padding:0 14px;height:56px}
+  .topbar-left{gap:10px;min-width:0}
+  .topbar-title{font-size:18px}
+  .topbar-sub{display:none}
+  .topbar-btn{display:none !important}
+  .status-pill{padding:4px 8px;font-size:11px}
+  .status-pill span:last-child{display:none}
+  .content{padding:14px}
+  .kpi-grid{grid-template-columns:repeat(2,1fr);gap:10px}
+  .kpi-card{padding:12px 14px}
+  .kpi-value{font-size:24px}
+  .kpi-sub{font-size:11px}
+  .table-responsive{margin:0 -4px}
+  .data-table{min-width:480px}
+  .data-table th, .data-table td{padding:9px 10px;font-size:12px}
+  .search-row{flex-direction:column;gap:8px}
+  .search-row input, .search-row select{max-width:100% !important;width:100%}
+  .filter-tabs{overflow-x:auto;white-space:nowrap;padding-bottom:6px;-webkit-overflow-scrolling:touch}
+  .heatmap{overflow-x:auto;min-width:320px;-webkit-overflow-scrolling:touch}
   .settings-row{grid-template-columns:1fr}
   .hours-row{grid-template-columns:1fr 1fr 1fr 50px}
   .menu-row{grid-template-columns:40px 1fr auto auto;gap:10px}
+  .menu-admin-tabs{overflow-x:auto;white-space:nowrap;padding-bottom:6px;-webkit-overflow-scrolling:touch}
 }
 </style>
 </head>
@@ -328,12 +348,14 @@ input:focus,select:focus,textarea:focus{border-color:#444}
               Senaste beställningar
               <button class="badge badge-muted" onclick="goToPage('bestallningar')" style="cursor:pointer">Visa alla →</button>
             </div>
-            <table class="data-table">
-              <thead><tr>
-                <th>Order</th><th>Tid</th><th>Innehåll</th><th>Totalt</th><th>Status</th>
-              </tr></thead>
-              <tbody id="overviewOrders"></tbody>
-            </table>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead><tr>
+                  <th>Order</th><th>Tid</th><th>Innehåll</th><th>Totalt</th><th>Status</th>
+                </tr></thead>
+                <tbody id="overviewOrders"></tbody>
+              </table>
+            </div>
           </div>
 
           <div class="card">
@@ -435,12 +457,14 @@ input:focus,select:focus,textarea:focus{border-color:#444}
           <div class="filter-tab" data-filter="klar" onclick="setOrderFilter(this,'klar')">Klar <span style="color:var(--muted)">(22)</span></div>
           <div class="filter-tab" data-filter="avbruten" onclick="setOrderFilter(this,'avbruten')">Avbruten <span style="color:var(--muted)">(0)</span></div>
         </div>
-        <table class="data-table" id="ordersTable">
-          <thead><tr>
-            <th></th><th>Order#</th><th>Tid</th><th>Innehåll</th><th>Kanal</th><th>Totalt</th><th>Status</th><th>Åtgärd</th>
-          </tr></thead>
-          <tbody id="ordersBody"></tbody>
-        </table>
+        <div class="table-responsive">
+          <table class="data-table" id="ordersTable">
+            <thead><tr>
+              <th></th><th>Order#</th><th>Tid</th><th>Innehåll</th><th>Kanal</th><th>Totalt</th><th>Status</th><th>Åtgärd</th>
+            </tr></thead>
+            <tbody id="ordersBody"></tbody>
+          </table>
+        </div>
       </div>
     </div>
 
