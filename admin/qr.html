@@ -152,10 +152,7 @@ button{cursor:pointer;border:none;background:none;font:inherit;color:inherit}
     </p>
 
     <div class="poster-qr-box">
-      <!-- High-res Vector QR Code linking to menu.html -->
-      <svg class="poster-qr-svg" viewBox="0 0 100 100" fill="#000">
-        <path d="M8 8h34v34H8zM14 14v22h22V14zm6 6h10v10H20zM58 8h34v34H58zM64 14v22h22V14zm6 6h10v10H70zM8 58h34v34H8zM14 64v22h22V64zm6 6h10v10H20zM48 8h5v16h-5zm0 24h12v5h-12zm22 26h14v5h-14zm-18 0h14v10h-5v-5h-9zm30 10h4v22h-4zm-12 12h12v10H70zm-14-6h10v5h-10zm0 10h5v6h-5zm-8-14h5v20h-5zM48 48h5v8h-5zm8 0h8v5h-8z"/>
-      </svg>
+      <div id="posterQrMount" style="display:flex;justify-content:center;"></div>
       <div class="poster-qr-label">Öppna menyn i mobilen</div>
     </div>
 
@@ -184,5 +181,21 @@ button{cursor:pointer;border:none;background:none;font:inherit;color:inherit}
     </div>
   </div>
 
+  <script src="../qrcode.min.js"></script>
+  <script>
+    (function() {
+      const mount = document.getElementById('posterQrMount');
+      if (!mount || typeof qrcode !== 'function') return;
+      const menuUrl = window.location.protocol.startsWith('http')
+        ? window.location.href.replace(/\/admin\/qr\.html.*$/, '/menu.html')
+        : 'https://ishakssmashburger.se/menu.html';
+      const q = qrcode(0, 'M');
+      q.addData(menuUrl);
+      q.make();
+      mount.innerHTML = q.createSvgTag(6, 0);
+      const svg = mount.querySelector('svg');
+      if (svg) svg.classList.add('poster-qr-svg');
+    })();
+  </script>
 </body>
 </html>

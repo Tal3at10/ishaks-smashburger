@@ -129,12 +129,18 @@
       </div>
 
       <div class="form-group">
+        <label class="form-label" for="orderPhone">Mobilnummer (för SMS/WhatsApp när maten är klar)</label>
+        <input type="tel" id="orderPhone" class="form-control" placeholder="070-XXX XX XX" autocomplete="tel" required />
+      </div>
+
+      <div class="form-group">
         <label class="form-label" for="orderTime">Upphämtningstid</label>
         <select id="orderTime" class="form-control">
           <option value="Snarast (ca 15-20 min)">Snarast (ca 15–20 min)</option>
           <option value="Om 30 minuter">Om 30 minuter</option>
           <option value="Om 45 minuter">Om 45 minuter</option>
           <option value="Om 60 minuter">Om 60 minuter</option>
+          <option value="Förbeställ till nästa öppettid (11:00–15:00)">Förbeställ till nästa öppettid (11:00–15:00)</option>
         </select>
       </div>
 
@@ -167,17 +173,15 @@
           <span style="font-size:11px;color:#a0b8c8;font-weight:600;">Ishak Abika</span>
         </div>
 
-        <div class="swish-qr-wrap">
-          <svg viewBox="0 0 100 100" fill="#000">
-            <path d="M10 10h30v30H10zM15 15v20h20V15zm5 5h10v10H20zM60 10h30v30H60zM65 15v20h20V15zm5 5h10v10H70zM10 60h30v30H10zM15 65v20h20V65zm5 5h10v10H20zM50 10h5v15h-5zm0 25h10v5h-10zm25 25h15v5h-15zm-20 0h15v10h-5v-5h-10zm30 10h5v20h-5zm-10 10h10v10h-10zm-15-5h10v5h-10zm0 10h5v5h-5zm-10-15h5v20h-5z"/>
-          </svg>
-        </div>
+        <div class="swish-qr-wrap" id="swishQrWrap"></div>
 
         <div class="swish-meta">
           Mottagare: <strong>Ishak's Smash Burger</strong><br>
           Swish-nummer: <strong>123 082 44 41</strong><br>
           Ref: <strong id="swishOrderRef">ISHAK-1025</strong>
         </div>
+
+        <a href="#" id="btnOpenSwishApp" target="_blank" rel="noopener" style="text-align:center;font-size:12.5px;font-weight:700;color:#4dc4f0;text-decoration:underline;">Öppna Swish-appen direkt i mobilen &rarr;</a>
 
         <button type="button" class="btn-swish-pay" id="btnSimulateSwish">
           <span>Genomför Swish-betalning (Demo)</span>
@@ -224,6 +228,7 @@
     </div>
   </footer>
 
+  <script src="qrcode.min.js"></script>
   <script src="menu-data.js"></script>
   <script src="app.js"></script>
 </body>

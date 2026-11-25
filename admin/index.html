@@ -654,23 +654,23 @@ input:focus,select:focus,textarea:focus{border-color:#444}
 <script>
 // ===== DATA =====
 const ORDERS = [
-  {id:'#1024',tid:'14:32',items:'Smash Burger 2 × 1, Fries × 1',kanal:'WhatsApp',total:205,status:'klar',details:['Smash Burger 2 (Kött) × 1 — 135 kr','Extra kött × 1 — 35 kr','Fries × 1 — 35 kr'],extras:'Extra kött',note:''},
-  {id:'#1023',tid:'14:18',items:'Smash Burger 3 × 2',kanal:'WhatsApp',total:270,status:'klar',details:['Smash Burger 3 (Kött) × 2 — 270 kr'],extras:'',note:'Extra sås'},
-  {id:'#1022',tid:'14:05',items:'Barn Burger × 1, Nuggets × 1',kanal:'Foodora',total:220,status:'klar',details:['Barn Burger × 1 — 110 kr','Chicken Nuggets (8 st) × 1 — 110 kr'],extras:'',note:''},
-  {id:'#1021',tid:'13:52',items:'Smash Burger 1 × 1',kanal:'WhatsApp',total:135,status:'klar',details:['Smash Burger 1 (Kött) × 1 — 135 kr'],extras:'',note:'Utan lök'},
-  {id:'#1020',tid:'13:41',items:'Smash Burger 5 × 2, Fries × 2',kanal:'WhatsApp',total:340,status:'klar',details:['Smash Burger 5 (Kött) × 2 — 270 kr','Fries × 2 — 70 kr'],extras:'',note:''},
-  {id:'#1019',tid:'13:28',items:'Smash Burger 4 × 1',kanal:'Foodora',total:135,status:'klar',details:['Smash Burger 4 (Kött) × 1 — 135 kr'],extras:'Glutenfritt bröd',note:''},
-  {id:'#1018',tid:'13:15',items:'Smash Burger 6 × 1, Nuggets × 1',kanal:'WhatsApp',total:245,status:'kö',details:['Smash Burger 6 (Halloumi) × 1 — 135 kr','Chicken Nuggets (8 st) × 1 — 110 kr'],extras:'',note:'Snälla ta bort jalapeños'},
-  {id:'#1017',tid:'13:02',items:'Barn Burger × 2',kanal:'WhatsApp',total:220,status:'kö',details:['Barn Burger × 2 — 220 kr'],extras:'',note:'Till barn, lugnt med krydda'},
-  {id:'#1016',tid:'12:48',items:'Smash Burger 1 × 3',kanal:'Foodora',total:405,status:'klar',details:['Smash Burger 1 (Kött) × 3 — 405 kr'],extras:'',note:''},
-  {id:'#1015',tid:'12:33',items:'Smash Burger 2 × 2, Dip × 2',kanal:'WhatsApp',total:290,status:'klar',details:['Smash Burger 2 (Kyckling) × 2 — 270 kr','Dip × 2 — 20 kr'],extras:'',note:''},
-  {id:'#1014',tid:'12:20',items:'Smash Burger 3 × 1, Chili cheese × 2',kanal:'WhatsApp',total:215,status:'klar',details:['Smash Burger 3 (Kött) × 1 — 135 kr','Chili cheese, 6 st × 2 — 80 kr'],extras:'',note:''},
-  {id:'#1013',tid:'12:11',items:'Nuggets × 2',kanal:'Foodora',total:220,status:'klar',details:['Chicken Nuggets (8 st) × 2 — 220 kr'],extras:'',note:''},
+  {id:'#1024',phone:'0701234567',tid:'14:32',items:'Smash Burger 2 × 1, Fries × 1',kanal:'WhatsApp',total:205,status:'klar',details:['Smash Burger 2 (Kött) × 1 — 135 kr','Extra kött × 1 — 35 kr','Fries × 1 — 35 kr'],extras:'Extra kött',note:''},
+  {id:'#1023',phone:'0702233445',tid:'14:18',items:'Smash Burger 3 × 2',kanal:'WhatsApp',total:270,status:'klar',details:['Smash Burger 3 (Kött) × 2 — 270 kr'],extras:'',note:'Extra sås'},
+  {id:'#1022',phone:'0731122334',tid:'14:05',items:'Barn Burger × 1, Nuggets × 1',kanal:'Foodora',total:220,status:'klar',details:['Barn Burger × 1 — 110 kr','Chicken Nuggets (8 st) × 1 — 110 kr'],extras:'',note:''},
+  {id:'#1021',phone:'0709988776',tid:'13:52',items:'Smash Burger 1 × 1',kanal:'WhatsApp',total:135,status:'klar',details:['Smash Burger 1 (Kött) × 1 — 135 kr'],extras:'',note:'Utan lök'},
+  {id:'#1020',phone:'0725566778',tid:'13:41',items:'Smash Burger 5 × 2, Fries × 2',kanal:'WhatsApp',total:340,status:'klar',details:['Smash Burger 5 (Kött) × 2 — 270 kr','Fries × 2 — 70 kr'],extras:'',note:''},
+  {id:'#1019',phone:'0704455667',tid:'13:28',items:'Smash Burger 4 × 1',kanal:'Foodora',total:135,status:'klar',details:['Smash Burger 4 (Kött) × 1 — 135 kr'],extras:'Glutenfritt bröd',note:''},
+  {id:'#1018',phone:'0739876543',tid:'13:15',items:'Smash Burger 6 × 1, Nuggets × 1',kanal:'WhatsApp',total:245,status:'kö',details:['Smash Burger 6 (Halloumi) × 1 — 135 kr','Chicken Nuggets (8 st) × 1 — 110 kr'],extras:'',note:'Snälla ta bort jalapeños'},
+  {id:'#1017',phone:'0705544332',tid:'13:02',items:'Barn Burger × 2',kanal:'WhatsApp',total:220,status:'kö',details:['Barn Burger × 2 — 220 kr'],extras:'',note:'Till barn, lugnt med krydda'},
+  {id:'#1016',phone:'0701122998',tid:'12:48',items:'Smash Burger 1 × 3',kanal:'Foodora',total:405,status:'klar',details:['Smash Burger 1 (Kött) × 3 — 405 kr'],extras:'',note:''},
+  {id:'#1015',phone:'0728899001',tid:'12:33',items:'Smash Burger 2 × 2, Dips × 2',kanal:'WhatsApp',total:290,status:'klar',details:['Smash Burger 2 (Kyckling) × 2 — 270 kr','Dip × 2 — 20 kr'],extras:'',note:''},
+  {id:'#1014',phone:'0703344556',tid:'12:20',items:'Smash Burger 3 × 1, Chili cheese × 2',kanal:'WhatsApp',total:215,status:'klar',details:['Smash Burger 3 (Kött) × 1 — 135 kr','Chili cheese, 6 st × 2 — 80 kr'],extras:'',note:''},
+  {id:'#1013',phone:'0707788990',tid:'12:11',items:'Nuggets × 2',kanal:'Foodora',total:220,status:'klar',details:['Chicken Nuggets (8 st) × 2 — 220 kr'],extras:'',note:''},
 ];
 
 const MENU_DATA = [
   {cat:'Smash Burgers',items:[
-    {id:'sb1',name:'Smash Burger 1',desc:'Steks med jalapeños. Briochebröd, cheddar, srirachamajo, karamelliserad lök, chili cheese',price:135,active:true,img:'../assets/images/smash-burger-2.jpg'},
+    {id:'sb1',name:'Smash Burger 1',desc:'Steks med jalapeños. Briochebröd, cheddar, srirachamajo, karamelliserad lök, chili cheese',price:135,active:true,img:'../assets/images/smash-burger-1-real.jpg'},
     {id:'sb2',name:'Smash Burger 2',desc:'Briochebröd, cheddar, tryffelmajo, karamelliserad lök, rostad lök',price:135,active:true,img:'../assets/images/smash-burger-3.jpg'},
     {id:'sb3',name:'Smash Burger 3',desc:'Steks med lök. Briochebröd, cheddar, barbequesås, picklad gurka, rostad lök',price:135,active:true,img:'../assets/images/smash-burger-5.jpg'},
     {id:'sb4',name:'Smash Burger 4',desc:'Briochebröd, cheddar, ketchup, senap, sallad, rödlök',price:135,active:true,img:'../assets/images/smash-burger-2.jpg'},
@@ -912,8 +912,10 @@ function renderOrders() {
 
 function pingCustomerWhatsApp(id) {
   const o = ORDERS.find(x => x.id === id);
+  const digits = (o?.phone || '').replace(/\D/g, '');
+  const waNum = digits.startsWith('0') ? '46' + digits.slice(1) : (digits || '46705491132');
   const msg = encodeURIComponent(`Hej! Din beställning ${id} från Ishak's Smash Burger är nu klar vid luckan på Hantverkargatan 5. Varmt välkommen!`);
-  window.open(`https://wa.me/46705491132?text=${msg}`, '_blank');
+  window.open(`https://wa.me/${waNum}?text=${msg}`, '_blank');
 }
 
 function toggleOrderDetail(id) {

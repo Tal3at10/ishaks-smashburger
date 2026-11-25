@@ -562,6 +562,19 @@ function initCheckout() {
     const refEl = document.getElementById('swishOrderRef');
     if (refEl) refEl.textContent = ref;
 
+    const qrWrap = document.getElementById('swishQrWrap');
+    if (qrWrap && typeof qrcode === 'function') {
+      const q = qrcode(0, 'M');
+      q.addData(`C1230824441;${totalPrice};${ref};0`);
+      q.make();
+      qrWrap.innerHTML = q.createSvgTag(4, 0);
+    }
+
+    const swishAppBtn = document.getElementById('btnOpenSwishApp');
+    if (swishAppBtn) {
+      swishAppBtn.href = `https://app.swish.nu/1/p/sw/?sw=1230824441&amt=${totalPrice}&msg=${encodeURIComponent(ref)}`;
+    }
+
     listEl.innerHTML = cart.map(item => `
       <div class="checkout-item">
         <div>
@@ -577,6 +590,36 @@ function initCheckout() {
     checkoutModal.classList.add('open');
   };
 
+  function getValidatedCheckoutDetails() {
+    const nameInput = document.getElementById('orderName');
+    const phoneInput = document.getElementById('orderPhone');
+    const timeSelect = document.getElementById('orderTime');
+    const notesInput = document.getElementById('orderNotes');
+
+    const name = nameInput.value.trim();
+    if (!name) {
+      nameInput.focus();
+      showToast('Vänligen ange ditt namn för avhämtning');
+      return null;
+    }
+
+    const phone = phoneInput ? phoneInput.value.trim() : '';
+    if (phoneInput && phone.length < 7) {
+      phoneInput.focus();
+      showToast('Vänligen ange ditt mobilnummer');
+      return null;
+    }
+
+    return {
+      name,
+      phone,
+      time: timeSelect.value,
+      notes: notesInput ? notesInput.value.trim() : '',
+      totalPrice: cart.reduce((sum, item) => sum + (item.price * item.qty), 0),
+      ref: document.getElementById('swishOrderRef')?.textContent || ('ISHAK-' + Math.floor(1000 + Math.random() * 9000))
+    };
+  }
+
   if (btnKassa) btnKassa.addEventListener('click', openCheckoutModal);
 
   if (btnCancel) {
@@ -587,24 +630,10 @@ function initCheckout() {
     if (e.target === checkoutModal) checkoutModal.classList.remove('open');
   });
 
-  // SWISH SIMULATION
   if (btnSwish) {
     btnSwish.addEventListener('click', () => {
-      const nameInput = document.getElementById('orderName');
-      const timeSelect = document.getElementById('orderTime');
-      const notesInput = document.getElementById('orderNotes');
-
-      const name = nameInput.value.trim();
-      if (!name) {
-        nameInput.focus();
-        showToast('Vänligen ange ditt namn för avhämtning');
-        return;
-      }
-
-      const time = timeSelect.value;
-      const notes = notesInput ? notesInput.value.trim() : '';
-      const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-      const ref = document.getElementById('swishOrderRef')?.textContent || ('ISHAK-' + Math.floor(1000 + Math.random() * 9000));
+      const details = getValidatedCheckoutDetails();
+      if (!details) return;
 
       btnSwish.classList.add('processing');
       btnSwish.innerHTML = '<span>Ansluter till Swish...</span>';
@@ -612,15 +641,16 @@ function initCheckout() {
       setTimeout(() => {
         btnSwish.classList.remove('processing');
         btnSwish.classList.add('success');
-        btnSwish.innerHTML = '<span>✓ Betalning godkänd (' + totalPrice + ' kr)</span>';
+        btnSwish.innerHTML = '<span>✓ Betalning godkänd (' + details.totalPrice + ' kr)</span>';
 
         const orderData = {
-          id: ref,
-          name: name,
-          time: time,
-          notes: notes,
+          id: details.ref,
+          name: details.name,
+          phone: details.phone,
+          time: details.time,
+          notes: details.notes,
           items: cart.map(i => ({ name: i.name, qty: i.qty, price: i.price, mods: i.mods })),
-          total: totalPrice,
+          total: details.totalPrice,
           payment: 'Swish Direkt',
           date: new Date().toLocaleTimeString('sv-SE', { hour: '2-digit', minute: '2-digit' })
         };
@@ -641,29 +671,16 @@ function initCheckout() {
     });
   }
 
-  // WHATSAPP DISPATCH
   if (btnSend) {
     btnSend.addEventListener('click', () => {
-      const nameInput = document.getElementById('orderName');
-      const timeSelect = document.getElementById('orderTime');
-      const notesInput = document.getElementById('orderNotes');
+      const details = getValidatedCheckoutDetails();
+      if (!details) return;
 
-      const name = nameInput.value.trim();
-      if (!name) {
-        nameInput.focus();
-        showToast('Vänligen ange ditt namn för avhämtning');
-        return;
-      }
-
-      const time = timeSelect.value;
-      const notes = notesInput.value.trim();
-      const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-      const ref = document.getElementById('swishOrderRef')?.textContent || ('ISHAK-' + Math.floor(1000 + Math.random() * 9000));
-
-      let text = `*NY BESTÄLLNING [${ref}] — ISHAK'S SMASH BURGER*\n`;
+      let text = `*NY BESTÄLLNING [${details.ref}] — ISHAK'S SMASH BURGER*\n`;
       text += `━━━━━━━━━━━━━━━━━━━━━\n`;
-      text += `*Kund:* ${name}\n`;
-      text += `*Upphämtning:* ${time}\n`;
+      text += `*Kund:* ${details.name}\n`;
+      text += `*Mobil:* ${details.phone}\n`;
+      text += `*Upphämtning:* ${details.time}\n`;
       text += `━━━━━━━━━━━━━━━━━━━━━\n\n`;
       text += `*BESTÄLLNING:*\n`;
 
@@ -675,22 +692,23 @@ function initCheckout() {
       });
 
       text += `\n━━━━━━━━━━━━━━━━━━━━━\n`;
-      text += `*TOTALT:* ${totalPrice} kr\n`;
+      text += `*TOTALT:* ${details.totalPrice} kr\n`;
       text += `*Betalsätt:* Swish 123 082 44 41 / Vid luckan\n`;
 
-      if (notes) {
-        text += `\n*Önskemål:* ${notes}\n`;
+      if (details.notes) {
+        text += `\n*Önskemål:* ${details.notes}\n`;
       }
       text += `━━━━━━━━━━━━━━━━━━━━━\n`;
       text += `Beställning lagd via hemsidan.`;
 
       const orderData = {
-        id: ref,
-        name: name,
-        time: time,
-        notes: notes,
+        id: details.ref,
+        name: details.name,
+        phone: details.phone,
+        time: details.time,
+        notes: details.notes,
         items: cart.map(i => ({ name: i.name, qty: i.qty, price: i.price, mods: i.mods })),
-        total: totalPrice,
+        total: details.totalPrice,
         payment: 'WhatsApp / Vid luckan',
         date: new Date().toLocaleTimeString('sv-SE', { hour: '2-digit', minute: '2-digit' })
       };
@@ -699,13 +717,11 @@ function initCheckout() {
         sessionStorage.setItem('ishaks_last_order', JSON.stringify(orderData));
       } catch (e) {}
 
-      // Clear cart
       cart = [];
       saveCart();
       updateCartUI();
       checkoutModal.classList.remove('open');
 
-      // Dispatch WhatsApp & redirect
       const waUrl = `https://wa.me/46705491132?text=${encodeURIComponent(text)}`;
       window.open(waUrl, '_blank');
       window.location.href = 'tack.html';

@@ -9,7 +9,7 @@ const MENU = [
         name: 'Smash Burger 1',
         desc: 'Steks med jalapeños. Briochebröd, cheddar, srirachamajo, karamelliserad lök, chili cheese.',
         price: 135,
-        img: 'assets/images/smash-burger-2.jpg',
+        img: 'assets/images/smash-burger-1-real.jpg',
       },
       {
         id: 'sb2',

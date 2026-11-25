@@ -337,10 +337,10 @@ a{color:inherit;text-decoration:none}
         else if (minutes >= 6) timerClass = 'timer-warn';
 
         return `
-          <div class="ticket status-${t.status} ${minutes >= 14 ? 'urgent' : ''}">
+          <div class="ticket status-${t.status} ${minutes >= 14 ? 'urgent' : ''}" data-ticket-card="${idx}">
             <div class="ticket-header">
               <span class="ticket-id">${t.id}</span>
-              <span class="ticket-timer ${timerClass}">${timeStr}</span>
+              <span class="ticket-timer ${timerClass}" data-ticket-timer="${idx}">${timeStr}</span>
             </div>
 
             <div class="ticket-meta">
@@ -402,14 +402,30 @@ a{color:inherit;text-decoration:none}
       renderTickets();
     }
 
+    function formatSwedishWhatsApp(phone) {
+      const digits = (phone || '').replace(/\D/g, '');
+      if (digits.startsWith('0')) return '46' + digits.slice(1);
+      return digits || '46705491132';
+    }
+
     function pingCustomer(orderId, name, phone) {
       const msg = `Hej ${name}! Din beställning ${orderId} hos Ishak's Smash Burger är nu klar att hämtas vid luckan på Hantverkargatan 5. Välkommen!`;
-      window.open(`https://wa.me/46705491132?text=${encodeURIComponent(msg)}`, '_blank');
+      window.open(`https://wa.me/${formatSwedishWhatsApp(phone)}?text=${encodeURIComponent(msg)}`, '_blank');
     }
 
     function updateTimers() {
-      tickets.forEach(t => t.elapsedSec++);
-      renderTickets();
+      tickets.forEach((t, idx) => {
+        t.elapsedSec++;
+        const timerEl = document.querySelector(`[data-ticket-timer="${idx}"]`);
+        const cardEl = document.querySelector(`[data-ticket-card="${idx}"]`);
+        if (!timerEl) return;
+
+        const minutes = Math.floor(t.elapsedSec / 60);
+        const seconds = t.elapsedSec % 60;
+        timerEl.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds} min`;
+        timerEl.className = 'ticket-timer' + (minutes >= 12 ? ' timer-urgent' : minutes >= 6 ? ' timer-warn' : '');
+        if (cardEl && minutes >= 14) cardEl.classList.add('urgent');
+      });
     }
 
     function updateClock() {

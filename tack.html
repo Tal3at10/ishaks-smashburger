@@ -245,7 +245,7 @@
           if (box) {
             box.style.display = 'block';
             document.getElementById('tackOrderRef').textContent = order.id || 'BESTÄLLNING';
-            document.getElementById('tackCustomerName').textContent = `${order.name} · ${order.time}`;
+            document.getElementById('tackCustomerName').textContent = `${order.name}${order.phone ? ' · ' + order.phone : ''} · ${order.time}`;
             document.getElementById('tackOrderTotal').textContent = `${order.total} kr`;
             
             const badge = document.getElementById('tackPaymentBadge');
