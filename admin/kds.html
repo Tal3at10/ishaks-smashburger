@@ -97,9 +97,12 @@ a{color:inherit;text-decoration:none}
 }
 .ticket-customer{font-weight:600;color:#ddd}
 .ticket-pay-badge{
-  font-size:10.5px;font-weight:600;padding:2px 7px;border-radius:3px;text-transform:uppercase;
-  background:#202020;color:#aaa;border:1px solid #2e2e2e;
+  font-size:10.5px;font-weight:700;padding:3px 7px;border-radius:3px;text-transform:uppercase;
+  background:#202020;color:#aaa;border:1px solid #2e2e2e;white-space:nowrap;
 }
+.ticket-pay-badge.pay-unverified{background:#241d06;color:var(--yellow);border-color:#594600}
+.ticket-pay-badge.pay-verified{background:#142117;color:#8cc999;border-color:#26452e}
+.ticket-pay-badge.pay-pickup{background:#1d1d1d;color:#ddd;border-color:#3a3a3a}
 
 .ticket-body{flex:1;padding:14px 16px}
 .ticket-item{margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid #1a1a1a}
@@ -280,12 +283,27 @@ a{color:inherit;text-decoration:none}
           phone: o.phone || '',
           time: o.tid || '',
           pickupTime: o.pickupTime || '',
+          total: Number(o.total) || 0,
+          paymentStatus: o.paymentStatus || 'verified',
           elapsedSec: elapsedMap[o.id] != null ? elapsedMap[o.id] : (o.elapsedSec || 0),
-          pay: o.kanal === 'Swish Direkt' ? 'Swish' : (o.kanal || 'Vid luckan'),
+          pay: (o.kanal || '').toLowerCase().includes('swish') ? 'Swish' : (o.kanal || 'Vid luckan'),
           status: o.status,
           items: o.items || [],
           note: o.note || ''
         }));
+    }
+
+    function renderPayBadge(t) {
+      if (t.pay === 'Swish') {
+        if (t.status === 'new' || t.paymentStatus === 'unverified') {
+          return `<span class="ticket-pay-badge pay-unverified">Swish · ${t.total} kr (Stäm av)</span>`;
+        }
+        return `<span class="ticket-pay-badge pay-verified">Swish · ${t.total} kr ✓</span>`;
+      }
+      if (t.pay === 'Foodora') {
+        return `<span class="ticket-pay-badge">Foodora · ${t.total} kr</span>`;
+      }
+      return `<span class="ticket-pay-badge pay-pickup">Vid luckan · ${t.total} kr</span>`;
     }
 
     function calculatePucks() {
@@ -325,13 +343,16 @@ a{color:inherit;text-decoration:none}
         return `
           <div class="ticket status-${escapeHtml(t.status)} ${minutes >= 14 ? 'urgent' : ''}" data-ticket-card="${idx}">
             <div class="ticket-header">
-              <span class="ticket-id">${escapeHtml(t.id)}</span>
+              <div style="display:flex;align-items:baseline;gap:10px;">
+                <span class="ticket-id">${escapeHtml(t.id)}</span>
+                <a href="../tack.html?order=${encodeURIComponent(String(t.id).replace(/^#/, ''))}" target="_blank" style="font-size:11px;color:#888;font-weight:600;" title="Öppna kundens livespårning">Kundvy ↗</a>
+              </div>
               <span class="ticket-timer ${timerClass}" data-ticket-timer="${idx}">${timeStr}</span>
             </div>
 
-            <div class="ticket-meta">
-              <span class="ticket-customer">${escapeHtml(t.customer)}${t.pickupTime && !t.pickupTime.startsWith('Snarast') ? ' · ' + escapeHtml(t.pickupTime) : ''}</span>
-              <span class="ticket-pay-badge">${escapeHtml(t.pay)}</span>
+            <div class="ticket-meta" style="gap:8px;flex-wrap:wrap;">
+              <span class="ticket-customer">${escapeHtml(t.customer)}${t.phone ? ' · <span style="color:#888;font-weight:400">' + escapeHtml(t.phone) + '</span>' : ''}${t.pickupTime && !t.pickupTime.startsWith('Snarast') ? ' · <span style="color:var(--yellow)">' + escapeHtml(t.pickupTime) + '</span>' : ''}</span>
+              ${renderPayBadge(t)}
             </div>
 
             <div class="ticket-body">
@@ -351,7 +372,10 @@ a{color:inherit;text-decoration:none}
             <div class="ticket-footer">
               ${t.status === 'new' ? `
                 <button class="btn-kds-action btn-cook" onclick="setTicketStatus(${idx}, 'cooking')">
-                  Börja tillaga
+                  Bekräfta &amp; tillaga
+                </button>
+                <button class="btn-archive" onclick="rejectTicket(${idx})" style="color:#d98278;border-color:#421c17;" title="Avvisa ej betald / felaktig order">
+                  Avvisa
                 </button>
               ` : ''}
 
@@ -362,10 +386,13 @@ a{color:inherit;text-decoration:none}
               ` : ''}
 
               ${t.status === 'ready' ? `
-                <button class="btn-kds-action btn-ping" onclick="pingCustomer(${idx})">
-                  Meddela kund (WhatsApp)
+                <button class="btn-kds-action btn-ping" onclick="smsCustomer(${idx})">
+                  SMS kund
                 </button>
-                <button class="btn-archive" onclick="archiveTicket(${idx})" title="Arkivera order">
+                <button class="btn-kds-action btn-ping" onclick="pingCustomer(${idx})">
+                  WhatsApp
+                </button>
+                <button class="btn-archive" onclick="archiveTicket(${idx})" title="Markera som utlämnad">
                   Utlämnad
                 </button>
               ` : ''}
@@ -392,11 +419,27 @@ a{color:inherit;text-decoration:none}
       renderTickets();
     }
 
+    function rejectTicket(idx) {
+      const t = tickets[idx];
+      if (!t) return;
+      IshakStore.updateOrderStatus(t.id, 'avbruten');
+      renderTickets();
+    }
+
     function pingCustomer(idx) {
       const t = tickets[idx];
       if (!t) return;
-      const msg = `Hej ${t.customer}! Din beställning ${t.id} hos Ishak's Smash Burger är nu klar att hämtas vid luckan på Hantverkargatan 5. Välkommen!`;
+      const s = IshakStore.getSettings();
+      const msg = `Hej ${t.customer}! Din beställning ${t.id} hos ${s.name || "Ishak's Smash Burger"} är nu klar att hämtas vid luckan på ${s.address || 'Hantverkargatan 5'}. Välkommen!`;
       window.open(`https://wa.me/${IshakStore.formatSwedishWhatsApp(t.phone)}?text=${encodeURIComponent(msg)}`, '_blank');
+    }
+
+    function smsCustomer(idx) {
+      const t = tickets[idx];
+      if (!t) return;
+      const s = IshakStore.getSettings();
+      const msg = `Hej ${t.customer}! Din order ${t.id} hos ${s.name || "Ishak's Smash Burger"} är nu klar vid luckan (${s.address || 'Hantverkargatan 5'}). Välkommen!`;
+      window.location.href = IshakStore.formatSwedishSMS(t.phone, msg);
     }
 
     function updateTimers() {
@@ -426,6 +469,10 @@ a{color:inherit;text-decoration:none}
         renderTickets();
         if (tickets.length > prevCount) playChime();
       }
+    });
+    window.addEventListener('focus', renderTickets);
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) renderTickets();
     });
 
     setInterval(updateTimers, 1000);

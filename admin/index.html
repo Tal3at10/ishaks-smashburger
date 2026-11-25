@@ -747,14 +747,20 @@ document.addEventListener('DOMContentLoaded', () => {
   setupNav();
   setupMobileMenu();
 
+  const refreshFromStore = () => {
+    loadStoreState();
+    populateSettingsForms();
+    checkOpen();
+    renderAll();
+  };
+
   window.addEventListener('storage', (e) => {
     if (typeof IshakStore === 'undefined') return;
-    if (Object.values(IshakStore.KEYS).includes(e.key)) {
-      loadStoreState();
-      populateSettingsForms();
-      checkOpen();
-      renderAll();
-    }
+    if (Object.values(IshakStore.KEYS).includes(e.key)) refreshFromStore();
+  });
+  window.addEventListener('focus', refreshFromStore);
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) refreshFromStore();
   });
 });
 
@@ -1033,8 +1039,11 @@ function setupOrderEvents() {
       e.stopPropagation();
       const id = actionBtn.dataset.orderId;
       const action = actionBtn.dataset.orderAction;
-      if (action === 'done') markDone(id);
+      if (action === 'confirm') confirmOrderAdmin(id);
+      else if (action === 'ready') markReadyAdmin(id);
+      else if (action === 'done') markDone(id);
       else if (action === 'cancel') cancelOrder(id);
+      else if (action === 'sms') pingCustomerSMS(id);
       else if (action === 'whatsapp') pingCustomerWhatsApp(id);
       return;
     }
@@ -1049,6 +1058,18 @@ function setupOrderEvents() {
       }
     }
   });
+}
+
+function renderOrderChannelBadge(o) {
+  const k = o.kanal || 'Webb';
+  if (k.toLowerCase().includes('swish')) {
+    if (o.status === 'new' || o.paymentStatus === 'unverified') {
+      return '<span class="badge badge-yellow" style="font-size:10px">Swish (Stäm av)</span>';
+    }
+    return '<span class="badge badge-green" style="font-size:10px">Swish ✓</span>';
+  }
+  if (k === 'Foodora') return '<span class="badge badge-muted" style="font-size:10px">Foodora</span>';
+  return `<span class="badge badge-muted" style="font-size:10px">${escapeHtml(k)}</span>`;
 }
 
 function renderOrders() {
@@ -1096,29 +1117,59 @@ function renderOrders() {
         <td style="font-weight:700;color:var(--yellow)">${escapeHtml(o.id)}</td>
         <td style="color:var(--muted)">${escapeHtml(o.tid)}</td>
         <td style="max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escapeHtml(summary)}</td>
-        <td><span class="badge ${o.kanal==='Foodora'?'badge-muted':'badge-green'}" style="font-size:10px">${escapeHtml(o.kanal || 'Webb')}</span></td>
+        <td>${renderOrderChannelBadge(o)}</td>
         <td style="font-weight:700">${Number(o.total) || 0} kr</td>
         <td>${statusBadge(o.status)}</td>
         <td>
-          ${inQueue ? `<button class="badge badge-yellow" data-order-action="done" data-order-id="${escapeHtml(o.id)}">Klar</button>` : ''}
+          ${o.status === 'new'
+            ? `<button class="badge badge-yellow" data-order-action="confirm" data-order-id="${escapeHtml(o.id)}">Bekräfta</button>`
+            : inQueue
+              ? `<button class="badge badge-yellow" data-order-action="done" data-order-id="${escapeHtml(o.id)}">Utlämnad</button>`
+              : ''}
         </td>
       </tr>
       <tr><td colspan="8" style="padding:0"><div class="order-detail${isExpanded ? ' open' : ''}" id="${domId}">
-        <div style="display:flex;flex-wrap:wrap;gap:14px;margin-bottom:8px;color:#ccc">
+        <div style="display:flex;flex-wrap:wrap;gap:14px;margin-bottom:8px;color:#ccc;align-items:center">
           ${o.customer ? `<span><strong style="color:#fff">Kund:</strong> ${escapeHtml(o.customer)}</span>` : ''}
           ${o.phone ? `<span><strong style="color:#fff">Telefon:</strong> ${escapeHtml(o.phone)}</span>` : ''}
           ${o.pickupTime ? `<span><strong style="color:#fff">Upphämtning:</strong> ${escapeHtml(o.pickupTime)}</span>` : ''}
+          <a href="../tack.html?order=${encodeURIComponent(String(o.id).replace(/^#/, ''))}" target="_blank" style="color:var(--yellow);font-weight:600;margin-left:auto">Öppna kundspårning ↗</a>
         </div>
         <strong style="color:#fff">Orderinnehåll:</strong>
         <ul class="order-items-list">${itemsListHtml}</ul>
         ${o.note ? `<div style="padding:8px;background:#1a1a1a;border-radius:4px;border-left:3px solid var(--yellow)"><strong style="color:#fff">Not:</strong> ${escapeHtml(o.note)}</div>` : ''}
         <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
-          ${inQueue ? `<button class="badge badge-yellow" data-order-action="done" data-order-id="${escapeHtml(o.id)}">Markera klar vid luckan</button>` : ''}
+          ${o.status === 'new' ? `<button class="badge badge-yellow" data-order-action="confirm" data-order-id="${escapeHtml(o.id)}">Bekräfta &amp; börja steka</button>` : ''}
+          ${o.status === 'cooking' ? `<button class="badge badge-green" data-order-action="ready" data-order-id="${escapeHtml(o.id)}">Markera klar vid luckan</button>` : ''}
+          ${inQueue ? `<button class="badge badge-muted" data-order-action="done" data-order-id="${escapeHtml(o.id)}">Markera utlämnad</button>` : ''}
+          <button class="badge badge-muted" data-order-action="sms" data-order-id="${escapeHtml(o.id)}">SMS kund</button>
+          <button class="badge badge-muted" data-order-action="whatsapp" data-order-id="${escapeHtml(o.id)}">WhatsApp kund</button>
           ${o.status !== 'avbruten' ? `<button class="badge badge-red" data-order-action="cancel" data-order-id="${escapeHtml(o.id)}">Avbryt</button>` : ''}
-          <button class="badge badge-muted" data-order-action="whatsapp" data-order-id="${escapeHtml(o.id)}">Meddela kund via WhatsApp</button>
         </div>
       </div></td></tr>`;
   }).join('');
+}
+
+function pingCustomerSMS(id) {
+  const o = getOrders().find(x => x.id === id);
+  const s = typeof IshakStore !== 'undefined' ? IshakStore.getSettings() : {};
+  const greeting = o?.customer ? `Hej ${o.customer}!` : 'Hej!';
+  const body = `${greeting} Din beställning ${id} hos ${s.name || "Ishak's Smash Burger"} är nu klar vid luckan (${s.address || 'Hantverkargatan 5'}). Välkommen!`;
+  if (typeof IshakStore !== 'undefined' && IshakStore.formatSwedishSMS) {
+    window.location.href = IshakStore.formatSwedishSMS(o?.phone, body);
+  }
+}
+
+function confirmOrderAdmin(id) {
+  if (typeof IshakStore !== 'undefined') IshakStore.updateOrderStatus(id, 'cooking');
+  renderAll();
+  showToast(`Order ${id} bekräftad — skickad till stekbordet!`);
+}
+
+function markReadyAdmin(id) {
+  if (typeof IshakStore !== 'undefined') IshakStore.updateOrderStatus(id, 'ready');
+  renderAll();
+  showToast(`Order ${id} klar att hämtas vid luckan!`);
 }
 
 function pingCustomerWhatsApp(id) {
@@ -1332,12 +1383,12 @@ function renderPayment(orders) {
   const total = active.length || 1;
   const countBy = (matcher) => active.filter(o => matcher(o.kanal || '')).length;
   const swishCount = countBy(k => k.toLowerCase().includes('swish'));
-  const waCount = countBy(k => k.toLowerCase().includes('whatsapp'));
+  const waCount = countBy(k => k.toLowerCase().includes('whatsapp') || k.toLowerCase().includes('luckan'));
   const foodoraCount = countBy(k => k.toLowerCase().includes('foodora'));
 
   const data = [
-    { label: 'Swish Direkt (Webb)', val: Math.round((swishCount / total) * 100), count: swishCount, color: 'var(--yellow)' },
-    { label: 'WhatsApp', val: Math.round((waCount / total) * 100), count: waCount, color: '#8cc999' },
+    { label: 'Swish i förväg', val: Math.round((swishCount / total) * 100), count: swishCount, color: 'var(--yellow)' },
+    { label: 'Vid luckan / WhatsApp', val: Math.round((waCount / total) * 100), count: waCount, color: '#8cc999' },
     { label: 'Foodora', val: Math.round((foodoraCount / total) * 100), count: foodoraCount, color: '#5a4000' }
   ];
   const pc = document.getElementById('paymentChart');

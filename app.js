@@ -126,6 +126,11 @@ function initMenuPage() {
       syncStoreSettingsToPage();
     }
   });
+
+  window.addEventListener('focus', () => {
+    renderMenuSections();
+    syncStoreSettingsToPage();
+  });
 }
 
 function updateActiveCategoryTab(catId) {
@@ -629,6 +634,7 @@ function initCheckout() {
   const checkoutModal = document.getElementById('checkoutModal');
   const btnCancel = document.getElementById('btnCancelCheckout');
   const btnSend = document.getElementById('btnSendOrder');
+  const btnPayAtPickup = document.getElementById('btnPayAtPickup');
   const btnSwish = document.getElementById('btnSimulateSwish');
   const btnCopySwish = document.getElementById('btnCopySwish');
 
@@ -645,10 +651,12 @@ function initCheckout() {
     const totalEl = document.getElementById('checkoutTotalAmount');
     const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
 
-    const refEl = document.getElementById('swishOrderRef');
-    if (refEl) refEl.textContent = activeCheckoutRef;
+    const cleanNumRef = activeCheckoutRef.replace(/^#/, '');
+    const swishMsg = `Order ${cleanNumRef}`;
 
-    const swishClean = (s.swish || '1230824441').replace(/\D/g, '') || '1230824441';
+    const refEl = document.getElementById('swishOrderRef');
+    if (refEl) refEl.textContent = swishMsg;
+
     const swishDisplay = document.getElementById('swishNumberDisplay');
     if (swishDisplay && s.swish) swishDisplay.textContent = s.swish;
     const recDisplay = document.getElementById('swishRecipientDisplay');
@@ -658,8 +666,11 @@ function initCheckout() {
 
     const qrWrap = document.getElementById('swishQrWrap');
     if (qrWrap && typeof qrcode === 'function') {
+      const payload = typeof IshakStore !== 'undefined' && IshakStore.buildSwishQrPayload
+        ? IshakStore.buildSwishQrPayload(s.swish, totalPrice, swishMsg, 0)
+        : `C1230824441;${totalPrice};${encodeURIComponent(swishMsg)};0`;
       const q = qrcode(0, 'M');
-      q.addData(`C${swishClean};${totalPrice};${activeCheckoutRef};0`);
+      q.addData(payload);
       q.make();
       qrWrap.innerHTML = q.createSvgTag(4, 0);
     }
@@ -697,7 +708,7 @@ function initCheckout() {
 
     if (btnSwish) {
       btnSwish.classList.remove('processing', 'success');
-      btnSwish.innerHTML = '<span>Bekräfta beställning</span>';
+      btnSwish.innerHTML = '<span>Skicka beställning</span>';
     }
 
     activeCheckoutRef = getNextOrderId();
@@ -752,11 +763,11 @@ function initCheckout() {
       time: timeSelect.value,
       notes: notesInput ? notesInput.value.trim() : '',
       totalPrice: cart.reduce((sum, item) => sum + (item.price * item.qty), 0),
-      ref: document.getElementById('swishOrderRef')?.textContent || getNextOrderId()
+      ref: activeCheckoutRef || getNextOrderId()
     };
   }
 
-  function commitPlacedOrder(details, paymentMethod) {
+  function commitPlacedOrder(details, paymentMethod, paymentStatus) {
     const timeStr = new Date().toLocaleTimeString('sv-SE', { hour: '2-digit', minute: '2-digit' });
     const itemsCopy = cart.map(i => ({ name: i.name, qty: i.qty, price: i.price, mods: i.mods }));
 
@@ -769,6 +780,7 @@ function initCheckout() {
       items: itemsCopy,
       total: details.totalPrice,
       payment: paymentMethod,
+      paymentStatus: paymentStatus || 'unverified',
       date: timeStr
     };
 
@@ -784,6 +796,7 @@ function initCheckout() {
         tid: timeStr,
         pickupTime: details.time,
         kanal: paymentMethod,
+        paymentStatus: paymentStatus || 'unverified',
         total: details.totalPrice,
         status: 'new',
         elapsedSec: 0,
@@ -795,6 +808,11 @@ function initCheckout() {
     cart = [];
     saveCart();
     updateCartUI();
+  }
+
+  function navigateToOrderTracker(ref) {
+    const num = String(ref || '').replace(/^#/, '');
+    window.location.href = `tack.html?order=${encodeURIComponent(num)}`;
   }
 
   if (btnKassa) btnKassa.addEventListener('click', openCheckoutModal);
@@ -813,20 +831,24 @@ function initCheckout() {
       if (!details) return;
 
       btnSwish.classList.add('processing');
-      btnSwish.innerHTML = '<span>Registrerar beställning...</span>';
+      btnSwish.innerHTML = '<span>Skickar till köket...</span>';
 
       setTimeout(() => {
-        btnSwish.classList.remove('processing');
-        btnSwish.classList.add('success');
-        btnSwish.innerHTML = '<span>Beställning mottagen (' + details.totalPrice + ' kr)</span>';
+        commitPlacedOrder(details, 'Swish', 'unverified');
+        checkoutModal.classList.remove('open');
+        navigateToOrderTracker(details.ref);
+      }, 350);
+    });
+  }
 
-        commitPlacedOrder(details, 'Swish Direkt');
+  if (btnPayAtPickup) {
+    btnPayAtPickup.addEventListener('click', () => {
+      const details = getValidatedCheckoutDetails();
+      if (!details) return;
 
-        setTimeout(() => {
-          checkoutModal.classList.remove('open');
-          window.location.href = 'tack.html';
-        }, 500);
-      }, 450);
+      commitPlacedOrder(details, 'Vid luckan', 'at_pickup');
+      checkoutModal.classList.remove('open');
+      navigateToOrderTracker(details.ref);
     });
   }
 
@@ -855,20 +877,18 @@ function initCheckout() {
 
       text += `\n━━━━━━━━━━━━━━━━━━━━━\n`;
       text += `*TOTALT:* ${details.totalPrice} kr\n`;
-      text += `*Betalsätt:* Swish ${s.swish || '123 082 44 41'} / Vid luckan\n`;
+      text += `*Betalsätt:* Vid luckan (Kort / Swish ${s.swish || '123 082 44 41'})\n`;
 
       if (details.notes) {
         text += `\n*Önskemål:* ${details.notes}\n`;
       }
-      text += `━━━━━━━━━━━━━━━━━━━━━\n`;
-      text += `Beställning lagd via hemsidan.`;
 
-      commitPlacedOrder(details, 'WhatsApp');
+      commitPlacedOrder(details, 'WhatsApp', 'at_pickup');
       checkoutModal.classList.remove('open');
 
       const waUrl = `https://wa.me/${waTarget}?text=${encodeURIComponent(text)}`;
       window.open(waUrl, '_blank');
-      window.location.href = 'tack.html';
+      navigateToOrderTracker(details.ref);
     });
   }
 }

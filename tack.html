@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tack för din beställning — Ishak's Smash Burger</title>
-  <meta name="description" content="Din beställning är mottagen vid foodtrucken på Hantverkargatan 5 i Borlänge." />
+  <title>Orderstatus — Ishak's Smash Burger</title>
+  <meta name="description" content="Följ din beställning i realtid hos Ishak's Smash Burger på Hantverkargatan 5 i Borlänge." />
   <meta name="robots" content="noindex, follow" />
   <meta name="theme-color" content="#0A0A0A" />
   <link rel="icon" type="image/png" href="assets/images/logo.png" />
@@ -16,14 +16,14 @@
     .confirm-page {
       min-height: calc(100vh - var(--nav-h));
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: center;
-      padding: calc(var(--nav-h) + 40px) 24px 60px;
+      padding: calc(var(--nav-h) + 32px) 20px 60px;
     }
 
     .confirm-inner {
       text-align: center;
-      max-width: 540px;
+      max-width: 560px;
       width: 100%;
     }
 
@@ -31,34 +31,165 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 0 auto 24px;
+      margin: 0 auto 18px;
     }
 
     .confirm-heading {
       font-family: var(--font-display);
       font-weight: 900;
-      font-size: clamp(32px, 6vw, 44px);
+      font-size: clamp(30px, 6vw, 42px);
       text-transform: uppercase;
       letter-spacing: 0.03em;
       color: #FFFFFF;
-      line-height: 1.1;
-      margin: 0 0 10px;
+      line-height: 1.08;
+      margin: 0 0 8px;
     }
 
     .confirm-subtitle {
       font-family: var(--font-body);
-      font-size: 15px;
-      line-height: 1.6;
+      font-size: 14.5px;
+      line-height: 1.55;
       color: var(--ink-muted);
-      margin: 0 0 28px;
+      margin: 0 auto 24px;
+      max-width: 460px;
+    }
+
+    .tracker-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px 18px;
+      margin-bottom: 18px;
+    }
+
+    .tracker-steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      position: relative;
+    }
+
+    .tracker-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .tracker-dot {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: #1a1a1a;
+      border: 2px solid #2e2e2e;
+      color: #666;
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.25s ease;
+    }
+
+    .tracker-label {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: #666;
+      text-align: center;
+      line-height: 1.25;
+    }
+
+    .tracker-step.done .tracker-dot {
+      background: #192b1d;
+      border-color: #3d7a4a;
+      color: #8cc999;
+    }
+
+    .tracker-step.done .tracker-label {
+      color: #aaa;
+    }
+
+    .tracker-step.active .tracker-dot {
+      background: var(--yellow);
+      border-color: var(--yellow);
+      color: #000;
+      box-shadow: 0 0 0 4px rgba(255, 192, 0, 0.14);
+    }
+
+    .tracker-step.active .tracker-label {
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .tracker-step.ready-active .tracker-dot {
+      background: #3d8b4f;
+      border-color: #3d8b4f;
+      color: #fff;
+      box-shadow: 0 0 0 4px rgba(61, 139, 79, 0.2);
+    }
+
+    .tracker-step.ready-active .tracker-label {
+      color: #8cc999;
+      font-weight: 700;
+    }
+
+    .status-pill-tack {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 9px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      white-space: nowrap;
+    }
+    .pill-pending { background: #241d06; color: var(--yellow); border: 1px solid #4a3a00; }
+    .pill-verified { background: #141f17; color: #8cc999; border: 1px solid #233b2a; }
+    .pill-pickup { background: #1c1c1c; color: #ccc; border: 1px solid #333; }
+    .pill-canceled { background: #261210; color: #e57373; border: 1px solid #4a1d1d; }
+
+    .tack-swish-box {
+      background: #0f1c24;
+      border: 1px solid #1a3d52;
+      border-radius: 8px;
+      padding: 16px 18px;
+      margin-bottom: 18px;
+      text-align: left;
+      display: none;
+    }
+
+    .tack-swish-grid {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .tack-qr-only-desktop {
+      background: #fff;
+      padding: 8px;
+      border-radius: 6px;
+      width: 96px;
+      height: 96px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .tack-qr-only-desktop svg { width: 100%; height: 100%; }
+
+    @media (max-width: 640px) {
+      .tack-qr-only-desktop { display: none; }
     }
 
     .confirm-receipt {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 8px;
-      padding: 22px 24px;
-      margin-bottom: 24px;
+      padding: 20px 22px;
+      margin-bottom: 18px;
       text-align: left;
     }
 
@@ -85,6 +216,7 @@
       font-size: 12px;
       text-transform: uppercase;
       letter-spacing: 0.5px;
+      min-width: 92px;
     }
 
     .confirm-actions {
@@ -92,6 +224,7 @@
       gap: 12px;
       justify-content: center;
       flex-wrap: wrap;
+      margin-top: 22px;
     }
 
     .confirm-btn-primary {
@@ -135,11 +268,32 @@
       border-color: var(--yellow);
       color: var(--yellow);
     }
+
+    .demo-staff-bar {
+      margin-top: 28px;
+      padding: 12px 16px;
+      border: 1px dashed #2b2b2b;
+      border-radius: 6px;
+      background: #0e0e0e;
+      font-size: 12px;
+      color: #888;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .demo-staff-bar a {
+      color: var(--yellow);
+      font-weight: 600;
+    }
+    .demo-staff-bar a:hover {
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
 
-  <!-- NAV -->
   <nav class="site-nav">
     <a href="index.html" class="nav-brand" aria-label="Startsida">
       <img src="assets/images/logo.png" alt="Ishak's Smash Burger" />
@@ -159,29 +313,58 @@
     </div>
   </nav>
 
-  <!-- CONFIRMATION CONTENT -->
   <main class="confirm-page">
     <div class="confirm-inner">
 
-      <!-- Checkmark SVG -->
-      <div class="confirm-check">
-        <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <circle cx="32" cy="32" r="29" stroke="#FFC000" stroke-width="3" />
-          <polyline points="20,33 28,41 44,24" stroke="#FFC000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <div class="confirm-check" id="tackIconWrap">
+        <svg width="58" height="58" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+          <circle id="tackIconCircle" cx="32" cy="32" r="29" stroke="#FFC000" stroke-width="3" />
+          <polyline id="tackIconMark" points="20,33 28,41 44,24" stroke="#FFC000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
       </div>
 
-      <h1 class="confirm-heading">Tack för din beställning!</h1>
-      <p class="confirm-subtitle">Din order har skickats direkt till stekbordet i foodtrucken.</p>
+      <h1 class="confirm-heading" id="tackMainHeading">Order mottagen!</h1>
+      <p class="confirm-subtitle" id="tackMainSubtitle">Köket tar emot din beställning vid foodtrucken och uppdaterar statusen här i realtid.</p>
 
-      <!-- DYNAMIC RECEIPT BOX -->
-      <div id="dynamicOrderBox" style="display:none;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:24px;text-align:left;">
-        <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);padding-bottom:12px;margin-bottom:14px;">
+      <div class="tracker-card" id="trackerCard">
+        <div class="tracker-steps">
+          <div class="tracker-step active" id="stepMottagen">
+            <div class="tracker-dot" id="dotMottagen">1</div>
+            <div class="tracker-label">Mottagen<br>av köket</div>
+          </div>
+          <div class="tracker-step" id="stepCooking">
+            <div class="tracker-dot" id="dotCooking">2</div>
+            <div class="tracker-label">Tillagas på<br>stekbordet</div>
+          </div>
+          <div class="tracker-step" id="stepReady">
+            <div class="tracker-dot" id="dotReady">3</div>
+            <div class="tracker-label">Klar att<br>hämtas</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tack-swish-box" id="tackSwishReminder">
+        <div class="tack-swish-grid">
+          <div style="flex:1;min-width:0;">
+            <div style="font-family:var(--font-display);font-weight:800;font-size:16px;text-transform:uppercase;color:#7bd5f7;margin-bottom:4px;">Swisha innan upphämtning</div>
+            <div style="font-size:12.5px;color:#b8cedc;line-height:1.55;margin-bottom:10px;">
+              Har du inte hunnit swisha än? Skicka <strong style="color:#fff;" id="tackSwishAmt">0 kr</strong> till <strong style="color:#fff;" data-store-swish id="tackSwishNum">123 082 44 41</strong> och märk med <strong style="color:#fff;" id="tackSwishMsg">Order</strong>. Så fort köket ser betalningen startar tillagningen.
+            </div>
+            <button type="button" class="btn-copy-swish" id="btnTackCopySwish" style="max-width:260px;">
+              <span id="btnTackCopyLabel">Kopiera Swish-nummer</span>
+            </button>
+          </div>
+          <div class="tack-qr-only-desktop" id="tackSwishQr"></div>
+        </div>
+      </div>
+
+      <div id="dynamicOrderBox" class="confirm-receipt" style="display:none;">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;border-bottom:1px solid var(--border);padding-bottom:12px;margin-bottom:14px;flex-wrap:wrap;">
           <div>
-            <span style="font-family:var(--font-display);font-weight:900;font-size:22px;color:var(--yellow);" id="tackOrderRef">ORDER</span>
+            <span style="font-family:var(--font-display);font-weight:900;font-size:24px;color:var(--yellow);" id="tackOrderRef">#1027</span>
             <div style="font-size:12px;color:var(--ink-muted);" id="tackCustomerName"></div>
           </div>
-          <span style="background:#141f17;color:#8cc999;border:1px solid #233b2a;font-size:11px;font-weight:600;padding:3px 8px;border-radius:3px;text-transform:uppercase;letter-spacing:.3px;" id="tackPaymentBadge">Betald via Swish</span>
+          <span class="status-pill-tack pill-pending" id="tackPaymentBadge">Inväntar bekräftelse</span>
         </div>
         <div id="tackOrderItems" style="font-size:13px;line-height:1.7;margin-bottom:14px;color:#ccc;"></div>
         <div style="display:flex;justify-content:space-between;font-weight:700;font-size:15px;border-top:1px solid var(--border);padding-top:10px;">
@@ -196,12 +379,12 @@
           <span><span data-store-address>Hantverkargatan 5</span>, Södra Backa, Borlänge</span>
         </div>
         <div class="confirm-info-row">
-          <span class="confirm-info-label">Tid:</span>
-          <span id="tackPickupTime">Klar om ca 15–20 minuter</span>
+          <span class="confirm-info-label">Upphämtning:</span>
+          <span id="tackPickupTime">Snarast (ca 15–20 min)</span>
         </div>
         <div class="confirm-info-row">
           <span class="confirm-info-label">Frågor?</span>
-          <span>Ring eller WhatsApp: <a href="tel:+46705491132" data-store-phone style="color:var(--yellow); text-decoration:none;">070-549 11 32</a></span>
+          <span>Ring eller SMS: <a href="tel:+46705491132" data-store-phone style="color:var(--yellow); text-decoration:none;">070-549 11 32</a></span>
         </div>
       </div>
 
@@ -210,16 +393,23 @@
         <a href="hitta-hit.html" class="confirm-btn-secondary">Hitta till foodtrucken</a>
       </div>
 
+      <div class="demo-staff-bar">
+        <span>Personalvy (testa flödet live):</span>
+        <a href="admin/kds.html" target="_blank" rel="noopener">Öppna Köksskärm (KDS) &rarr;</a>
+        <a href="admin/index.html" target="_blank" rel="noopener">Öppna Admin &rarr;</a>
+      </div>
+
     </div>
   </main>
 
-  <!-- FOOTER -->
+  <div class="toast" id="toast"></div>
+
   <footer class="site-footer">
     <div class="container">
       <div class="footer-row">
         <div>
           <span style="font-family:var(--font-display);font-weight:900;font-size:18px;">ISHAK'S SMASH BURGER</span>
-          <p style="font-size:13px;color:#8E8E8E;margin-top:4px;">Hantverkargatan 5, Södra Backa, Borlänge</p>
+          <p style="font-size:13px;color:#8E8E8E;margin-top:4px;"><span data-store-address>Hantverkargatan 5</span>, Södra Backa, Borlänge</p>
         </div>
         <div style="display:flex;gap:18px;font-size:13px;font-weight:600;text-transform:uppercase;">
           <a href="menu.html">Meny</a>
@@ -234,48 +424,207 @@
     </div>
   </footer>
 
+  <script src="qrcode.min.js"></script>
   <script src="store.js"></script>
   <script src="app.js"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
+    (function() {
       const esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-      try {
-        const raw = sessionStorage.getItem('ishaks_last_order');
-        if (raw) {
-          const order = JSON.parse(raw);
-          const box = document.getElementById('dynamicOrderBox');
-          if (box) {
-            box.style.display = 'block';
-            document.getElementById('tackOrderRef').textContent = order.id || 'BESTÄLLNING';
-            document.getElementById('tackCustomerName').textContent = `${order.name}${order.phone ? ' · ' + order.phone : ''} · ${order.time}`;
-            document.getElementById('tackOrderTotal').textContent = `${order.total} kr`;
-            
-            const badge = document.getElementById('tackPaymentBadge');
-            if (badge) {
-              badge.textContent = order.payment === 'Swish Direkt' ? 'Betald via Swish' : 'Beställd via WhatsApp';
-              if (order.payment !== 'Swish Direkt') {
-                badge.style.background = '#1a3a2a';
-                badge.style.color = '#25D366';
-              }
-            }
 
-            const itemsEl = document.getElementById('tackOrderItems');
-            if (itemsEl && order.items) {
-              itemsEl.innerHTML = order.items.map(it => `
-                <div style="display:flex;justify-content:space-between;padding:3px 0;gap:8px;">
-                  <span><strong>${Number(it.qty) || 1}×</strong> ${esc(it.name)} ${it.mods?.length ? '<span style="font-size:11px;color:#888;">(' + esc(it.mods.join(', ')) + ')</span>' : ''}</span>
-                  <span style="white-space:nowrap;">${(Number(it.price) || 0) * (Number(it.qty) || 1)} kr</span>
-                </div>
-              `).join('');
-            }
+      function resolveTrackedOrder() {
+        const params = new URLSearchParams(window.location.search);
+        const queryOrder = params.get('order');
+        if (queryOrder && typeof IshakStore !== 'undefined' && IshakStore.getOrderById) {
+          const found = IshakStore.getOrderById(queryOrder);
+          if (found) return found;
+        }
 
-            if (order.time) {
-              document.getElementById('tackPickupTime').textContent = order.time;
+        try {
+          const raw = sessionStorage.getItem('ishaks_last_order');
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            if (parsed && parsed.id && typeof IshakStore !== 'undefined' && IshakStore.getOrderById) {
+              const live = IshakStore.getOrderById(parsed.id);
+              if (live) return live;
+            }
+            if (parsed) {
+              return {
+                id: parsed.id,
+                customer: parsed.name,
+                phone: parsed.phone,
+                pickupTime: parsed.time,
+                kanal: parsed.payment,
+                paymentStatus: parsed.paymentStatus || 'unverified',
+                total: parsed.total,
+                status: 'new',
+                items: parsed.items || []
+              };
             }
           }
+        } catch (e) {}
+
+        if (typeof IshakStore !== 'undefined') {
+          const all = IshakStore.getOrders();
+          if (all.length) return all[0];
         }
-      } catch (e) {}
-    });
+        return null;
+      }
+
+      function setStepState(elId, dotId, state, numLabel) {
+        const el = document.getElementById(elId);
+        const dot = document.getElementById(dotId);
+        if (!el || !dot) return;
+        el.className = 'tracker-step' + (state ? ' ' + state : '');
+        dot.textContent = state === 'done' ? '✓' : numLabel;
+      }
+
+      function renderLiveTracker() {
+        const order = resolveTrackedOrder();
+        if (!order) return;
+
+        const s = typeof IshakStore !== 'undefined' ? IshakStore.getSettings() : { swish: '123 082 44 41' };
+        const box = document.getElementById('dynamicOrderBox');
+        if (box) box.style.display = 'block';
+
+        const ref = order.id || '#1027';
+        const cleanNum = ref.replace(/^#/, '');
+        document.getElementById('tackOrderRef').textContent = ref;
+        document.getElementById('tackCustomerName').textContent =
+          `${order.customer || ''}${order.phone ? ' · ' + order.phone : ''}`;
+        document.getElementById('tackOrderTotal').textContent = `${order.total} kr`;
+        if (order.pickupTime) {
+          document.getElementById('tackPickupTime').textContent = order.pickupTime;
+        }
+
+        const itemsEl = document.getElementById('tackOrderItems');
+        if (itemsEl && Array.isArray(order.items)) {
+          itemsEl.innerHTML = order.items.map(it => `
+            <div style="display:flex;justify-content:space-between;padding:3px 0;gap:8px;">
+              <span><strong>${Number(it.qty) || 1}×</strong> ${esc(it.name)} ${it.mods?.length ? '<span style="font-size:11px;color:#888;">(' + esc(it.mods.join(', ')) + ')</span>' : ''}</span>
+              <span style="white-space:nowrap;">${(Number(it.price) || 0) * (Number(it.qty) || 1)} kr</span>
+            </div>
+          `).join('');
+        }
+
+        const heading = document.getElementById('tackMainHeading');
+        const sub = document.getElementById('tackMainSubtitle');
+        const badge = document.getElementById('tackPaymentBadge');
+        const swishBox = document.getElementById('tackSwishReminder');
+        const trackerCard = document.getElementById('trackerCard');
+        const circle = document.getElementById('tackIconCircle');
+        const mark = document.getElementById('tackIconMark');
+
+        const isSwish = (order.kanal || '').toLowerCase().includes('swish');
+        const status = order.status || 'new';
+
+        trackerCard.style.display = status === 'avbruten' ? 'none' : 'block';
+        circle.setAttribute('stroke', status === 'ready' || status === 'klar' ? '#4caf50' : status === 'avbruten' ? '#e57373' : '#FFC000');
+        mark.setAttribute('stroke', status === 'ready' || status === 'klar' ? '#4caf50' : status === 'avbruten' ? '#e57373' : '#FFC000');
+
+        if (status === 'new') {
+          heading.textContent = `Order ${ref} mottagen`;
+          sub.textContent = isSwish
+            ? 'Köket stämmer nu av din Swish-betalning och startar tillagningen direkt.'
+            : 'Köket har tagit emot din beställning och förbereder den inför upphämtning.';
+          setStepState('stepMottagen', 'dotMottagen', 'active', '1');
+          setStepState('stepCooking', 'dotCooking', '', '2');
+          setStepState('stepReady', 'dotReady', '', '3');
+
+          if (isSwish) {
+            badge.className = 'status-pill-tack pill-pending';
+            badge.textContent = 'Swish · Stäms av i köket';
+            swishBox.style.display = 'block';
+            document.getElementById('tackSwishAmt').textContent = `${order.total} kr`;
+            document.getElementById('tackSwishNum').textContent = s.swish || '123 082 44 41';
+            document.getElementById('tackSwishMsg').textContent = `Order ${cleanNum}`;
+            document.getElementById('btnTackCopyLabel').textContent = `Kopiera Swish (${s.swish || '123 082 44 41'})`;
+
+            const qrEl = document.getElementById('tackSwishQr');
+            if (qrEl && typeof qrcode === 'function') {
+              const payload = typeof IshakStore !== 'undefined' && IshakStore.buildSwishQrPayload
+                ? IshakStore.buildSwishQrPayload(s.swish, order.total, `Order ${cleanNum}`, 0)
+                : `C1230824441;${order.total};Order%20${cleanNum};0`;
+              const q = qrcode(0, 'M');
+              q.addData(payload);
+              q.make();
+              qrEl.innerHTML = q.createSvgTag(3, 0);
+            }
+          } else {
+            badge.className = 'status-pill-tack pill-pickup';
+            badge.textContent = `Betalas vid luckan (${order.total} kr)`;
+            swishBox.style.display = 'none';
+          }
+        } else if (status === 'cooking' || status === 'kö') {
+          heading.textContent = 'Tillagas på stekbordet!';
+          sub.textContent = `Order ${ref} är bekräftad av köket och dina burgare steks nu färska på plattan.`;
+          setStepState('stepMottagen', 'dotMottagen', 'done', '1');
+          setStepState('stepCooking', 'dotCooking', 'active', '2');
+          setStepState('stepReady', 'dotReady', '', '3');
+          swishBox.style.display = 'none';
+
+          if (isSwish) {
+            badge.className = 'status-pill-tack pill-verified';
+            badge.textContent = 'Swish bekräftad · På stekbordet';
+          } else {
+            badge.className = 'status-pill-tack pill-pickup';
+            badge.textContent = `Bekräftad · Betalas vid luckan`;
+          }
+        } else if (status === 'ready') {
+          heading.textContent = 'Din mat är klar vid luckan!';
+          sub.textContent = `Välkommen fram till luckan på ${s.address || 'Hantverkargatan 5'} och uppge ${ref}.`;
+          setStepState('stepMottagen', 'dotMottagen', 'done', '1');
+          setStepState('stepCooking', 'dotCooking', 'done', '2');
+          setStepState('stepReady', 'dotReady', 'ready-active', '3');
+          swishBox.style.display = 'none';
+
+          badge.className = 'status-pill-tack pill-verified';
+          badge.textContent = isSwish ? 'Klar att hämtas (Betald)' : `Klar · Betala ${order.total} kr vid luckan`;
+        } else if (status === 'klar') {
+          heading.textContent = 'Utlämnad — Smaklig måltid!';
+          sub.textContent = `Order ${ref} är utlämnad. Varmt välkommen åter till Ishak's Smash Burger!`;
+          setStepState('stepMottagen', 'dotMottagen', 'done', '1');
+          setStepState('stepCooking', 'dotCooking', 'done', '2');
+          setStepState('stepReady', 'dotReady', 'done', '3');
+          swishBox.style.display = 'none';
+          badge.className = 'status-pill-tack pill-verified';
+          badge.textContent = 'Slutförd & utlämnad';
+        } else if (status === 'avbruten') {
+          heading.textContent = 'Beställningen avbröts';
+          sub.textContent = `Order ${ref} avbröts av köket. Ring oss på ${s.phone || '070-549 11 32'} vid frågor.`;
+          swishBox.style.display = 'none';
+          badge.className = 'status-pill-tack pill-canceled';
+          badge.textContent = 'Avbruten';
+        }
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        renderLiveTracker();
+
+        const copyBtn = document.getElementById('btnTackCopySwish');
+        if (copyBtn) {
+          copyBtn.addEventListener('click', () => {
+            const s = typeof IshakStore !== 'undefined' ? IshakStore.getSettings() : { swish: '123 082 44 41' };
+            const rawNum = (s.swish || '123 082 44 41').replace(/\s+/g, '');
+            const lbl = document.getElementById('btnTackCopyLabel');
+            const done = () => {
+              if (lbl) lbl.textContent = `Kopierat: ${s.swish || '123 082 44 41'}`;
+              if (typeof showToast === 'function') showToast('Swish-nummer kopierat');
+            };
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+              navigator.clipboard.writeText(rawNum).then(done).catch(done);
+            } else {
+              done();
+            }
+          });
+        }
+
+        window.addEventListener('storage', renderLiveTracker);
+        window.addEventListener('focus', renderLiveTracker);
+        document.addEventListener('visibilitychange', () => {
+          if (!document.hidden) renderLiveTracker();
+        });
+      });
+    })();
   </script>
 </body>
 </html>

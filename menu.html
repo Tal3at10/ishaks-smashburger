@@ -154,11 +154,11 @@
         <div class="payment-tabs">
           <button type="button" class="pay-tab active" id="tabSwish" onclick="setPayMethod('swish')">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#00A3E0" stroke-width="2"/><path d="M8 12l3 3 5-5" stroke="#00A3E0" stroke-width="2" stroke-linecap="round"/></svg>
-            <span>Swish (Direkt)</span>
+            <span>Swish i förväg</span>
           </button>
-          <button type="button" class="pay-tab" id="tabWhatsApp" onclick="setPayMethod('whatsapp')">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.998 2C6.473 2 2 6.473 2 11.998c0 1.763.456 3.422 1.252 4.864L2 22l5.283-1.237A9.957 9.957 0 0012 22c5.525 0 10-4.473 10-9.998C22 6.473 17.525 2 11.998 2z"/></svg>
-            <span>WhatsApp / Vid luckan</span>
+          <button type="button" class="pay-tab" id="tabWhatsApp" onclick="setPayMethod('pickup')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+            <span>Betala vid luckan</span>
           </button>
         </div>
       </div>
@@ -170,18 +170,18 @@
             <svg width="18" height="18" viewBox="0 0 24 24" fill="#00A3E0"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-5" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
             <span>Swish Företag</span>
           </div>
-          <span style="font-size:11.5px;color:#a0b8c8;font-weight:600;">Direkt till restaurangen</span>
+          <span style="font-size:11.5px;color:#a0b8c8;font-weight:600;">0% mellanhänder</span>
         </div>
 
         <div class="swish-qr-section">
           <div class="swish-qr-wrap" id="swishQrWrap"></div>
-          <div class="swish-qr-caption">Scanna med Swish-appen</div>
+          <div class="swish-qr-caption">Scanna med Swish-appen (belopp &amp; ref ifyllt)</div>
         </div>
 
         <div class="swish-meta">
           Mottagare: <strong id="swishRecipientDisplay">Ishak's Smash Burger</strong><br>
           Swish-nummer: <strong id="swishNumberDisplay">123 082 44 41</strong><br>
-          Meddelande: <strong id="swishOrderRef">#1027</strong>
+          Meddelande: <strong id="swishOrderRef">Order 1027</strong>
         </div>
 
         <button type="button" class="btn-copy-swish" id="btnCopySwish">
@@ -189,19 +189,26 @@
           <span id="btnCopySwishLabel">Kopiera Swish-nummer (123 082 44 41)</span>
         </button>
 
+        <div style="font-size:11.5px;color:#8ba6b8;text-align:center;line-height:1.45;">
+          Swisha beloppet och skicka din beställning nedan. Köket stämmer av betalningen och bekräftar ordern på din skärm.
+        </div>
+
         <button type="button" class="btn-swish-pay" id="btnSimulateSwish">
-          <span>Bekräfta beställning</span>
+          <span>Skicka beställning</span>
         </button>
       </div>
 
-      <!-- WHATSAPP CONTAINER -->
+      <!-- PAY AT PICKUP / WHATSAPP CONTAINER -->
       <div id="whatsappContainer" style="display:none;">
         <div class="swish-box" style="margin-bottom:14px;">
-          Beställningen skickas direkt till luckan via WhatsApp. Du betalar vid luckan när du hämtar.
+          Beställ i förväg så förbereder köket maten. Du betalar enkelt med <strong>kort eller Swish</strong> när du hämtar vid luckan.
         </div>
-        <button type="button" class="btn-whatsapp" id="btnSendOrder">
+        <button type="button" class="btn-kassa" id="btnPayAtPickup" style="font-size:16px;margin-bottom:10px;">
+          Skicka beställning (Betala vid luckan)
+        </button>
+        <button type="button" class="btn-whatsapp" id="btnSendOrder" style="width:100%;background:transparent;border:1px solid #264a33;color:#8cc999;font-size:13px;padding:10px;">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.998 2C6.473 2 2 6.473 2 11.998c0 1.763.456 3.422 1.252 4.864L2 22l5.283-1.237A9.957 9.957 0 0012 22c5.525 0 10-4.473 10-9.998C22 6.473 17.525 2 11.998 2z"/></svg>
-          <span>Skicka beställning via WhatsApp</span>
+          <span>Eller skicka beställningen via WhatsApp</span>
         </button>
       </div>
 

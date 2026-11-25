@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Fönsteraffisch &amp; QR-kit — Ishak's Smash Burger</title>
+  <title>Fönsteraffisch &amp; Swish-skylt — Ishak's Smash Burger</title>
   <meta name="robots" content="noindex, nofollow" />
   <link rel="icon" type="image/png" href="../assets/images/logo.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -12,63 +12,74 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#0A0A0A;--surface:#141414;--border:#2A2A2A;--yellow:#FFC000;
+  --bg:#0A0A0A;--surface:#141414;--border:#2A2A2A;--yellow:#FFC000;--swish:#00A3E0;
   --font-d:'Barlow Condensed',sans-serif;--font-b:'Inter',system-ui,sans-serif;
 }
 body{
-  background:#1e1e1e;color:#fff;font-family:var(--font-b);
-  padding:40px 20px;display:flex;flex-direction:column;align-items:center;min-height:100vh;
+  background:#181818;color:#fff;font-family:var(--font-b);
+  padding:32px 20px 48px;display:flex;flex-direction:column;align-items:center;min-height:100vh;
 }
 button{cursor:pointer;border:none;background:none;font:inherit;color:inherit}
 
 .controls{
-  max-width:700px;width:100%;display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;
+  max-width:680px;width:100%;display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px;
 }
+.mode-tabs{
+  max-width:680px;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:22px;
+}
+.mode-tab{
+  background:#111;border:1px solid var(--border);border-radius:6px;padding:11px 14px;
+  font-family:var(--font-d);font-weight:800;font-size:15px;text-transform:uppercase;letter-spacing:.5px;
+  color:#8E8E8E;text-align:center;transition:all .15s;
+}
+.mode-tab:hover{color:#fff;border-color:#3a3a3a}
+.mode-tab.active{background:#222;color:#fff;border-color:var(--yellow)}
+
 .btn-print{
   background:var(--yellow);color:#000;font-family:var(--font-d);font-weight:900;
-  font-size:16px;text-transform:uppercase;letter-spacing:1px;padding:12px 28px;
+  font-size:16px;text-transform:uppercase;letter-spacing:1px;padding:11px 24px;
   border-radius:4px;display:inline-flex;align-items:center;gap:8px;
 }
 .btn-print:hover{background:#E5AC00}
 .btn-back{
-  background:#2a2a2a;color:#ccc !important;text-decoration:none !important;font-size:13px;font-weight:600;padding:10px 18px;border-radius:4px;display:inline-flex;align-items:center;gap:6px;
+  background:#262626;color:#ccc !important;text-decoration:none !important;font-size:13px;font-weight:600;
+  padding:10px 16px;border-radius:4px;display:inline-flex;align-items:center;gap:6px;
 }
-.btn-back:hover{color:#fff !important;background:#333}
+.btn-back:hover{color:#fff !important;background:#303030}
 
-/* A4 POSTER SHEET */
 .poster-sheet{
   width:100%;max-width:680px;background:var(--bg);border:3px solid var(--border);
-  border-radius:8px;padding:56px 48px;display:flex;flex-direction:column;
+  border-radius:8px;padding:52px 44px;display:flex;flex-direction:column;
   align-items:center;text-align:center;box-shadow:0 12px 40px rgba(0,0,0,0.6);
   position:relative;
 }
 
 .poster-logo{
-  width:84px;height:84px;object-fit:contain;margin-bottom:16px;
+  width:80px;height:80px;object-fit:contain;margin-bottom:14px;
 }
 
 .poster-brand-title{
-  font-family:var(--font-d);font-weight:900;font-size:36px;
+  font-family:var(--font-d);font-weight:900;font-size:34px;
   letter-spacing:1.5px;text-transform:uppercase;line-height:1;margin-bottom:6px;
 }
 .poster-brand-sub{
-  font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:2px;
-  color:var(--yellow);margin-bottom:36px;
+  font-size:12.5px;font-weight:700;text-transform:uppercase;letter-spacing:2px;
+  color:var(--yellow);margin-bottom:32px;
 }
 
 .poster-headline{
-  font-family:var(--font-d);font-weight:900;font-size:clamp(40px, 7vw, 56px);
+  font-family:var(--font-d);font-weight:900;font-size:clamp(38px, 7vw, 54px);
   text-transform:uppercase;line-height:0.95;letter-spacing:0.5px;margin-bottom:14px;
 }
 .poster-headline span{color:var(--yellow)}
+.poster-headline span.swish-accent{color:var(--swish)}
 
 .poster-desc{
-  font-size:15px;color:#bbb;line-height:1.6;max-width:480px;margin-bottom:32px;
+  font-size:15px;color:#bbb;line-height:1.6;max-width:480px;margin-bottom:30px;
 }
 
-/* QR CONTAINER */
 .poster-qr-box{
-  background:#fff;border-radius:12px;padding:24px;margin-bottom:32px;
+  background:#fff;border-radius:12px;padding:24px;margin-bottom:30px;
   box-shadow:0 8px 30px rgba(0,0,0,0.4);display:flex;flex-direction:column;
   align-items:center;gap:12px;
 }
@@ -76,15 +87,14 @@ button{cursor:pointer;border:none;background:none;font:inherit;color:inherit}
   width:220px;height:220px;display:block;
 }
 .poster-qr-label{
-  color:#000;font-family:var(--font-d);font-weight:900;font-size:16px;
-  letter-spacing:1px;text-transform:uppercase;
+  color:#000;font-family:var(--font-d);font-weight:900;font-size:17px;
+  letter-spacing:0.8px;text-transform:uppercase;
 }
 
-/* 3 STEPS */
 .poster-steps{
   display:grid;grid-template-columns:repeat(3, 1fr);gap:20px;
-  width:100%;margin-bottom:40px;border-top:1px solid #222;border-bottom:1px solid #222;
-  padding:24px 0;text-align:center;
+  width:100%;margin-bottom:36px;border-top:1px solid #222;border-bottom:1px solid #222;
+  padding:22px 0;text-align:center;
 }
 .step-num{
   font-family:var(--font-d);font-weight:900;font-size:28px;color:var(--yellow);line-height:1;margin-bottom:6px;
@@ -92,34 +102,32 @@ button{cursor:pointer;border:none;background:none;font:inherit;color:inherit}
 .step-title{font-size:13px;font-weight:700;text-transform:uppercase;margin-bottom:4px}
 .step-sub{font-size:11.5px;color:#8E8E8E;line-height:1.4}
 
-/* FOOTER META */
 .poster-footer{
   font-size:13px;color:#8E8E8E;display:flex;gap:24px;flex-wrap:wrap;justify-content:center;
 }
 .poster-footer strong{color:#fff}
 
 @media(max-width:600px){
-  body{padding:14px 10px}
-  .controls{flex-direction:column;gap:8px;margin-bottom:14px}
+  body{padding:14px 10px 32px}
+  .controls{flex-direction:column;gap:8px;margin-bottom:10px}
+  .mode-tabs{grid-template-columns:1fr;gap:6px;margin-bottom:14px}
   .btn-back, .btn-print{width:100%;justify-content:center;padding:12px 14px;font-size:13px}
   .poster-sheet{padding:28px 14px;box-shadow:none}
-  .poster-logo{width:60px;height:60px;margin-bottom:10px}
+  .poster-logo{width:58px;height:58px;margin-bottom:10px}
   .poster-brand-title{font-size:24px}
   .poster-brand-sub{font-size:11px;margin-bottom:18px}
   .poster-headline{font-size:28px !important;line-height:1.05;margin-bottom:10px}
   .poster-desc{font-size:13px;line-height:1.5;margin-bottom:18px}
   .poster-qr-box{padding:14px;margin-bottom:18px}
-  .poster-qr-svg{width:160px;height:160px}
+  .poster-qr-svg{width:168px;height:168px}
   .poster-steps{grid-template-columns:1fr;gap:12px;padding:14px 0;margin-bottom:18px}
   .step-num{font-size:20px;margin-bottom:2px}
-  .step-title{font-size:13px}
-  .step-sub{font-size:12px}
   .poster-footer{font-size:12px;gap:8px;flex-direction:column;align-items:center}
 }
 
 @media print{
   body{background:#fff;padding:0;min-height:auto}
-  .controls{display:none}
+  .controls, .mode-tabs{display:none}
   .poster-sheet{
     max-width:100%;box-shadow:none;border:none;padding:30px;
     background:#0A0A0A !important;-webkit-print-color-adjust:exact;print-color-adjust:exact;
@@ -133,34 +141,39 @@ button{cursor:pointer;border:none;background:none;font:inherit;color:inherit}
     <a href="index.html" class="btn-back">← Tillbaka till Admin</a>
     <button type="button" class="btn-print" onclick="window.print()">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-      Skriv ut affisch (A4)
+      Skriv ut (A4)
     </button>
+  </div>
+
+  <div class="mode-tabs">
+    <button type="button" class="mode-tab active" id="tabModeMenu" onclick="switchPosterMode('menu')">1. Fönsteraffisch — Beställ Online</button>
+    <button type="button" class="mode-tab" id="tabModeSwish" onclick="switchPosterMode('swish')">2. Kassaskylt — Swish vid luckan</button>
   </div>
 
   <div class="poster-sheet">
     <img src="../assets/images/logo.png" alt="Ishak's Smash Burger" class="poster-logo" />
-    <div class="poster-brand-title">Ishak's Smash Burger</div>
+    <div class="poster-brand-title" id="posterBrandName">Ishak's Smash Burger</div>
     <div class="poster-brand-sub">Södra Backa · Borlänge</div>
 
-    <h1 class="poster-headline">
+    <h1 class="poster-headline" id="posterHeadline">
       Scanna &amp; beställ<br>
       <span>direkt vid luckan</span>
     </h1>
 
-    <p class="poster-desc">
-      Slipp vänta i kylan — beställ till ordinarie pris (135 kr inkl. pommes &amp; dryck). Scanna QR-koden, välj din burgare och hämta nystekt vid luckan när maten är klar.
+    <p class="poster-desc" id="posterDesc">
+      Slipp vänta i kylan — beställ till ordinarie pris (135 kr inkl. pommes &amp; dryck). Scanna QR-koden, välj din burgare och följ din order live i mobilen.
     </p>
 
     <div class="poster-qr-box">
       <div id="posterQrMount" style="display:flex;justify-content:center;"></div>
-      <div class="poster-qr-label">Öppna menyn i mobilen</div>
+      <div class="poster-qr-label" id="posterQrLabel">Öppna menyn i mobilen</div>
     </div>
 
-    <div class="poster-steps">
+    <div class="poster-steps" id="posterSteps">
       <div>
         <div class="step-num">1</div>
         <div class="step-title">Scanna</div>
-        <div class="step-sub">Öppna kameran och rikta mot QR-koden</div>
+        <div class="step-sub">Rikta mobilkameran mot QR-koden</div>
       </div>
       <div>
         <div class="step-num">2</div>
@@ -169,49 +182,89 @@ button{cursor:pointer;border:none;background:none;font:inherit;color:inherit}
       </div>
       <div>
         <div class="step-num">3</div>
-        <div class="step-title">Swisha &amp; Hämta</div>
-        <div class="step-sub">Betala med Swish och hämta nystekt vid luckan</div>
+        <div class="step-title">Följ &amp; Hämta</div>
+        <div class="step-sub">Se live när maten är klar vid luckan</div>
       </div>
     </div>
 
     <div class="poster-footer">
       <div>Plats: <strong id="posterAddress">Hantverkargatan 5</strong>, Södra Backa</div>
       <div>Öppettider: <strong>Mån–Fre 11:00–15:00 · Lör varierande</strong></div>
-      <div>Swish: <strong id="posterSwish">123 082 44 41</strong></div>
+      <div>Swish Företag: <strong id="posterSwish">123 082 44 41</strong></div>
     </div>
   </div>
 
   <script src="../qrcode.min.js"></script>
   <script src="../store.js"></script>
   <script>
-    (function() {
-      function syncPosterInfo() {
-        if (typeof IshakStore === 'undefined') return;
-        const s = IshakStore.getSettings();
-        const swishEl = document.getElementById('posterSwish');
-        const addrEl = document.getElementById('posterAddress');
-        if (swishEl && s.swish) swishEl.textContent = s.swish;
-        if (addrEl && s.address) addrEl.textContent = s.address;
-      }
-      syncPosterInfo();
-      window.addEventListener('storage', (e) => {
-        if (typeof IshakStore !== 'undefined' && e.key === IshakStore.KEYS.SETTINGS) {
-          syncPosterInfo();
-        }
-      });
+    let currentMode = 'menu';
 
+    function renderPoster() {
+      const s = typeof IshakStore !== 'undefined'
+        ? IshakStore.getSettings()
+        : { name: "Ishak's Smash Burger", address: 'Hantverkargatan 5', swish: '123 082 44 41' };
+
+      document.getElementById('posterBrandName').textContent = s.name || "Ishak's Smash Burger";
+      document.getElementById('posterSwish').textContent = s.swish || '123 082 44 41';
+      document.getElementById('posterAddress').textContent = s.address || 'Hantverkargatan 5';
+
+      document.getElementById('tabModeMenu').classList.toggle('active', currentMode === 'menu');
+      document.getElementById('tabModeSwish').classList.toggle('active', currentMode === 'swish');
+
+      const headline = document.getElementById('posterHeadline');
+      const desc = document.getElementById('posterDesc');
+      const qrLabel = document.getElementById('posterQrLabel');
+      const steps = document.getElementById('posterSteps');
       const mount = document.getElementById('posterQrMount');
-      if (!mount || typeof qrcode !== 'function') return;
-      const menuUrl = window.location.protocol.startsWith('http')
-        ? window.location.href.replace(/\/admin\/qr\.html.*$/, '/menu.html')
-        : 'https://ishakssmashburger.se/menu.html';
-      const q = qrcode(0, 'M');
-      q.addData(menuUrl);
-      q.make();
-      mount.innerHTML = q.createSvgTag(6, 0);
-      const svg = mount.querySelector('svg');
-      if (svg) svg.classList.add('poster-qr-svg');
-    })();
+
+      let qrPayload = '';
+
+      if (currentMode === 'menu') {
+        headline.innerHTML = 'Scanna &amp; beställ<br><span>direkt vid luckan</span>';
+        desc.textContent = 'Slipp vänta i kylan — beställ till ordinarie pris (135 kr inkl. pommes & dryck). Scanna QR-koden, välj din burgare och följ din order live i mobilen.';
+        qrLabel.textContent = 'Öppna menyn i mobilen';
+        steps.innerHTML = `
+          <div><div class="step-num">1</div><div class="step-title">Scanna</div><div class="step-sub">Rikta mobilkameran mot QR-koden</div></div>
+          <div><div class="step-num">2</div><div class="step-title">Välj &amp; Beställ</div><div class="step-sub">Välj kött, kyckling eller halloumi</div></div>
+          <div><div class="step-num">3</div><div class="step-title">Följ &amp; Hämta</div><div class="step-sub">Se live när maten är klar vid luckan</div></div>
+        `;
+        qrPayload = window.location.protocol.startsWith('http')
+          ? window.location.href.replace(/\/admin\/qr\.html.*$/, '/menu.html')
+          : 'https://ishakssmashburger.se/menu.html';
+      } else {
+        headline.innerHTML = 'Betala enkelt med<br><span class="swish-accent">Swish vid luckan</span>';
+        desc.textContent = 'Öppna Swish-appen i mobilen och scanna QR-koden nedan. Mottagaren fylls i automatiskt — ange beloppet och visa betalningen i luckan.';
+        qrLabel.textContent = `Swish: ${s.swish || '123 082 44 41'}`;
+        steps.innerHTML = `
+          <div><div class="step-num">1</div><div class="step-title">Öppna Swish</div><div class="step-sub">Starta Swish-appen och tryck Scanna</div></div>
+          <div><div class="step-num">2</div><div class="step-title">Ange belopp</div><div class="step-sub">Mottagare ${s.swish || '123 082 44 41'} är förifyllt</div></div>
+          <div><div class="step-num">3</div><div class="step-title">Visa i luckan</div><div class="step-sub">Signera med BankID och hämta din mat</div></div>
+        `;
+        qrPayload = typeof IshakStore !== 'undefined' && IshakStore.buildSwishQrPayload
+          ? IshakStore.buildSwishQrPayload(s.swish, '', 'Ishaks Smash Burger', 6)
+          : 'C1230824441;;Ishaks%20Smash%20Burger;6';
+      }
+
+      if (mount && typeof qrcode === 'function') {
+        const q = qrcode(0, 'M');
+        q.addData(qrPayload);
+        q.make();
+        mount.innerHTML = q.createSvgTag(6, 0);
+        const svg = mount.querySelector('svg');
+        if (svg) svg.classList.add('poster-qr-svg');
+      }
+    }
+
+    function switchPosterMode(mode) {
+      currentMode = mode;
+      renderPoster();
+    }
+
+    renderPoster();
+    window.addEventListener('storage', (e) => {
+      if (typeof IshakStore !== 'undefined' && e.key === IshakStore.KEYS.SETTINGS) renderPoster();
+    });
+    window.addEventListener('focus', renderPoster);
   </script>
 </body>
 </html>

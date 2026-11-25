@@ -1,7 +1,7 @@
 // Shared Demo State Store — Bridges Storefront (menu.html), Admin, and KDS via localStorage
 window.IshakStore = (function () {
   const KEYS = {
-    ORDERS: 'ishaks_store_orders_v1',
+    ORDERS: 'ishaks_store_orders_v2',
     MENU: 'ishaks_store_menu_v1',
     SETTINGS: 'ishaks_store_settings_v1',
     HOURS: 'ishaks_store_hours_v1',
@@ -15,7 +15,8 @@ window.IshakStore = (function () {
       phone: '0701234567',
       tid: '14:42',
       pickupTime: 'Snarast (ca 15-20 min)',
-      kanal: 'Swish Direkt',
+      kanal: 'Swish',
+      paymentStatus: 'verified',
       total: 470,
       status: 'cooking',
       elapsedSec: 140,
@@ -32,7 +33,8 @@ window.IshakStore = (function () {
       phone: '0739876543',
       tid: '14:38',
       pickupTime: 'Snarast (ca 15-20 min)',
-      kanal: 'Swish Direkt',
+      kanal: 'Swish',
+      paymentStatus: 'verified',
       total: 175,
       status: 'cooking',
       elapsedSec: 380,
@@ -48,7 +50,8 @@ window.IshakStore = (function () {
       phone: '0705544332',
       tid: '14:32',
       pickupTime: 'Snarast (ca 15-20 min)',
-      kanal: 'Swish Direkt',
+      kanal: 'Swish',
+      paymentStatus: 'verified',
       total: 595,
       status: 'ready',
       elapsedSec: 740,
@@ -63,12 +66,13 @@ window.IshakStore = (function () {
       id: '#1023',
       customer: 'Anders E.',
       phone: '0722334455',
-      tid: '14:22',
+      tid: '14:46',
       pickupTime: 'Snarast (ca 15-20 min)',
-      kanal: 'WhatsApp',
+      kanal: 'Swish',
+      paymentStatus: 'unverified',
       total: 135,
       status: 'new',
-      elapsedSec: 45,
+      elapsedSec: 35,
       note: 'Utan senap',
       items: [
         { name: 'Smash Burger 4', qty: 1, price: 135, mods: ['Kyckling'] }
@@ -274,11 +278,29 @@ window.IshakStore = (function () {
     return orders;
   }
 
+  function normalizeOrderId(orderId) {
+    const clean = String(orderId || '').trim().replace(/^#/, '');
+    return clean ? '#' + clean : '';
+  }
+
+  function getOrderById(orderId) {
+    const norm = normalizeOrderId(orderId);
+    if (!norm) return null;
+    return getOrders().find(o => normalizeOrderId(o.id) === norm) || null;
+  }
+
   function updateOrderStatus(orderId, newStatus) {
     const orders = getOrders();
-    const target = orders.find(o => o.id === orderId);
+    const norm = normalizeOrderId(orderId);
+    const target = orders.find(o => normalizeOrderId(o.id) === norm);
     if (target) {
       target.status = newStatus;
+      if ((newStatus === 'cooking' || newStatus === 'ready' || newStatus === 'klar') && target.paymentStatus === 'unverified') {
+        target.paymentStatus = 'verified';
+      }
+      if (newStatus === 'klar' && target.paymentStatus === 'at_pickup') {
+        target.paymentStatus = 'verified';
+      }
       saveOrders(orders);
     }
     return orders;
@@ -353,9 +375,23 @@ window.IshakStore = (function () {
     return digits || '46705491132';
   }
 
+  function formatSwedishSMS(phone, body) {
+    const num = '+' + formatSwedishWhatsApp(phone);
+    return `sms:${num}?body=${encodeURIComponent(body || '')}`;
+  }
+
+  function buildSwishQrPayload(swishNumber, amount, message, editableMask) {
+    const cleanNum = String(swishNumber || '1230824441').replace(/\D/g, '') || '1230824441';
+    const amtStr = amount != null && amount !== '' ? String(Math.round(Number(amount))) : '';
+    const msgStr = message ? encodeURIComponent(String(message)) : '';
+    const maskStr = editableMask != null ? String(editableMask) : '0';
+    return `C${cleanNum};${amtStr};${msgStr};${maskStr}`;
+  }
+
   return {
     KEYS,
     getOrders,
+    getOrderById,
     saveOrders,
     addOrder,
     updateOrderStatus,
@@ -369,6 +405,8 @@ window.IshakStore = (function () {
     saveCatering,
     addCatering,
     resetAll,
-    formatSwedishWhatsApp
+    formatSwedishWhatsApp,
+    formatSwedishSMS,
+    buildSwishQrPayload
   };
 })();
