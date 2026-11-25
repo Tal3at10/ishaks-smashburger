@@ -172,7 +172,7 @@
       </div>
 
       <h1 class="confirm-heading">Tack för din beställning!</h1>
-      <p class="confirm-subtitle">Din order har skickats direkt till stekbordet i trucken.</p>
+      <p class="confirm-subtitle">Din order har skickats direkt till stekbordet i foodtrucken.</p>
 
       <!-- DYNAMIC RECEIPT BOX -->
       <div id="dynamicOrderBox" style="display:none;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:24px;text-align:left;">
@@ -193,7 +193,7 @@
       <div class="confirm-receipt">
         <div class="confirm-info-row">
           <span class="confirm-info-label">Avhämtning:</span>
-          <span>Hantverkargatan 5, Södra Backa, Borlänge (vid Byggmax)</span>
+          <span><span data-store-address>Hantverkargatan 5</span>, Södra Backa, Borlänge</span>
         </div>
         <div class="confirm-info-row">
           <span class="confirm-info-label">Tid:</span>
@@ -201,13 +201,13 @@
         </div>
         <div class="confirm-info-row">
           <span class="confirm-info-label">Frågor?</span>
-          <span>Ring eller WhatsApp: <a href="tel:+46705491132" style="color:var(--yellow); text-decoration:none;">070-549 11 32</a></span>
+          <span>Ring eller WhatsApp: <a href="tel:+46705491132" data-store-phone style="color:var(--yellow); text-decoration:none;">070-549 11 32</a></span>
         </div>
       </div>
 
       <div class="confirm-actions">
         <a href="menu.html" class="confirm-btn-primary">Beställ mer</a>
-        <a href="hitta-hit.html" class="confirm-btn-secondary">Hitta till trucken</a>
+        <a href="hitta-hit.html" class="confirm-btn-secondary">Hitta till foodtrucken</a>
       </div>
 
     </div>
@@ -234,9 +234,11 @@
     </div>
   </footer>
 
+  <script src="store.js"></script>
   <script src="app.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+      const esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
       try {
         const raw = sessionStorage.getItem('ishaks_last_order');
         if (raw) {
@@ -260,9 +262,9 @@
             const itemsEl = document.getElementById('tackOrderItems');
             if (itemsEl && order.items) {
               itemsEl.innerHTML = order.items.map(it => `
-                <div style="display:flex;justify-content:space-between;padding:3px 0;">
-                  <span><strong>${it.qty}×</strong> ${it.name} ${it.mods?.length ? '<span style="font-size:11px;color:#888;">(' + it.mods.join(', ') + ')</span>' : ''}</span>
-                  <span>${it.price * it.qty} kr</span>
+                <div style="display:flex;justify-content:space-between;padding:3px 0;gap:8px;">
+                  <span><strong>${Number(it.qty) || 1}×</strong> ${esc(it.name)} ${it.mods?.length ? '<span style="font-size:11px;color:#888;">(' + esc(it.mods.join(', ')) + ')</span>' : ''}</span>
+                  <span style="white-space:nowrap;">${(Number(it.price) || 0) * (Number(it.qty) || 1)} kr</span>
                 </div>
               `).join('');
             }

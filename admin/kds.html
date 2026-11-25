@@ -168,11 +168,15 @@ a{color:inherit;text-decoration:none}
   .kds-puck-counter{padding:3px 7px;gap:5px}
   .kds-puck-num{font-size:16px}
   .kds-puck-label{font-size:9px}
-  .kds-actions{gap:6px}
-  .kds-btn{padding:6px 8px;font-size:11px;gap:4px}
+  .kds-actions{gap:5px}
+  .kds-btn{padding:6px 7px;font-size:11px;gap:4px}
   .ticket-footer{flex-direction:column;gap:8px}
   .btn-kds-action, .btn-archive{width:100%;height:44px;display:flex;align-items:center;justify-content:center;font-size:14px}
   .btn-archive{text-align:center;padding:10px}
+}
+@media(max-width:400px){
+  .kds-brand img{display:none}
+  .kds-header{padding:0 8px}
 }
 
 @media(max-width:600px){
@@ -214,6 +218,9 @@ a{color:inherit;text-decoration:none}
         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
         <span class="btn-text-full">Ljud: </span><strong id="soundStatus" style="color:#fff;">PÅ</strong>
       </button>
+      <a href="../menu.html" class="kds-btn">
+        <span class="btn-text-full">Beställningssida</span><span class="btn-text-short">Meny</span>
+      </a>
       <a href="index.html" class="kds-btn">
         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
         <span class="btn-text-full">Kontrollpanel</span><span class="btn-text-short">Admin</span>
@@ -225,6 +232,15 @@ a{color:inherit;text-decoration:none}
 
   <script src="../store.js"></script>
   <script>
+    function escapeHtml(str) {
+      return String(str ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
     let soundEnabled = true;
     function playChime() {
       if (!soundEnabled) return;
@@ -307,29 +323,29 @@ a{color:inherit;text-decoration:none}
         else if (minutes >= 6) timerClass = 'timer-warn';
 
         return `
-          <div class="ticket status-${t.status} ${minutes >= 14 ? 'urgent' : ''}" data-ticket-card="${idx}">
+          <div class="ticket status-${escapeHtml(t.status)} ${minutes >= 14 ? 'urgent' : ''}" data-ticket-card="${idx}">
             <div class="ticket-header">
-              <span class="ticket-id">${t.id}</span>
+              <span class="ticket-id">${escapeHtml(t.id)}</span>
               <span class="ticket-timer ${timerClass}" data-ticket-timer="${idx}">${timeStr}</span>
             </div>
 
             <div class="ticket-meta">
-              <span class="ticket-customer">${t.customer}${t.pickupTime && !t.pickupTime.startsWith('Snarast') ? ' · ' + t.pickupTime : ''}</span>
-              <span class="ticket-pay-badge">${t.pay}</span>
+              <span class="ticket-customer">${escapeHtml(t.customer)}${t.pickupTime && !t.pickupTime.startsWith('Snarast') ? ' · ' + escapeHtml(t.pickupTime) : ''}</span>
+              <span class="ticket-pay-badge">${escapeHtml(t.pay)}</span>
             </div>
 
             <div class="ticket-body">
               ${t.items.map(it => `
                 <div class="ticket-item">
                   <div class="ticket-item-title">
-                    <span class="ticket-item-qty">${it.qty}×</span>
-                    <span>${it.name}</span>
+                    <span class="ticket-item-qty">${Number(it.qty) || 1}×</span>
+                    <span>${escapeHtml(it.name)}</span>
                   </div>
-                  ${it.mods && it.mods.length ? `<div class="ticket-item-mods">${it.mods.join(' · ')}</div>` : ''}
+                  ${it.mods && it.mods.length ? `<div class="ticket-item-mods">${escapeHtml(it.mods.join(' · '))}</div>` : ''}
                 </div>
               `).join('')}
 
-              ${t.note ? `<div class="ticket-note">${t.note}</div>` : ''}
+              ${t.note ? `<div class="ticket-note">${escapeHtml(t.note)}</div>` : ''}
             </div>
 
             <div class="ticket-footer">

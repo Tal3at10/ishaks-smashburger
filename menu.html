@@ -6,7 +6,7 @@
   <title>Meny — Ishak's Smash Burger</title>
   <meta name="description" content="Beställ smashburgare för avhämtning på Hantverkargatan 5 i Borlänge. Pommes frites och 33 cl dryck ingår." />
   <meta property="og:title" content="Meny — Ishak's Smash Burger" />
-  <meta property="og:description" content="Smash Burger 1–6, Barn Burger, Nuggets och mer. Beställ online via WhatsApp." />
+  <meta property="og:description" content="Smash Burger 1–6 (135 kr inkl. pommes &amp; dryck), Barnmeny &amp; Sides. Beställ online för avhämtning vid Hantverkargatan 5." />
   <meta property="og:image" content="https://tal3at10.github.io/ishaks-smashburger/assets/images/smash-burger-2.jpg" />
   <meta property="og:url" content="https://tal3at10.github.io/ishaks-smashburger/menu.html" />
   <meta name="theme-color" content="#0A0A0A" />
@@ -168,23 +168,29 @@
         <div class="swish-card-header">
           <div class="swish-badge">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="#00A3E0"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-5" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
-            <span>Swish Direkt</span>
+            <span>Swish Företag</span>
           </div>
-          <span style="font-size:11px;color:#a0b8c8;font-weight:600;">Ishak Abika</span>
+          <span style="font-size:11.5px;color:#a0b8c8;font-weight:600;">Direkt till restaurangen</span>
         </div>
 
-        <div class="swish-qr-wrap" id="swishQrWrap"></div>
+        <div class="swish-qr-section">
+          <div class="swish-qr-wrap" id="swishQrWrap"></div>
+          <div class="swish-qr-caption">Scanna med Swish-appen</div>
+        </div>
 
         <div class="swish-meta">
-          Mottagare: <strong>Ishak's Smash Burger</strong><br>
+          Mottagare: <strong id="swishRecipientDisplay">Ishak's Smash Burger</strong><br>
           Swish-nummer: <strong id="swishNumberDisplay">123 082 44 41</strong><br>
-          Ref: <strong id="swishOrderRef">#1027</strong>
+          Meddelande: <strong id="swishOrderRef">#1027</strong>
         </div>
 
-        <a href="#" id="btnOpenSwishApp" target="_blank" rel="noopener" style="text-align:center;font-size:12.5px;font-weight:700;color:#4dc4f0;text-decoration:underline;">Öppna Swish-appen direkt i mobilen &rarr;</a>
+        <button type="button" class="btn-copy-swish" id="btnCopySwish">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          <span id="btnCopySwishLabel">Kopiera Swish-nummer (123 082 44 41)</span>
+        </button>
 
         <button type="button" class="btn-swish-pay" id="btnSimulateSwish">
-          <span>Genomför Swish-betalning (Demo)</span>
+          <span>Bekräfta beställning</span>
         </button>
       </div>
 

@@ -26,12 +26,28 @@ function saveCart() {
   } catch (e) {}
 }
 
+function escapeHtml(str) {
+  return String(str ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   initNav();
+  syncStoreSettingsToPage();
   if (document.getElementById('menuMain')) {
     initMenuPage();
   }
   updateCartUI();
+
+  window.addEventListener('storage', (e) => {
+    if (typeof IshakStore !== 'undefined' && e.key === IshakStore.KEYS.SETTINGS) {
+      syncStoreSettingsToPage();
+    }
+  });
 });
 
 function initNav() {
@@ -41,13 +57,6 @@ function initNav() {
     hamburger.addEventListener('click', () => {
       const open = navLinks.classList.toggle('open');
       hamburger.setAttribute('aria-expanded', open);
-    });
-  }
-
-  const navCartBtn = document.getElementById('navCartBtn');
-  if (navCartBtn) {
-    navCartBtn.addEventListener('click', () => {
-      openMobileDrawer();
     });
   }
 }
@@ -82,6 +91,23 @@ function syncStoreSettingsToPage() {
   if (timeNote) timeNote.textContent = `Klar inom ca ${s.waitTime || '15–20 min'}`;
   const swishEl = document.getElementById('swishNumberDisplay');
   if (swishEl && s.swish) swishEl.textContent = s.swish;
+  const recEl = document.getElementById('swishRecipientDisplay');
+  if (recEl && s.name) recEl.textContent = s.name;
+  const copyLbl = document.getElementById('btnCopySwishLabel');
+  if (copyLbl && s.swish) copyLbl.textContent = `Kopiera Swish-nummer (${s.swish})`;
+
+  document.querySelectorAll('[data-store-swish]').forEach(el => {
+    if (s.swish) el.textContent = s.swish;
+  });
+  document.querySelectorAll('[data-store-phone]').forEach(el => {
+    if (s.phone) {
+      el.textContent = s.phone;
+      if (el.tagName === 'A') el.href = 'tel:' + s.phone.replace(/\s+/g, '');
+    }
+  });
+  document.querySelectorAll('[data-store-address]').forEach(el => {
+    if (s.address) el.textContent = s.address;
+  });
 }
 
 function initMenuPage() {
@@ -520,52 +546,54 @@ function updateCartUI() {
     if (cartTotal) cartTotal.textContent = `${totalPrice} kr`;
   }
 
-  // Mobile trigger & drawer
   const mobileTrigger = document.getElementById('mobileCartTrigger');
   const mobileCount = document.getElementById('mobileCartCount');
   const mobileTotal = document.getElementById('mobileCartTotal');
-  const drawerList = document.getElementById('drawerCartItems');
-  const drawerTotal = document.getElementById('drawerTotal');
 
   if (mobileTrigger) {
     mobileTrigger.classList.toggle('has-items', totalCount > 0);
     if (mobileCount) mobileCount.textContent = `${totalCount} st`;
     if (mobileTotal) mobileTotal.textContent = `${totalPrice} kr`;
   }
-  if (drawerList) {
-    drawerList.innerHTML = cart.length === 0 ? '<p style="padding:24px;text-align:center;color:var(--ink-muted);">Varukorgen är tom</p>' : renderCartLines(cart);
-    if (drawerTotal) drawerTotal.textContent = `${totalPrice} kr`;
-  }
 }
 
 function renderCartLines(items) {
-  return items.map(item => `
-    <div class="cart-line" data-key="${item.key}">
+  return items.map((item, idx) => `
+    <div class="cart-line">
       <div class="cart-line-qty">
-        <button type="button" class="qty-btn" onclick="changeQty('${item.key}', -1)">&minus;</button>
+        <button type="button" class="qty-btn" onclick="changeQtyIdx(${idx}, -1)" aria-label="Minska">&minus;</button>
         <span class="qty-num">${item.qty}</span>
-        <button type="button" class="qty-btn" onclick="changeQty('${item.key}', 1)">+</button>
+        <button type="button" class="qty-btn" onclick="changeQtyIdx(${idx}, 1)" aria-label="Öka">+</button>
       </div>
       <div class="cart-line-info">
-        <div class="cart-line-name">${item.name}</div>
-        ${item.mods.length > 0 ? `<div class="cart-line-mods">${item.mods.join(' · ')}</div>` : ''}
+        <div class="cart-line-name">${escapeHtml(item.name)}</div>
+        ${item.mods.length > 0 ? `<div class="cart-line-mods">${escapeHtml(item.mods.join(' · '))}</div>` : ''}
       </div>
       <div class="cart-line-price">${item.price * item.qty} kr</div>
     </div>
   `).join('');
 }
 
-window.changeQty = function(key, delta) {
-  const item = cart.find(ci => ci.key === key);
-  if (!item) return;
+window.changeQtyIdx = function(idx, delta) {
+  if (!cart[idx]) return;
 
-  item.qty += delta;
-  if (item.qty <= 0) {
-    cart = cart.filter(ci => ci.key !== key);
+  cart[idx].qty += delta;
+  if (cart[idx].qty <= 0) {
+    cart.splice(idx, 1);
   }
 
   saveCart();
   updateCartUI();
+
+  const checkoutModal = document.getElementById('checkoutModal');
+  if (checkoutModal && checkoutModal.classList.contains('open')) {
+    if (cart.length === 0) {
+      checkoutModal.classList.remove('open');
+      showToast('Varukorgen är tom');
+    } else if (typeof window.refreshCheckoutSummary === 'function') {
+      window.refreshCheckoutSummary();
+    }
+  }
 };
 
 function initMobileDrawer() {
@@ -602,8 +630,59 @@ function initCheckout() {
   const btnCancel = document.getElementById('btnCancelCheckout');
   const btnSend = document.getElementById('btnSendOrder');
   const btnSwish = document.getElementById('btnSimulateSwish');
+  const btnCopySwish = document.getElementById('btnCopySwish');
 
   if (!checkoutModal) return;
+
+  let activeCheckoutRef = '#1027';
+
+  window.refreshCheckoutSummary = function() {
+    const s = typeof IshakStore !== 'undefined'
+      ? IshakStore.getSettings()
+      : { name: "Ishak's Smash Burger", swish: '123 082 44 41' };
+
+    const listEl = document.getElementById('checkoutItemsList');
+    const totalEl = document.getElementById('checkoutTotalAmount');
+    const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+
+    const refEl = document.getElementById('swishOrderRef');
+    if (refEl) refEl.textContent = activeCheckoutRef;
+
+    const swishClean = (s.swish || '1230824441').replace(/\D/g, '') || '1230824441';
+    const swishDisplay = document.getElementById('swishNumberDisplay');
+    if (swishDisplay && s.swish) swishDisplay.textContent = s.swish;
+    const recDisplay = document.getElementById('swishRecipientDisplay');
+    if (recDisplay && s.name) recDisplay.textContent = s.name;
+    const copyLbl = document.getElementById('btnCopySwishLabel');
+    if (copyLbl && s.swish) copyLbl.textContent = `Kopiera Swish-nummer (${s.swish})`;
+
+    const qrWrap = document.getElementById('swishQrWrap');
+    if (qrWrap && typeof qrcode === 'function') {
+      const q = qrcode(0, 'M');
+      q.addData(`C${swishClean};${totalPrice};${activeCheckoutRef};0`);
+      q.make();
+      qrWrap.innerHTML = q.createSvgTag(4, 0);
+    }
+
+    listEl.innerHTML = cart.map((item, idx) => `
+      <div class="checkout-item">
+        <div class="checkout-item-left">
+          <div class="cart-line-qty">
+            <button type="button" class="qty-btn" onclick="changeQtyIdx(${idx}, -1)" aria-label="Minska">&minus;</button>
+            <span class="qty-num">${item.qty}</span>
+            <button type="button" class="qty-btn" onclick="changeQtyIdx(${idx}, 1)" aria-label="Öka">+</button>
+          </div>
+          <div>
+            <div class="checkout-item-name">${escapeHtml(item.name)}</div>
+            ${item.mods.length > 0 ? `<div class="checkout-item-mods">${escapeHtml(item.mods.join(' · '))}</div>` : ''}
+          </div>
+        </div>
+        <span class="checkout-item-price">${item.price * item.qty} kr</span>
+      </div>
+    `).join('');
+
+    totalEl.textContent = `${totalPrice} kr`;
+  };
 
   window.openCheckoutModal = function() {
     if (cart.length === 0) {
@@ -616,44 +695,36 @@ function initCheckout() {
       return;
     }
 
-    const listEl = document.getElementById('checkoutItemsList');
-    const totalEl = document.getElementById('checkoutTotalAmount');
-    const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-    const ref = getNextOrderId();
-    const refEl = document.getElementById('swishOrderRef');
-    if (refEl) refEl.textContent = ref;
-
-    const swishClean = (s.swish || '1230824441').replace(/\D/g, '') || '1230824441';
-    const swishDisplay = document.getElementById('swishNumberDisplay');
-    if (swishDisplay && s.swish) swishDisplay.textContent = s.swish;
-
-    const qrWrap = document.getElementById('swishQrWrap');
-    if (qrWrap && typeof qrcode === 'function') {
-      const q = qrcode(0, 'M');
-      q.addData(`C${swishClean};${totalPrice};${ref};0`);
-      q.make();
-      qrWrap.innerHTML = q.createSvgTag(4, 0);
+    if (btnSwish) {
+      btnSwish.classList.remove('processing', 'success');
+      btnSwish.innerHTML = '<span>Bekräfta beställning</span>';
     }
 
-    const swishAppBtn = document.getElementById('btnOpenSwishApp');
-    if (swishAppBtn) {
-      swishAppBtn.href = `https://app.swish.nu/1/p/sw/?sw=${swishClean}&amt=${totalPrice}&msg=${encodeURIComponent(ref)}`;
-    }
-
-    listEl.innerHTML = cart.map(item => `
-      <div class="checkout-item">
-        <div>
-          <div class="checkout-item-name">${item.qty}× ${item.name}</div>
-          ${item.mods.length > 0 ? `<div class="checkout-item-mods">${item.mods.join(' · ')}</div>` : ''}
-        </div>
-        <span class="checkout-item-price">${item.price * item.qty} kr</span>
-      </div>
-    `).join('');
-
-    totalEl.textContent = `${totalPrice} kr`;
+    activeCheckoutRef = getNextOrderId();
+    window.refreshCheckoutSummary();
     setPayMethod('swish');
     checkoutModal.classList.add('open');
   };
+
+  if (btnCopySwish) {
+    btnCopySwish.addEventListener('click', () => {
+      const s = typeof IshakStore !== 'undefined' ? IshakStore.getSettings() : { swish: '123 082 44 41' };
+      const rawNum = (s.swish || '123 082 44 41').replace(/\s+/g, '');
+      const lbl = document.getElementById('btnCopySwishLabel');
+      const done = () => {
+        if (lbl) lbl.textContent = `Kopierat: ${s.swish || '123 082 44 41'}`;
+        showToast('Swish-nummer kopierat');
+        setTimeout(() => {
+          if (lbl) lbl.textContent = `Kopiera Swish-nummer (${s.swish || '123 082 44 41'})`;
+        }, 2200);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(rawNum).then(done).catch(done);
+      } else {
+        done();
+      }
+    });
+  }
 
   function getValidatedCheckoutDetails() {
     const nameInput = document.getElementById('orderName');
@@ -742,20 +813,20 @@ function initCheckout() {
       if (!details) return;
 
       btnSwish.classList.add('processing');
-      btnSwish.innerHTML = '<span>Ansluter till Swish...</span>';
+      btnSwish.innerHTML = '<span>Registrerar beställning...</span>';
 
       setTimeout(() => {
         btnSwish.classList.remove('processing');
         btnSwish.classList.add('success');
-        btnSwish.innerHTML = '<span>✓ Betalning godkänd (' + details.totalPrice + ' kr)</span>';
+        btnSwish.innerHTML = '<span>Beställning mottagen (' + details.totalPrice + ' kr)</span>';
 
         commitPlacedOrder(details, 'Swish Direkt');
 
         setTimeout(() => {
           checkoutModal.classList.remove('open');
           window.location.href = 'tack.html';
-        }, 600);
-      }, 700);
+        }, 500);
+      }, 450);
     });
   }
 

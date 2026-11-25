@@ -60,7 +60,7 @@
               </div>
               <div class="quick-info-col" style="padding:16px;">
                 <div class="quick-info-label">Allt ingår</div>
-                <div class="quick-info-val">Truck, personal, gasol, råvaror och servering.</div>
+                <div class="quick-info-val">Foodtruck, personal, gasol, råvaror och servering.</div>
               </div>
             </div>
           </div>
@@ -121,6 +121,9 @@
     </div>
   </footer>
 
+  <div class="toast" id="toast"></div>
+
+  <script src="store.js"></script>
   <script src="app.js"></script>
   <script>
     document.getElementById('cateringForm').addEventListener('submit', function(e) {
@@ -131,8 +134,33 @@
       const guests = document.getElementById('c-guests').value;
       const place = document.getElementById('c-place').value.trim();
 
-      const text = `Hej Ishak! Jag vill boka foodtrucken.\nNamn: ${name}\nTelefon: ${phone}\nDatum: ${date}\nAntal gäster: ca ${guests}\nPlats: ${place}`;
-      window.open(`https://wa.me/46705491132?text=${encodeURIComponent(text)}`, '_blank');
+      let dateFormatted = date;
+      if (date) {
+        const d = new Date(date + 'T12:00:00');
+        const months = ['jan', 'feb', 'mar', 'apr', 'maj', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'dec'];
+        if (!isNaN(d.getTime())) {
+          dateFormatted = `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+        }
+      }
+
+      if (typeof IshakStore !== 'undefined') {
+        IshakStore.addCatering({
+          title: `${name} — Event / Catering`,
+          meta: `${dateFormatted} · ${guests} personer · ${place}`,
+          phone
+        });
+      }
+
+      const s = typeof IshakStore !== 'undefined' ? IshakStore.getSettings() : { phone: '46705491132' };
+      const waTarget = typeof IshakStore !== 'undefined' ? IshakStore.formatSwedishWhatsApp(s.phone) : '46705491132';
+
+      if (typeof showToast === 'function') {
+        showToast('Förfrågan sparad och redo i WhatsApp');
+      }
+
+      const text = `Hej Ishak! Jag vill boka foodtrucken.\nNamn: ${name}\nTelefon: ${phone}\nDatum: ${dateFormatted}\nAntal gäster: ca ${guests}\nPlats: ${place}`;
+      window.open(`https://wa.me/${waTarget}?text=${encodeURIComponent(text)}`, '_blank');
+      this.reset();
     });
   </script>
 </body>

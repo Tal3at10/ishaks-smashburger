@@ -5,6 +5,7 @@ window.IshakStore = (function () {
     MENU: 'ishaks_store_menu_v1',
     SETTINGS: 'ishaks_store_settings_v1',
     HOURS: 'ishaks_store_hours_v1',
+    CATERING: 'ishaks_store_catering_v1',
   };
 
   const DEFAULT_ORDERS = [
@@ -223,6 +224,12 @@ window.IshakStore = (function () {
     { day: 'Söndag', open: false, start: '', end: '', note: '' }
   ];
 
+  const DEFAULT_CATERING = [
+    { id: 'cat-3', title: 'SSAB Borlänge — Skiftlunch', meta: '12 dec 2026 · 60 personer · Borlänge', phone: '0703322110', status: 'new' },
+    { id: 'cat-2', title: 'Tunabyggen — Avdelningslunch', meta: '18 dec 2026 · 45 personer · Södra Backa', phone: '0734455667', status: 'new' },
+    { id: 'cat-1', title: 'ICA Maxi Borlänge — Personalträff', meta: '15 jan 2027 · 50 personer · Borlänge', phone: '0708899112', status: 'contacted' }
+  ];
+
   function read(key, fallback) {
     try {
       const raw = localStorage.getItem(key);
@@ -312,6 +319,28 @@ window.IshakStore = (function () {
     write(KEYS.HOURS, hours);
   }
 
+  function getCatering() {
+    if (!localStorage.getItem(KEYS.CATERING)) {
+      write(KEYS.CATERING, DEFAULT_CATERING);
+    }
+    return read(KEYS.CATERING, DEFAULT_CATERING);
+  }
+
+  function saveCatering(list) {
+    write(KEYS.CATERING, list);
+  }
+
+  function addCatering(entry) {
+    const list = getCatering();
+    list.unshift({
+      id: 'cat-' + Date.now(),
+      status: 'new',
+      ...entry
+    });
+    saveCatering(list);
+    return list;
+  }
+
   function resetAll() {
     Object.values(KEYS).forEach(k => {
       try { localStorage.removeItem(k); } catch (e) {}
@@ -336,6 +365,9 @@ window.IshakStore = (function () {
     saveSettings,
     getHours,
     saveHours,
+    getCatering,
+    saveCatering,
+    addCatering,
     resetAll,
     formatSwedishWhatsApp
   };

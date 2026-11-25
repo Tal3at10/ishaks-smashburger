@@ -40,6 +40,13 @@ input:focus,select:focus,textarea:focus{border-color:#444}
 .nav-item.active{color:#fff;border-color:var(--yellow);background:rgba(255,192,0,.06)}
 .nav-item svg{flex-shrink:0;opacity:.7}
 .nav-item.active svg{opacity:1}
+.sidebar-sep{height:1px;background:var(--border);margin:10px 20px}
+.sidebar-link{
+  display:flex;align-items:center;gap:10px;padding:9px 20px;font-size:12.5px;font-weight:500;
+  color:var(--muted);transition:all .15s;
+}
+.sidebar-link:hover{color:#fff;background:var(--surface-2)}
+.sidebar-link svg{flex-shrink:0;opacity:.7}
 .sidebar-footer{padding:16px 20px;border-top:1px solid var(--border)}
 .sidebar-footer-name{font-size:12px;font-weight:600;margin-bottom:6px}
 .demo-badge{display:inline-block;background:var(--yellow);color:#000;font-family:var(--font-d);font-weight:800;font-size:11px;text-transform:uppercase;padding:3px 8px;border-radius:3px;letter-spacing:.5px}
@@ -277,6 +284,19 @@ input:focus,select:focus,textarea:focus{border-color:#444}
       <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
       Inställningar
     </div>
+    <div class="sidebar-sep"></div>
+    <a href="kds.html" class="sidebar-link">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      Köksskärm (KDS)
+    </a>
+    <a href="qr.html" class="sidebar-link">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+      Fönsteraffisch &amp; QR
+    </a>
+    <a href="../menu.html" class="sidebar-link">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      Öppna beställningssida
+    </a>
   </nav>
 
   <div class="sidebar-footer">
@@ -374,27 +394,7 @@ input:focus,select:focus,textarea:focus{border-color:#444}
 
           <div class="card">
             <div class="card-title">Catering-förfrågningar</div>
-            <div class="catering-item">
-              <div>
-                <div class="catering-name">Företagslunch — ICA Borlänge</div>
-                <div class="catering-meta">15 dec 2026 · 45 personer</div>
-              </div>
-              <span class="badge badge-muted">Kontaktad</span>
-            </div>
-            <div class="catering-item">
-              <div>
-                <div class="catering-name">SSAB Borlänge — Skiftlunch</div>
-                <div class="catering-meta">22 jan 2026 · 60 personer</div>
-              </div>
-              <span class="badge badge-yellow">Ny förfrågan</span>
-            </div>
-            <div class="catering-item">
-              <div>
-                <div class="catering-name">Byggmax &amp; Grannar — Företagsdag</div>
-                <div class="catering-meta">18 feb 2026 · 80 personer</div>
-              </div>
-              <span class="badge badge-yellow">Ny förfrågan</span>
-            </div>
+            <div id="cateringList"></div>
           </div>
 
           <div class="card">
@@ -962,7 +962,41 @@ function renderOverview() {
       <div class="bar-track"><div class="bar-fill" style="width:${Math.round((b.pct / maxPct) * 100)}%"></div></div>
     </div>`).join('') : '<div style="color:var(--muted);font-size:12px">Inga ordrar ännu idag.</div>';
 
+  renderCateringList();
   renderWeekChart('weekChart', buildLiveWeekData(orders), false);
+}
+
+function renderCateringList() {
+  const wrap = document.getElementById('cateringList');
+  if (!wrap) return;
+  const list = typeof IshakStore !== 'undefined' && IshakStore.getCatering ? IshakStore.getCatering() : [];
+  if (!list.length) {
+    wrap.innerHTML = '<div style="color:var(--muted);font-size:12px">Inga catering-förfrågningar.</div>';
+    return;
+  }
+  wrap.innerHTML = list.slice(0, 5).map((c, idx) => {
+    const isNew = c.status === 'new';
+    return `
+      <div class="catering-item">
+        <div>
+          <div class="catering-name">${escapeHtml(c.title)}</div>
+          <div class="catering-meta">${escapeHtml(c.meta)}${c.phone ? ' · ' + escapeHtml(c.phone) : ''}</div>
+        </div>
+        <button type="button" class="badge ${isNew ? 'badge-yellow' : 'badge-muted'}" onclick="toggleCateringStatus(${idx})" style="cursor:pointer;flex-shrink:0">
+          ${isNew ? 'Ny förfrågan' : 'Kontaktad'}
+        </button>
+      </div>`;
+  }).join('');
+}
+
+function toggleCateringStatus(idx) {
+  if (typeof IshakStore === 'undefined' || !IshakStore.getCatering) return;
+  const list = IshakStore.getCatering();
+  if (!list[idx]) return;
+  list[idx].status = list[idx].status === 'new' ? 'contacted' : 'new';
+  IshakStore.saveCatering(list);
+  renderCateringList();
+  showToast(list[idx].status === 'contacted' ? 'Markerad som kontaktad' : 'Markerad som ny förfrågan');
 }
 
 function renderWeekChart(containerId, data, tall) {

@@ -83,7 +83,7 @@ const MENU = [
       },
       {
         id: 'chili',
-        name: 'Chili Cheese (6 st)',
+        name: 'Chili cheese, 6 st',
         desc: '6 st frasiga chili cheese med smält ost och jalapeño.',
         price: 40,
         img: 'assets/images/chili-cheese.jpg',
