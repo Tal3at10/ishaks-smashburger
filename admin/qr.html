@@ -175,15 +175,31 @@ button{cursor:pointer;border:none;background:none;font:inherit;color:inherit}
     </div>
 
     <div class="poster-footer">
-      <div>Plats: <strong>Hantverkargatan 5</strong> (vid Byggmax)</div>
+      <div>Plats: <strong id="posterAddress">Hantverkargatan 5</strong> (vid Byggmax)</div>
       <div>Öppettider: <strong>Mån–Fre 11:00–15:00 · Lör varierande</strong></div>
-      <div>Swish: <strong>123 082 44 41</strong></div>
+      <div>Swish: <strong id="posterSwish">123 082 44 41</strong></div>
     </div>
   </div>
 
   <script src="../qrcode.min.js"></script>
+  <script src="../store.js"></script>
   <script>
     (function() {
+      function syncPosterInfo() {
+        if (typeof IshakStore === 'undefined') return;
+        const s = IshakStore.getSettings();
+        const swishEl = document.getElementById('posterSwish');
+        const addrEl = document.getElementById('posterAddress');
+        if (swishEl && s.swish) swishEl.textContent = s.swish;
+        if (addrEl && s.address) addrEl.textContent = s.address;
+      }
+      syncPosterInfo();
+      window.addEventListener('storage', (e) => {
+        if (typeof IshakStore !== 'undefined' && e.key === IshakStore.KEYS.SETTINGS) {
+          syncPosterInfo();
+        }
+      });
+
       const mount = document.getElementById('posterQrMount');
       if (!mount || typeof qrcode !== 'function') return;
       const menuUrl = window.location.protocol.startsWith('http')

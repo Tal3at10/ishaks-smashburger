@@ -55,13 +55,51 @@ function initNav() {
 let isManualScroll = false;
 let manualScrollTimer = null;
 
+function getActiveMenu() {
+  if (typeof IshakStore !== 'undefined') {
+    return IshakStore.getMenu(typeof MENU !== 'undefined' ? MENU : []);
+  }
+  return typeof MENU !== 'undefined' ? MENU : [];
+}
+
+function getNextOrderId() {
+  if (typeof IshakStore === 'undefined') {
+    return '#ISHAK-' + Math.floor(1000 + Math.random() * 9000);
+  }
+  const orders = IshakStore.getOrders();
+  let maxNum = 1026;
+  orders.forEach(o => {
+    const n = parseInt((o.id || '').replace(/\D/g, ''), 10);
+    if (!isNaN(n) && n >= maxNum) maxNum = n;
+  });
+  return `#${maxNum + 1}`;
+}
+
+function syncStoreSettingsToPage() {
+  if (typeof IshakStore === 'undefined') return;
+  const s = IshakStore.getSettings();
+  const timeNote = document.querySelector('.cart-time-note');
+  if (timeNote) timeNote.textContent = `Klar inom ca ${s.waitTime || '15–20 min'}`;
+  const swishEl = document.getElementById('swishNumberDisplay');
+  if (swishEl && s.swish) swishEl.textContent = s.swish;
+}
+
 function initMenuPage() {
   renderCategoryTabs();
   renderMenuSections();
+  syncStoreSettingsToPage();
   setupMenuScrollSpy();
   initModals();
   initMobileDrawer();
   initCheckout();
+
+  window.addEventListener('storage', (e) => {
+    if (typeof IshakStore === 'undefined') return;
+    if (e.key === IshakStore.KEYS.MENU || e.key === IshakStore.KEYS.SETTINGS) {
+      renderMenuSections();
+      syncStoreSettingsToPage();
+    }
+  });
 }
 
 function updateActiveCategoryTab(catId) {
@@ -79,9 +117,10 @@ function updateActiveCategoryTab(catId) {
 
 function renderCategoryTabs() {
   const tabsContainer = document.getElementById('categoryTabs');
-  if (!tabsContainer || typeof MENU === 'undefined') return;
+  const catalog = getActiveMenu();
+  if (!tabsContainer || !catalog.length) return;
 
-  tabsContainer.innerHTML = MENU.map((cat, idx) => `
+  tabsContainer.innerHTML = catalog.map((cat, idx) => `
     <button type="button" class="cat-tab ${idx === 0 ? 'active' : ''}" data-cat="${cat.id}">
       ${cat.label}
     </button>
@@ -160,45 +199,62 @@ function setupMenuScrollSpy() {
 
 function renderMenuSections() {
   const menuMain = document.getElementById('menuMain');
-  if (!menuMain || typeof MENU === 'undefined') return;
+  const catalog = getActiveMenu();
+  if (!menuMain || !catalog.length) return;
 
-  menuMain.innerHTML = MENU.map(cat => `
+  const settings = typeof IshakStore !== 'undefined' ? IshakStore.getSettings() : { acceptOrders: true };
+  const pausedBanner = settings.acceptOrders === false
+    ? `<div class="orders-paused-banner"><strong>Onlinebeställning är tillfälligt pausad.</strong> Kontakta oss på ${settings.phone || '070-549 11 32'} eller besök luckan.</div>`
+    : '';
+
+  menuMain.innerHTML = pausedBanner + catalog.map(cat => `
     <section class="menu-section" id="cat-sec-${cat.id}">
       <h2 class="menu-section-title">${cat.label}</h2>
       ${cat.desc ? `<p class="menu-section-desc">${cat.desc}</p>` : ''}
       <div class="dish-grid">
-        ${cat.items.map(dish => `
-          <div class="dish-card" data-dish-id="${dish.id}">
+        ${cat.items.map(dish => {
+          const isPaused = dish.active === false;
+          return `
+          <div class="dish-card ${isPaused ? 'paused' : ''}" data-dish-id="${dish.id}">
             <img src="${dish.img}" alt="${dish.name}" class="dish-card-img" loading="lazy" />
             <div class="dish-card-body">
+              ${isPaused ? '<span class="dish-paused-badge">Tillfälligt slut</span>' : ''}
               <h3 class="dish-card-name">${dish.name}</h3>
               <p class="dish-card-desc">${dish.desc}</p>
               <div class="dish-card-footer">
                 <span class="dish-price">${dish.price} kr</span>
-                <button type="button" class="dish-add-btn" data-dish-id="${dish.id}">
+                <button type="button" class="dish-add-btn" data-dish-id="${dish.id}" ${isPaused ? 'disabled' : ''}>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                  <span>Lägg till</span>
+                  <span>${isPaused ? 'Slut' : 'Lägg till'}</span>
                 </button>
               </div>
             </div>
-          </div>
-        `).join('')}
+          </div>`;
+        }).join('')}
       </div>
     </section>
   `).join('');
 
-  menuMain.addEventListener('click', (e) => {
-    const card = e.target.closest('.dish-card');
-    if (!card) return;
-    const dishId = card.dataset.dishId;
-    const dish = findDish(dishId);
-    if (dish) openProductModal(dish);
-  });
+  if (!menuMain.dataset.bound) {
+    menuMain.dataset.bound = '1';
+    menuMain.addEventListener('click', (e) => {
+      const card = e.target.closest('.dish-card');
+      if (!card || card.classList.contains('paused')) return;
+      const s = typeof IshakStore !== 'undefined' ? IshakStore.getSettings() : { acceptOrders: true };
+      if (s.acceptOrders === false) {
+        showToast('Onlinebeställning är tillfälligt pausad');
+        return;
+      }
+      const dishId = card.dataset.dishId;
+      const dish = findDish(dishId);
+      if (dish) openProductModal(dish);
+    });
+  }
 }
 
 function findDish(id) {
-  if (typeof MENU === 'undefined') return null;
-  for (const cat of MENU) {
+  const catalog = getActiveMenu();
+  for (const cat of catalog) {
     const found = cat.items.find(i => i.id === id);
     if (found) return { ...found, categoryId: cat.id };
   }
@@ -554,25 +610,34 @@ function initCheckout() {
       showToast('Din varukorg är tom');
       return;
     }
+    const s = typeof IshakStore !== 'undefined' ? IshakStore.getSettings() : { acceptOrders: true, swish: '123 082 44 41' };
+    if (s.acceptOrders === false) {
+      showToast('Onlinebeställning är tillfälligt pausad');
+      return;
+    }
 
     const listEl = document.getElementById('checkoutItemsList');
     const totalEl = document.getElementById('checkoutTotalAmount');
     const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-    const ref = 'ISHAK-' + Math.floor(1000 + Math.random() * 9000);
+    const ref = getNextOrderId();
     const refEl = document.getElementById('swishOrderRef');
     if (refEl) refEl.textContent = ref;
+
+    const swishClean = (s.swish || '1230824441').replace(/\D/g, '') || '1230824441';
+    const swishDisplay = document.getElementById('swishNumberDisplay');
+    if (swishDisplay && s.swish) swishDisplay.textContent = s.swish;
 
     const qrWrap = document.getElementById('swishQrWrap');
     if (qrWrap && typeof qrcode === 'function') {
       const q = qrcode(0, 'M');
-      q.addData(`C1230824441;${totalPrice};${ref};0`);
+      q.addData(`C${swishClean};${totalPrice};${ref};0`);
       q.make();
       qrWrap.innerHTML = q.createSvgTag(4, 0);
     }
 
     const swishAppBtn = document.getElementById('btnOpenSwishApp');
     if (swishAppBtn) {
-      swishAppBtn.href = `https://app.swish.nu/1/p/sw/?sw=1230824441&amt=${totalPrice}&msg=${encodeURIComponent(ref)}`;
+      swishAppBtn.href = `https://app.swish.nu/1/p/sw/?sw=${swishClean}&amt=${totalPrice}&msg=${encodeURIComponent(ref)}`;
     }
 
     listEl.innerHTML = cart.map(item => `
@@ -616,8 +681,49 @@ function initCheckout() {
       time: timeSelect.value,
       notes: notesInput ? notesInput.value.trim() : '',
       totalPrice: cart.reduce((sum, item) => sum + (item.price * item.qty), 0),
-      ref: document.getElementById('swishOrderRef')?.textContent || ('ISHAK-' + Math.floor(1000 + Math.random() * 9000))
+      ref: document.getElementById('swishOrderRef')?.textContent || getNextOrderId()
     };
+  }
+
+  function commitPlacedOrder(details, paymentMethod) {
+    const timeStr = new Date().toLocaleTimeString('sv-SE', { hour: '2-digit', minute: '2-digit' });
+    const itemsCopy = cart.map(i => ({ name: i.name, qty: i.qty, price: i.price, mods: i.mods }));
+
+    const orderData = {
+      id: details.ref,
+      name: details.name,
+      phone: details.phone,
+      time: details.time,
+      notes: details.notes,
+      items: itemsCopy,
+      total: details.totalPrice,
+      payment: paymentMethod,
+      date: timeStr
+    };
+
+    try {
+      sessionStorage.setItem('ishaks_last_order', JSON.stringify(orderData));
+    } catch (e) {}
+
+    if (typeof IshakStore !== 'undefined') {
+      IshakStore.addOrder({
+        id: details.ref,
+        customer: details.name,
+        phone: details.phone,
+        tid: timeStr,
+        pickupTime: details.time,
+        kanal: paymentMethod,
+        total: details.totalPrice,
+        status: 'new',
+        elapsedSec: 0,
+        note: details.notes,
+        items: itemsCopy
+      });
+    }
+
+    cart = [];
+    saveCart();
+    updateCartUI();
   }
 
   if (btnKassa) btnKassa.addEventListener('click', openCheckoutModal);
@@ -643,25 +749,7 @@ function initCheckout() {
         btnSwish.classList.add('success');
         btnSwish.innerHTML = '<span>✓ Betalning godkänd (' + details.totalPrice + ' kr)</span>';
 
-        const orderData = {
-          id: details.ref,
-          name: details.name,
-          phone: details.phone,
-          time: details.time,
-          notes: details.notes,
-          items: cart.map(i => ({ name: i.name, qty: i.qty, price: i.price, mods: i.mods })),
-          total: details.totalPrice,
-          payment: 'Swish Direkt',
-          date: new Date().toLocaleTimeString('sv-SE', { hour: '2-digit', minute: '2-digit' })
-        };
-
-        try {
-          sessionStorage.setItem('ishaks_last_order', JSON.stringify(orderData));
-        } catch (e) {}
-
-        cart = [];
-        saveCart();
-        updateCartUI();
+        commitPlacedOrder(details, 'Swish Direkt');
 
         setTimeout(() => {
           checkoutModal.classList.remove('open');
@@ -675,6 +763,9 @@ function initCheckout() {
     btnSend.addEventListener('click', () => {
       const details = getValidatedCheckoutDetails();
       if (!details) return;
+
+      const s = typeof IshakStore !== 'undefined' ? IshakStore.getSettings() : { swish: '123 082 44 41', phone: '46705491132' };
+      const waTarget = typeof IshakStore !== 'undefined' ? IshakStore.formatSwedishWhatsApp(s.phone) : '46705491132';
 
       let text = `*NY BESTÄLLNING [${details.ref}] — ISHAK'S SMASH BURGER*\n`;
       text += `━━━━━━━━━━━━━━━━━━━━━\n`;
@@ -693,7 +784,7 @@ function initCheckout() {
 
       text += `\n━━━━━━━━━━━━━━━━━━━━━\n`;
       text += `*TOTALT:* ${details.totalPrice} kr\n`;
-      text += `*Betalsätt:* Swish 123 082 44 41 / Vid luckan\n`;
+      text += `*Betalsätt:* Swish ${s.swish || '123 082 44 41'} / Vid luckan\n`;
 
       if (details.notes) {
         text += `\n*Önskemål:* ${details.notes}\n`;
@@ -701,28 +792,10 @@ function initCheckout() {
       text += `━━━━━━━━━━━━━━━━━━━━━\n`;
       text += `Beställning lagd via hemsidan.`;
 
-      const orderData = {
-        id: details.ref,
-        name: details.name,
-        phone: details.phone,
-        time: details.time,
-        notes: details.notes,
-        items: cart.map(i => ({ name: i.name, qty: i.qty, price: i.price, mods: i.mods })),
-        total: details.totalPrice,
-        payment: 'WhatsApp / Vid luckan',
-        date: new Date().toLocaleTimeString('sv-SE', { hour: '2-digit', minute: '2-digit' })
-      };
-
-      try {
-        sessionStorage.setItem('ishaks_last_order', JSON.stringify(orderData));
-      } catch (e) {}
-
-      cart = [];
-      saveCart();
-      updateCartUI();
+      commitPlacedOrder(details, 'WhatsApp');
       checkoutModal.classList.remove('open');
 
-      const waUrl = `https://wa.me/46705491132?text=${encodeURIComponent(text)}`;
+      const waUrl = `https://wa.me/${waTarget}?text=${encodeURIComponent(text)}`;
       window.open(waUrl, '_blank');
       window.location.href = 'tack.html';
     });

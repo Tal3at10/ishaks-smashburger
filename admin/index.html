@@ -321,23 +321,23 @@ input:focus,select:focus,textarea:focus{border-color:#444}
       <div class="kpi-grid">
         <div class="kpi-card">
           <div class="kpi-label">Dagens intäkter</div>
-          <div class="kpi-value">3 240 kr</div>
+          <div class="kpi-value" id="kpiTodayRev">3 335 kr</div>
           <div class="kpi-sub">Mån–fre 11:00–15:00</div>
         </div>
         <div class="kpi-card">
           <div class="kpi-label">Beställningar idag</div>
-          <div class="kpi-value">24 st</div>
-          <div class="kpi-sub">Snitt 6 st / timme</div>
+          <div class="kpi-value" id="kpiTodayOrders">12 st</div>
+          <div class="kpi-sub">Aktiva &amp; slutförda</div>
         </div>
         <div class="kpi-card">
           <div class="kpi-label">Genomsnittligt ordervärde</div>
-          <div class="kpi-value">135 kr</div>
+          <div class="kpi-value" id="kpiTodayAvg">278 kr</div>
           <div class="kpi-sub">Per beställning</div>
         </div>
         <div class="kpi-card">
           <div class="kpi-label">Mest beställd idag</div>
-          <div class="kpi-value" style="font-size:24px">Smash 3</div>
-          <div class="kpi-sub">8 portioner serverade</div>
+          <div class="kpi-value" style="font-size:24px" id="kpiTopItem">Smash 1</div>
+          <div class="kpi-sub">Inkl. meny &amp; extra</div>
         </div>
       </div>
 
@@ -411,7 +411,7 @@ input:focus,select:focus,textarea:focus{border-color:#444}
               <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
               Hantera meny &amp; priser
             </button>
-            <button class="action-btn wa" onclick="window.open('https://wa.me/46705491132','_blank')">
+            <button class="action-btn wa" onclick="openStoreWhatsApp()">
               <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.994 2C6.472 2 2 6.472 2 11.994c0 1.978.572 3.818 1.56 5.372L2 22l4.792-1.527A9.964 9.964 0 0011.994 22C17.516 22 22 17.528 22 12.006 22 6.484 17.516 2 11.994 2z"/></svg>
               Öppna WhatsApp
             </button>
@@ -425,25 +425,25 @@ input:focus,select:focus,textarea:focus{border-color:#444}
       <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:20px">
         <div class="kpi-card">
           <div class="kpi-label">Totalt idag</div>
-          <div class="kpi-value">24 st</div>
+          <div class="kpi-value" id="ordersTotalToday">12 st</div>
         </div>
         <div class="kpi-card">
           <div class="kpi-label">I kö nu</div>
-          <div class="kpi-value" style="color:var(--yellow)">2 st</div>
+          <div class="kpi-value" style="color:var(--yellow)" id="ordersQueueNow">4 st</div>
         </div>
         <div class="kpi-card">
           <div class="kpi-label">Klara idag</div>
-          <div class="kpi-value" style="color:var(--green)">22 st</div>
+          <div class="kpi-value" style="color:var(--green)" id="ordersDoneToday">8 st</div>
         </div>
         <div class="kpi-card">
-          <div class="kpi-label">Totalt inkl. igår</div>
-          <div class="kpi-value">45 st</div>
+          <div class="kpi-label">Omsättning idag</div>
+          <div class="kpi-value" id="ordersRevToday">3 335 kr</div>
         </div>
       </div>
 
       <div class="card">
         <div class="search-row">
-          <input type="text" placeholder="Sök order, innehåll..." id="orderSearch" oninput="filterOrders()" />
+          <input type="text" placeholder="Sök order, kund eller innehåll..." id="orderSearch" oninput="filterOrders()" />
           <select onchange="filterOrders()" id="orderStatusFilter" style="width:160px">
             <option value="all">Alla statusar</option>
             <option value="kö">I kö</option>
@@ -452,10 +452,10 @@ input:focus,select:focus,textarea:focus{border-color:#444}
           </select>
         </div>
         <div class="filter-tabs">
-          <div class="filter-tab active" data-filter="all" onclick="setOrderFilter(this,'all')">Alla <span style="color:var(--muted)">(24)</span></div>
-          <div class="filter-tab" data-filter="kö" onclick="setOrderFilter(this,'kö')">I kö <span style="color:var(--muted)">(2)</span></div>
-          <div class="filter-tab" data-filter="klar" onclick="setOrderFilter(this,'klar')">Klar <span style="color:var(--muted)">(22)</span></div>
-          <div class="filter-tab" data-filter="avbruten" onclick="setOrderFilter(this,'avbruten')">Avbruten <span style="color:var(--muted)">(0)</span></div>
+          <div class="filter-tab active" data-filter="all" onclick="setOrderFilter(this,'all')">Alla <span id="tabAllCount" style="color:var(--muted)">(12)</span></div>
+          <div class="filter-tab" data-filter="kö" onclick="setOrderFilter(this,'kö')">I kö <span id="tabQueueCount" style="color:var(--muted)">(4)</span></div>
+          <div class="filter-tab" data-filter="klar" onclick="setOrderFilter(this,'klar')">Klar <span id="tabDoneCount" style="color:var(--muted)">(8)</span></div>
+          <div class="filter-tab" data-filter="avbruten" onclick="setOrderFilter(this,'avbruten')">Avbruten <span id="tabCancelCount" style="color:var(--muted)">(0)</span></div>
         </div>
         <div class="table-responsive">
           <table class="data-table" id="ordersTable">
@@ -481,7 +481,7 @@ input:focus,select:focus,textarea:focus{border-color:#444}
         </div>
         <div class="kpi-card">
           <div class="kpi-label">Senast uppdaterad</div>
-          <div class="kpi-value" style="font-size:18px">Idag 11:04</div>
+          <div class="kpi-value" style="font-size:18px" id="menuLastUpdated">Idag 11:04</div>
         </div>
       </div>
 
@@ -552,46 +552,46 @@ input:focus,select:focus,textarea:focus{border-color:#444}
             <div class="card-title">Restauranginformation</div>
             <div class="settings-section">
               <label class="settings-label">Namn</label>
-              <input type="text" value="Ishak's Smash Burger" />
+              <input type="text" id="setName" value="Ishak's Smash Burger" />
             </div>
             <div class="settings-row">
               <div>
                 <label class="settings-label">Gatuadress</label>
-                <input type="text" value="Hantverkargatan 5" />
+                <input type="text" id="setAddress" value="Hantverkargatan 5" />
               </div>
               <div>
                 <label class="settings-label">Postnummer</label>
-                <input type="text" value="781 71 Borlänge" />
+                <input type="text" id="setZipCity" value="781 71 Borlänge" />
               </div>
             </div>
             <div class="settings-row">
               <div>
                 <label class="settings-label">Telefon</label>
-                <input type="text" value="+46 70 549 11 32" />
+                <input type="text" id="setPhone" value="+46 70 549 11 32" />
               </div>
               <div>
                 <label class="settings-label">Swish Företag</label>
-                <input type="text" value="123 082 44 41" />
+                <input type="text" id="setSwish" value="123 082 44 41" />
               </div>
             </div>
             <div class="settings-section">
               <label class="settings-label">Instagram</label>
-              <input type="text" value="@ishaks_smashburger" />
+              <input type="text" id="setInstagram" value="@ishaks_smashburger" />
             </div>
-            <button class="save-btn" onclick="showToast('Restauranginformation sparad!')">Spara</button>
+            <button class="save-btn" onclick="saveSettingsSection('info')">Spara</button>
           </div>
 
           <div class="card">
             <div class="card-title">Meddelandetext (WhatsApp-kvitto)</div>
             <div class="settings-section">
               <label class="settings-label">Intro-text</label>
-              <textarea rows="3" style="resize:vertical">Tack för din beställning hos Ishak's Smash Burger! Vi bekräftar din beställning inom kort.</textarea>
+              <textarea rows="3" id="setIntroMsg" style="resize:vertical">Tack för din beställning hos Ishak's Smash Burger! Vi bekräftar din beställning inom kort.</textarea>
             </div>
             <div class="settings-section">
               <label class="settings-label">Avslutningstext</label>
-              <textarea rows="2" style="resize:vertical">Vi ses vid luckan på Hantverkargatan 5. Swish: 123 082 44 41</textarea>
+              <textarea rows="2" id="setOutroMsg" style="resize:vertical">Vi ses vid luckan på Hantverkargatan 5. Swish: 123 082 44 41</textarea>
             </div>
-            <button class="save-btn" onclick="showToast('Meddelandetext sparad!')">Spara</button>
+            <button class="save-btn" onclick="saveSettingsSection('msg')">Spara</button>
           </div>
         </div>
 
@@ -600,7 +600,7 @@ input:focus,select:focus,textarea:focus{border-color:#444}
             <div class="card-title">Öppettider</div>
             <div id="hoursEditor"></div>
             <div style="margin-top:16px">
-              <button class="save-btn" onclick="showToast('Öppettider sparade!')">Spara öppettider</button>
+              <button class="save-btn" onclick="saveHoursSection()">Spara öppettider</button>
             </div>
           </div>
 
@@ -608,38 +608,41 @@ input:focus,select:focus,textarea:focus{border-color:#444}
             <div class="card-title">Leveransinställningar</div>
             <div class="settings-section">
               <label class="settings-label">Beräknad väntetid</label>
-              <select>
-                <option>10–15 min</option>
-                <option selected>15–20 min</option>
-                <option>20–25 min</option>
-                <option>25–30 min</option>
+              <select id="setWaitTime">
+                <option value="10–15 min">10–15 min</option>
+                <option value="15–20 min" selected>15–20 min</option>
+                <option value="20–25 min">20–25 min</option>
+                <option value="25–30 min">25–30 min</option>
               </select>
             </div>
             <div class="settings-section">
               <label class="settings-label">Ordertyp</label>
-              <select>
-                <option selected>Avhämtning (Hämta-själv)</option>
-                <option>WhatsApp-beställning + avhämtning</option>
+              <select id="setOrderType">
+                <option value="Avhämtning (Hämta-själv)" selected>Avhämtning (Hämta-själv)</option>
+                <option value="Avhämtning &amp; Utkörning">Avhämtning &amp; Utkörning</option>
               </select>
             </div>
             <div class="settings-section" style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-top:1px solid var(--border)">
               <span style="font-weight:600;font-size:13px">Ta emot beställningar</span>
               <label class="toggle" style="margin-left:auto">
-                <input type="checkbox" checked id="acceptOrders" />
+                <input type="checkbox" checked id="acceptOrders" onchange="saveSettingsSection('delivery')" />
                 <span class="toggle-track"></span>
                 <span class="toggle-thumb"></span>
               </label>
             </div>
-            <button class="save-btn" onclick="showToast('Inställningar sparade!')">Spara</button>
+            <button class="save-btn" onclick="saveSettingsSection('delivery')">Spara</button>
           </div>
 
           <div class="card">
             <div class="card-title">Systeminfo</div>
             <div style="font-size:12px;color:var(--muted);line-height:2">
-              <div>Version: <span style="color:#fff">1.0.4 (Produktion)</span></div>
-              <div>GitHub Pages: <a href="https://tal3at10.github.io/ishaks-smashburger/" target="_blank" style="color:var(--yellow)">tal3at10.github.io/ishaks-smashburger</a></div>
-              <div>Publik webbplats: <span style="color:#8cc999">Aktiv</span></div>
-              <div>WhatsApp Integration: <span style="color:#8cc999">Konfigurerad</span></div>
+              <div>Version: <span style="color:#fff">1.1.0 (Live Demo)</span></div>
+              <div>Webbplats: <a href="../menu.html" target="_blank" style="color:var(--yellow)">Öppna beställningssida</a></div>
+              <div>Swish Företag: <span id="sysSwish" style="color:#8cc999">123 082 44 41</span></div>
+              <div>Lokal synkronisering: <span style="color:#8cc999">Aktiv (Meny + KDS + Ordrar)</span></div>
+            </div>
+            <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border)">
+              <button class="badge badge-muted" onclick="resetDemoData()" style="cursor:pointer;padding:6px 12px">Återställ demo-data</button>
             </div>
           </div>
         </div>
@@ -651,81 +654,69 @@ input:focus,select:focus,textarea:focus{border-color:#444}
 
 <div class="toast" id="toast"></div>
 
+<script src="../menu-data.js"></script>
+<script src="../store.js"></script>
 <script>
-// ===== DATA =====
-const ORDERS = [
-  {id:'#1024',phone:'0701234567',tid:'14:32',items:'Smash Burger 2 × 1, Fries × 1',kanal:'WhatsApp',total:205,status:'klar',details:['Smash Burger 2 (Kött) × 1 — 135 kr','Extra kött × 1 — 35 kr','Fries × 1 — 35 kr'],extras:'Extra kött',note:''},
-  {id:'#1023',phone:'0702233445',tid:'14:18',items:'Smash Burger 3 × 2',kanal:'WhatsApp',total:270,status:'klar',details:['Smash Burger 3 (Kött) × 2 — 270 kr'],extras:'',note:'Extra sås'},
-  {id:'#1022',phone:'0731122334',tid:'14:05',items:'Barn Burger × 1, Nuggets × 1',kanal:'Foodora',total:220,status:'klar',details:['Barn Burger × 1 — 110 kr','Chicken Nuggets (8 st) × 1 — 110 kr'],extras:'',note:''},
-  {id:'#1021',phone:'0709988776',tid:'13:52',items:'Smash Burger 1 × 1',kanal:'WhatsApp',total:135,status:'klar',details:['Smash Burger 1 (Kött) × 1 — 135 kr'],extras:'',note:'Utan lök'},
-  {id:'#1020',phone:'0725566778',tid:'13:41',items:'Smash Burger 5 × 2, Fries × 2',kanal:'WhatsApp',total:340,status:'klar',details:['Smash Burger 5 (Kött) × 2 — 270 kr','Fries × 2 — 70 kr'],extras:'',note:''},
-  {id:'#1019',phone:'0704455667',tid:'13:28',items:'Smash Burger 4 × 1',kanal:'Foodora',total:135,status:'klar',details:['Smash Burger 4 (Kött) × 1 — 135 kr'],extras:'Glutenfritt bröd',note:''},
-  {id:'#1018',phone:'0739876543',tid:'13:15',items:'Smash Burger 6 × 1, Nuggets × 1',kanal:'WhatsApp',total:245,status:'kö',details:['Smash Burger 6 (Halloumi) × 1 — 135 kr','Chicken Nuggets (8 st) × 1 — 110 kr'],extras:'',note:'Snälla ta bort jalapeños'},
-  {id:'#1017',phone:'0705544332',tid:'13:02',items:'Barn Burger × 2',kanal:'WhatsApp',total:220,status:'kö',details:['Barn Burger × 2 — 220 kr'],extras:'',note:'Till barn, lugnt med krydda'},
-  {id:'#1016',phone:'0701122998',tid:'12:48',items:'Smash Burger 1 × 3',kanal:'Foodora',total:405,status:'klar',details:['Smash Burger 1 (Kött) × 3 — 405 kr'],extras:'',note:''},
-  {id:'#1015',phone:'0728899001',tid:'12:33',items:'Smash Burger 2 × 2, Dips × 2',kanal:'WhatsApp',total:290,status:'klar',details:['Smash Burger 2 (Kyckling) × 2 — 270 kr','Dip × 2 — 20 kr'],extras:'',note:''},
-  {id:'#1014',phone:'0703344556',tid:'12:20',items:'Smash Burger 3 × 1, Chili cheese × 2',kanal:'WhatsApp',total:215,status:'klar',details:['Smash Burger 3 (Kött) × 1 — 135 kr','Chili cheese, 6 st × 2 — 80 kr'],extras:'',note:''},
-  {id:'#1013',phone:'0707788990',tid:'12:11',items:'Nuggets × 2',kanal:'Foodora',total:220,status:'klar',details:['Chicken Nuggets (8 st) × 2 — 220 kr'],extras:'',note:''},
-];
+// ===== DATA & HELPERS =====
+function escapeHtml(str) {
+  return String(str ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
 
-const MENU_DATA = [
-  {cat:'Smash Burgers',items:[
-    {id:'sb1',name:'Smash Burger 1',desc:'Steks med jalapeños. Briochebröd, cheddar, srirachamajo, karamelliserad lök, chili cheese',price:135,active:true,img:'../assets/images/smash-burger-1-real.jpg'},
-    {id:'sb2',name:'Smash Burger 2',desc:'Briochebröd, cheddar, tryffelmajo, karamelliserad lök, rostad lök',price:135,active:true,img:'../assets/images/smash-burger-3.jpg'},
-    {id:'sb3',name:'Smash Burger 3',desc:'Steks med lök. Briochebröd, cheddar, barbequesås, picklad gurka, rostad lök',price:135,active:true,img:'../assets/images/smash-burger-5.jpg'},
-    {id:'sb4',name:'Smash Burger 4',desc:'Briochebröd, cheddar, ketchup, senap, sallad, rödlök',price:135,active:true,img:'../assets/images/smash-burger-2.jpg'},
-    {id:'sb5',name:'Smash Burger 5',desc:'Briochebröd, cheddar, tryffelmajo, karamelliserad lök, picklad jalapeño, barbequesås',price:135,active:true,img:'../assets/images/smash-burger-5.jpg'},
-    {id:'sb6',name:'Smash Burger 6',desc:'Briochebröd, cheddar, tryffelmajo, sallad, picklad rödlök',price:135,active:true,img:'../assets/images/smash-burger-3.jpg'},
-  ]},
-  {cat:'Barnmeny',items:[
-    {id:'barn',name:'Barn Burger',desc:'Briochebröd, kött, cheddar, tryffelmajo, sallad, ketchup',price:110,active:true,img:'../assets/images/barn-burger.jpg'},
-    {id:'nuggets',name:'Chicken Nuggets (8 st)',desc:'8 st chicken nuggets med valfri dip, pommes och dricka',price:110,active:true,img:'../assets/images/chicken-nuggets.jpg'},
-  ]},
-  {cat:'Sides & Dip',items:[
-    {id:'fries',name:'Fries',desc:'Nystekta pommes frites',price:35,active:true,img:'../assets/images/fries.jpg'},
-    {id:'chili',name:'Chili cheese, 6 st',desc:'6 st frasiga chili cheese',price:40,active:true,img:'../assets/images/chili-cheese.jpg'},
-    {id:'dips',name:'Dip',desc:'Tryffelmajo · Srirachamajo · Ketchup',price:10,active:true,img:'../assets/images/dips.jpg'},
-  ]},
-  {cat:'Drycker',items:[
-    {id:'drink',name:'Dricka 33 cl',desc:'Coca-Cola, Zero, Fanta, Sprite, Trocadero, Loka',price:20,active:true,img:'../assets/images/drinks.jpg'},
-  ]},
-];
+function getOrders() {
+  return typeof IshakStore !== 'undefined' ? IshakStore.getOrders() : [];
+}
+
+function isQueueStatus(status) {
+  return status === 'kö' || status === 'new' || status === 'cooking' || status === 'ready';
+}
+
+function normalizedStatusFilter(status) {
+  return isQueueStatus(status) ? 'kö' : status;
+}
+
+function formatOrderItemsSummary(order) {
+  if (Array.isArray(order.items)) {
+    return order.items.map(it => `${it.name} × ${it.qty || 1}`).join(', ');
+  }
+  return String(order.items || '');
+}
+
+function resolveAdminImg(imgPath) {
+  if (!imgPath) return '../assets/images/smash-burger-1-real.jpg';
+  if (imgPath.startsWith('http') || imgPath.startsWith('../') || imgPath.startsWith('/')) return imgPath;
+  return '../' + imgPath;
+}
 
 const WEEK_DATA = {
-  week:{days:['Mån','Tis','Ons','Tor','Fre','Lör','Sön'],vals:[3240,2890,3450,4120,5280,0,0],cur:0},
-  month:{days:['V44','V45','V46','V47'],vals:[18200,20400,19800,22100],cur:3},
-  '3month':{days:['Sep','Okt','Nov'],vals:[71000,84000,62000],cur:2},
+  week: { days: ['Mån', 'Tis', 'Ons', 'Tor', 'Fre', 'Lör', 'Sön'], vals: [3240, 2890, 3450, 4120, 5280, 0, 0], cur: 0 },
+  month: { days: ['V44', 'V45', 'V46', 'V47'], vals: [18200, 20400, 19800, 22100], cur: 3 },
+  '3month': { days: ['Sep', 'Okt', 'Nov'], vals: [71000, 84000, 62000], cur: 2 },
 };
 
-const HOURS_DATA = [
-  {day:'Måndag',open:true,start:'11:00',end:'15:00'},
-  {day:'Tisdag',open:true,start:'11:00',end:'15:00'},
-  {day:'Onsdag',open:true,start:'11:00',end:'15:00'},
-  {day:'Torsdag',open:true,start:'11:00',end:'15:00'},
-  {day:'Fredag',open:true,start:'11:00',end:'15:00'},
-  {day:'Lördag',open:false,start:'',end:''},
-  {day:'Söndag',open:false,start:'',end:''},
-];
-
-const BEST_SELLERS = [
-  {name:'Smash Burger 3',pct:18,count:43},
-  {name:'Smash Burger 2',pct:15,count:36},
-  {name:'Smash Burger 5',pct:13,count:31},
-  {name:'Pommes Frites',pct:11,count:26},
-  {name:'Smash Burger 1',pct:10,count:24},
-  {name:'Chicken Nuggets',pct:8,count:19},
-  {name:'Barn Burger',pct:7,count:17},
+const BASE_BEST_SELLERS = [
+  { name: 'Smash Burger 3', count: 40 },
+  { name: 'Smash Burger 2', count: 34 },
+  { name: 'Smash Burger 5', count: 30 },
+  { name: 'Fries', count: 24 },
+  { name: 'Smash Burger 1', count: 22 },
+  { name: 'Chicken Nuggets (8 st)', count: 18 },
+  { name: 'Barn Burger', count: 16 },
 ];
 
 const HEATMAP = {
-  hours:['11','12','13','14','15'],
-  days:['Mån','Tis','Ons','Tor','Fre'],
-  data:[
-    [2,8,12,9,3],
-    [1,7,10,8,2],
-    [3,9,13,10,4],
-    [2,8,14,11,3],
-    [4,11,16,12,5],
+  hours: ['11', '12', '13', '14', '15'],
+  days: ['Mån', 'Tis', 'Ons', 'Tor', 'Fre'],
+  data: [
+    [2, 8, 12, 9, 3],
+    [1, 7, 10, 8, 2],
+    [3, 9, 13, 10, 4],
+    [2, 8, 14, 11, 3],
+    [4, 11, 16, 12, 5],
   ]
 };
 
@@ -734,37 +725,90 @@ let currentPage = 'oversikt';
 let orderFilterTab = 'all';
 let currentPeriod = 'week';
 let menuCat = 0;
-let menuState = JSON.parse(JSON.stringify(MENU_DATA));
+let menuState = [];
+let hoursState = [];
+let openOrderIds = new Set();
+
+function loadStoreState() {
+  if (typeof IshakStore !== 'undefined') {
+    menuState = IshakStore.getMenu(typeof MENU !== 'undefined' ? MENU : []);
+    hoursState = IshakStore.getHours();
+  }
+}
 
 // ===== INIT =====
 document.addEventListener('DOMContentLoaded', () => {
+  loadStoreState();
   setDate();
   checkOpen();
+  populateSettingsForms();
+  setupOrderEvents();
+  renderAll();
+  setupNav();
+  setupMobileMenu();
+
+  window.addEventListener('storage', (e) => {
+    if (typeof IshakStore === 'undefined') return;
+    if (Object.values(IshakStore.KEYS).includes(e.key)) {
+      loadStoreState();
+      populateSettingsForms();
+      checkOpen();
+      renderAll();
+    }
+  });
+});
+
+function renderAll() {
+  updateKPIs();
   renderOverview();
   renderOrders();
   renderMenu();
-  renderStats('week');
+  renderStats(currentPeriod);
   renderHours();
-  setupNav();
-  setupMobileMenu();
-});
+}
 
 function setDate() {
   const d = new Date();
-  const days = ['Söndag','Måndag','Tisdag','Onsdag','Torsdag','Fredag','Lördag'];
-  const months = ['jan','feb','mar','apr','maj','jun','jul','aug','sep','okt','nov','dec'];
+  const days = ['Söndag', 'Måndag', 'Tisdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lördag'];
+  const months = ['jan', 'feb', 'mar', 'apr', 'maj', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'dec'];
   document.getElementById('pageDate').textContent =
     `${days[d.getDay()]} ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
 }
 
 function checkOpen() {
-  const h = new Date().getHours();
-  const isOpen = h >= 11 && h < 15;
+  const s = typeof IshakStore !== 'undefined' ? IshakStore.getSettings() : { acceptOrders: true };
   const pill = document.getElementById('statusPill');
   const txt = document.getElementById('statusText');
+  const hoursLabel = pill ? pill.querySelector('span:last-child') : null;
+
+  const now = new Date();
+  const dayIdx = (now.getDay() + 6) % 7;
+  const todayRule = hoursState[dayIdx];
+
+  if (s.acceptOrders === false) {
+    pill.className = 'status-pill closed';
+    txt.textContent = 'Pausad';
+    pill.querySelector('.dot').className = 'dot';
+    if (hoursLabel) hoursLabel.textContent = 'Ordrar avstängda';
+    return;
+  }
+
+  let isOpen = false;
+  let windowStr = 'Stängt idag';
+  if (todayRule && todayRule.open && todayRule.start && todayRule.end) {
+    windowStr = `${todayRule.start} — ${todayRule.end}`;
+    const curMin = now.getHours() * 60 + now.getMinutes();
+    const [sh, sm] = todayRule.start.split(':').map(Number);
+    const [eh, em] = todayRule.end.split(':').map(Number);
+    isOpen = curMin >= (sh * 60 + sm) && curMin < (eh * 60 + em);
+  } else if (todayRule && todayRule.note) {
+    windowStr = todayRule.note;
+  }
+
   pill.className = 'status-pill ' + (isOpen ? 'open' : 'closed');
   txt.textContent = isOpen ? 'Öppet nu' : 'Stängt';
   pill.querySelector('.dot').className = 'dot' + (isOpen ? ' pulse' : '');
+  if (hoursLabel) hoursLabel.textContent = windowStr;
 }
 
 // ===== NAVIGATION =====
@@ -797,8 +841,8 @@ function goToPage(page) {
   document.querySelectorAll('.page').forEach(el =>
     el.classList.toggle('active', el.id === 'page-' + page));
   const titles = {
-    oversikt:'Översikt', bestallningar:'Beställningar',
-    meny:'Meny', statistik:'Statistik', installningar:'Inställningar'
+    oversikt: 'Översikt', bestallningar: 'Beställningar',
+    meny: 'Meny', statistik: 'Statistik', installningar: 'Inställningar'
   };
   document.getElementById('pageTitle').textContent = titles[page] || '';
   currentPage = page;
@@ -808,41 +852,117 @@ function goToPage(page) {
 function setupMobileMenu() {
   const btn = document.getElementById('menuBtn');
   const overlay = document.getElementById('overlay');
-  btn.addEventListener('click', () => document.getElementById('sidebar').classList.add('open'));
+  btn.addEventListener('click', () => {
+    document.getElementById('sidebar').classList.add('open');
+    overlay.classList.add('open');
+  });
   overlay.addEventListener('click', closeSidebar);
   document.addEventListener('click', e => {
     if (!e.target.closest('#sidebar') && !e.target.closest('#menuBtn'))
       closeSidebar();
   });
 }
+
 function closeSidebar() {
   document.getElementById('sidebar').classList.remove('open');
   document.getElementById('overlay').classList.remove('open');
 }
 
+// ===== KPI & ANALYTICS HELPERS =====
+function computePopularItems(orders, includeBaseline) {
+  const counts = {};
+  if (includeBaseline) {
+    BASE_BEST_SELLERS.forEach(b => { counts[b.name] = b.count; });
+  }
+  orders.forEach(o => {
+    if (o.status === 'avbruten' || !Array.isArray(o.items)) return;
+    o.items.forEach(it => {
+      const key = it.name || 'Okänd';
+      counts[key] = (counts[key] || 0) + (Number(it.qty) || 1);
+    });
+  });
+  const list = Object.entries(counts)
+    .map(([name, count]) => ({ name, count }))
+    .sort((a, b) => b.count - a.count);
+  const totalCount = list.reduce((sum, x) => sum + x.count, 0) || 1;
+  return list.map(x => ({
+    ...x,
+    pct: Math.max(1, Math.round((x.count / totalCount) * 100))
+  }));
+}
+
+function getTodayRevenue(orders) {
+  return orders
+    .filter(o => o.status !== 'avbruten')
+    .reduce((sum, o) => sum + (Number(o.total) || 0), 0);
+}
+
+function updateKPIs() {
+  const orders = getOrders();
+  const nonCanceled = orders.filter(o => o.status !== 'avbruten');
+  const queueOrders = orders.filter(o => isQueueStatus(o.status));
+  const doneOrders = orders.filter(o => o.status === 'klar');
+  const canceledOrders = orders.filter(o => o.status === 'avbruten');
+
+  const todayRev = getTodayRevenue(orders);
+  const avg = nonCanceled.length ? Math.round(todayRev / nonCanceled.length) : 0;
+
+  const todayPopular = computePopularItems(nonCanceled, false);
+  const topRaw = todayPopular.length ? todayPopular[0].name : '—';
+  const topShort = topRaw.replace(/^Smash Burger\s+/i, 'Smash ');
+
+  const setText = (id, text) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = text;
+  };
+
+  setText('kpiTodayRev', todayRev.toLocaleString('sv-SE') + ' kr');
+  setText('kpiTodayOrders', nonCanceled.length + ' st');
+  setText('kpiTodayAvg', avg.toLocaleString('sv-SE') + ' kr');
+  setText('kpiTopItem', topShort);
+
+  setText('pendingCount', String(queueOrders.length));
+  setText('ordersTotalToday', orders.length + ' st');
+  setText('ordersQueueNow', queueOrders.length + ' st');
+  setText('ordersDoneToday', doneOrders.length + ' st');
+  setText('ordersRevToday', todayRev.toLocaleString('sv-SE') + ' kr');
+
+  setText('tabAllCount', `(${orders.length})`);
+  setText('tabQueueCount', `(${queueOrders.length})`);
+  setText('tabDoneCount', `(${doneOrders.length})`);
+  setText('tabCancelCount', `(${canceledOrders.length})`);
+}
+
+function buildLiveWeekData(orders) {
+  const todayIdx = (new Date().getDay() + 6) % 7;
+  const vals = [...WEEK_DATA.week.vals];
+  vals[todayIdx] = getTodayRevenue(orders);
+  return { days: WEEK_DATA.week.days, vals, cur: todayIdx };
+}
+
 // ===== OVERVIEW =====
 function renderOverview() {
-  // Recent orders (last 6)
+  const orders = getOrders();
   const tbody = document.getElementById('overviewOrders');
-  tbody.innerHTML = ORDERS.slice(0,6).map(o => `
+  tbody.innerHTML = orders.slice(0, 6).map(o => `
     <tr>
-      <td style="font-weight:700;color:var(--muted)">${o.id}</td>
-      <td style="color:var(--muted)">${o.tid}</td>
-      <td>${o.items}</td>
-      <td style="font-weight:700">${o.total} kr</td>
+      <td style="font-weight:700;color:var(--muted)">${escapeHtml(o.id)}</td>
+      <td style="color:var(--muted)">${escapeHtml(o.tid)}</td>
+      <td>${escapeHtml(formatOrderItemsSummary(o))}</td>
+      <td style="font-weight:700">${Number(o.total) || 0} kr</td>
       <td>${statusBadge(o.status)}</td>
     </tr>`).join('');
 
-  // Popular items
+  const popular = computePopularItems(orders, false).slice(0, 5);
+  const maxPct = Math.max(...popular.map(b => b.pct), 1);
   const pop = document.getElementById('popularItems');
-  pop.innerHTML = BEST_SELLERS.slice(0,5).map(b => `
+  pop.innerHTML = popular.length ? popular.map(b => `
     <div class="bar-wrap">
-      <div class="bar-label"><span>${b.name}</span><span style="color:var(--muted)">${b.pct}%</span></div>
-      <div class="bar-track"><div class="bar-fill" style="width:${b.pct * 5.5}%"></div></div>
-    </div>`).join('');
+      <div class="bar-label"><span>${escapeHtml(b.name)}</span><span style="color:var(--muted)">${b.count} st · ${b.pct}%</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:${Math.round((b.pct / maxPct) * 100)}%"></div></div>
+    </div>`).join('') : '<div style="color:var(--muted);font-size:12px">Inga ordrar ännu idag.</div>';
 
-  // Week chart
-  renderWeekChart('weekChart', WEEK_DATA.week, false);
+  renderWeekChart('weekChart', buildLiveWeekData(orders), false);
 }
 
 function renderWeekChart(containerId, data, tall) {
@@ -870,57 +990,123 @@ function renderWeekChart(containerId, data, tall) {
 }
 
 // ===== ORDERS =====
-function renderOrders() {
+function setupOrderEvents() {
   const tbody = document.getElementById('ordersBody');
-  const search = (document.getElementById('orderSearch')?.value || '').toLowerCase();
+  if (!tbody) return;
+  tbody.addEventListener('click', (e) => {
+    const actionBtn = e.target.closest('[data-order-action]');
+    if (actionBtn) {
+      e.stopPropagation();
+      const id = actionBtn.dataset.orderId;
+      const action = actionBtn.dataset.orderAction;
+      if (action === 'done') markDone(id);
+      else if (action === 'cancel') cancelOrder(id);
+      else if (action === 'whatsapp') pingCustomerWhatsApp(id);
+      return;
+    }
+    const row = e.target.closest('.order-summary-row');
+    if (row) {
+      const id = row.dataset.orderId;
+      const el = document.getElementById(row.dataset.detailId);
+      if (el) {
+        const nowOpen = el.classList.toggle('open');
+        if (nowOpen) openOrderIds.add(id);
+        else openOrderIds.delete(id);
+      }
+    }
+  });
+}
+
+function renderOrders() {
+  const orders = getOrders();
+  const tbody = document.getElementById('ordersBody');
+  const search = (document.getElementById('orderSearch')?.value || '').trim().toLowerCase();
   const statusF = document.getElementById('orderStatusFilter')?.value || 'all';
 
-  let filtered = ORDERS.filter(o => {
-    const matchSearch = !search || o.id.toLowerCase().includes(search) || o.items.toLowerCase().includes(search);
-    const matchStatus = statusF === 'all' || o.status === statusF;
-    const matchTab = orderFilterTab === 'all' || o.status === orderFilterTab;
+  const filtered = orders.filter(o => {
+    const summary = formatOrderItemsSummary(o);
+    const matchSearch = !search
+      || (o.id || '').toLowerCase().includes(search)
+      || (o.customer || '').toLowerCase().includes(search)
+      || (o.phone || '').toLowerCase().includes(search)
+      || summary.toLowerCase().includes(search);
+    const normStatus = normalizedStatusFilter(o.status);
+    const matchStatus = statusF === 'all' || normStatus === statusF;
+    const matchTab = orderFilterTab === 'all' || normStatus === orderFilterTab;
     return matchSearch && matchStatus && matchTab;
   });
 
-  tbody.innerHTML = filtered.map(o => `
-    <tr onclick="toggleOrderDetail('detail-${o.id.replace('#','')}')" style="cursor:pointer">
-      <td><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></td>
-      <td style="font-weight:700;color:var(--yellow)">${o.id}</td>
-      <td style="color:var(--muted)">${o.tid}</td>
-      <td style="max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${o.items}</td>
-      <td><span class="badge ${o.kanal==='Foodora'?'badge-muted':'badge-green'}" style="font-size:10px">${o.kanal}</span></td>
-      <td style="font-weight:700">${o.total} kr</td>
-      <td>${statusBadge(o.status)}</td>
-      <td>
-        ${o.status === 'kö' ? `<button class="badge badge-yellow" onclick="event.stopPropagation();markDone('${o.id}')">Klar</button>` : ''}
-      </td>
-    </tr>
-    <tr><td colspan="8" style="padding:0"><div class="order-detail" id="detail-${o.id.replace('#','')}">
-      <strong style="color:#fff">Orderinnehåll:</strong>
-      <ul class="order-items-list">
-        ${o.details.map(d => `<li><span>${d}</span></li>`).join('')}
-        ${o.extras ? `<li><span style="color:var(--yellow)">+ ${o.extras}</span></li>` : ''}
-      </ul>
-      ${o.note ? `<div style="padding:8px;background:#1a1a1a;border-radius:4px;border-left:3px solid var(--yellow)"><strong style="color:#fff">Not:</strong> ${o.note}</div>` : ''}
-      <div style="margin-top:10px;display:flex;gap:8px">
-        ${o.status==='kö' ? `<button class="badge badge-yellow" onclick="markDone('${o.id}')">Markera klar vid luckan</button>` : ''}
-        <button class="badge badge-red" onclick="cancelOrder('${o.id}')">Avbryt</button>
-        <button class="badge badge-muted" onclick="event.stopPropagation();pingCustomerWhatsApp('${o.id}')">Meddela kund via WhatsApp</button>
-      </div>
-    </div></td></tr>`).join('');
+  if (!filtered.length) {
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:24px;color:var(--muted)">Inga beställningar matchar filtret.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = filtered.map(o => {
+    const domId = 'detail-' + (o.id || '').replace(/[^a-zA-Z0-9_-]/g, '');
+    const isExpanded = openOrderIds.has(o.id);
+    const inQueue = isQueueStatus(o.status);
+    const summary = formatOrderItemsSummary(o);
+    const itemsListHtml = Array.isArray(o.items)
+      ? o.items.map(it => {
+          const mods = Array.isArray(it.mods) && it.mods.length
+            ? ` <span style="color:var(--muted);font-size:11px">(${escapeHtml(it.mods.join(', '))})</span>`
+            : '';
+          const lineTotal = (Number(it.price) || 0) * (Number(it.qty) || 1);
+          return `<li><span>${escapeHtml(it.name)} × ${it.qty || 1}${mods}</span><span style="color:var(--muted)">${lineTotal} kr</span></li>`;
+        }).join('')
+      : `<li><span>${escapeHtml(summary)}</span></li>`;
+
+    return `
+      <tr class="order-summary-row" data-order-id="${escapeHtml(o.id)}" data-detail-id="${domId}" style="cursor:pointer">
+        <td><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></td>
+        <td style="font-weight:700;color:var(--yellow)">${escapeHtml(o.id)}</td>
+        <td style="color:var(--muted)">${escapeHtml(o.tid)}</td>
+        <td style="max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escapeHtml(summary)}</td>
+        <td><span class="badge ${o.kanal==='Foodora'?'badge-muted':'badge-green'}" style="font-size:10px">${escapeHtml(o.kanal || 'Webb')}</span></td>
+        <td style="font-weight:700">${Number(o.total) || 0} kr</td>
+        <td>${statusBadge(o.status)}</td>
+        <td>
+          ${inQueue ? `<button class="badge badge-yellow" data-order-action="done" data-order-id="${escapeHtml(o.id)}">Klar</button>` : ''}
+        </td>
+      </tr>
+      <tr><td colspan="8" style="padding:0"><div class="order-detail${isExpanded ? ' open' : ''}" id="${domId}">
+        <div style="display:flex;flex-wrap:wrap;gap:14px;margin-bottom:8px;color:#ccc">
+          ${o.customer ? `<span><strong style="color:#fff">Kund:</strong> ${escapeHtml(o.customer)}</span>` : ''}
+          ${o.phone ? `<span><strong style="color:#fff">Telefon:</strong> ${escapeHtml(o.phone)}</span>` : ''}
+          ${o.pickupTime ? `<span><strong style="color:#fff">Upphämtning:</strong> ${escapeHtml(o.pickupTime)}</span>` : ''}
+        </div>
+        <strong style="color:#fff">Orderinnehåll:</strong>
+        <ul class="order-items-list">${itemsListHtml}</ul>
+        ${o.note ? `<div style="padding:8px;background:#1a1a1a;border-radius:4px;border-left:3px solid var(--yellow)"><strong style="color:#fff">Not:</strong> ${escapeHtml(o.note)}</div>` : ''}
+        <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+          ${inQueue ? `<button class="badge badge-yellow" data-order-action="done" data-order-id="${escapeHtml(o.id)}">Markera klar vid luckan</button>` : ''}
+          ${o.status !== 'avbruten' ? `<button class="badge badge-red" data-order-action="cancel" data-order-id="${escapeHtml(o.id)}">Avbryt</button>` : ''}
+          <button class="badge badge-muted" data-order-action="whatsapp" data-order-id="${escapeHtml(o.id)}">Meddela kund via WhatsApp</button>
+        </div>
+      </div></td></tr>`;
+  }).join('');
 }
 
 function pingCustomerWhatsApp(id) {
-  const o = ORDERS.find(x => x.id === id);
-  const digits = (o?.phone || '').replace(/\D/g, '');
-  const waNum = digits.startsWith('0') ? '46' + digits.slice(1) : (digits || '46705491132');
-  const msg = encodeURIComponent(`Hej! Din beställning ${id} från Ishak's Smash Burger är nu klar vid luckan på Hantverkargatan 5. Varmt välkommen!`);
+  const orders = getOrders();
+  const o = orders.find(x => x.id === id);
+  const s = typeof IshakStore !== 'undefined' ? IshakStore.getSettings() : {};
+  const waNum = typeof IshakStore !== 'undefined'
+    ? IshakStore.formatSwedishWhatsApp(o?.phone)
+    : '46705491132';
+  const greeting = o?.customer ? `Hej ${o.customer}!` : 'Hej!';
+  const addr = s.address || 'Hantverkargatan 5';
+  const name = s.name || "Ishak's Smash Burger";
+  const msg = encodeURIComponent(`${greeting} Din beställning ${id} från ${name} är nu klar vid luckan på ${addr}. Varmt välkommen!`);
   window.open(`https://wa.me/${waNum}?text=${msg}`, '_blank');
 }
 
-function toggleOrderDetail(id) {
-  const el = document.getElementById(id);
-  if (el) el.classList.toggle('open');
+function openStoreWhatsApp() {
+  const s = typeof IshakStore !== 'undefined' ? IshakStore.getSettings() : {};
+  const waNum = typeof IshakStore !== 'undefined'
+    ? IshakStore.formatSwedishWhatsApp(s.phone)
+    : '46705491132';
+  window.open(`https://wa.me/${waNum}`, '_blank');
 }
 
 function filterOrders() { renderOrders(); }
@@ -933,55 +1119,64 @@ function setOrderFilter(el, val) {
 }
 
 function markDone(id) {
-  const o = ORDERS.find(x => x.id === id);
-  if (o) { o.status = 'klar'; renderOrders(); renderOverview(); updatePendingCount(); showToast(`Order ${id} klar vid luckan!`); }
+  if (typeof IshakStore !== 'undefined') {
+    IshakStore.updateOrderStatus(id, 'klar');
+  }
+  renderAll();
+  showToast(`Order ${id} klar vid luckan!`);
 }
 
 function cancelOrder(id) {
-  const o = ORDERS.find(x => x.id === id);
-  if (o) { o.status = 'avbruten'; renderOrders(); updatePendingCount(); showToast(`Order ${id} avbruten.`); }
-}
-
-function updatePendingCount() {
-  const n = ORDERS.filter(o => o.status === 'kö').length;
-  document.getElementById('pendingCount').textContent = n;
+  if (typeof IshakStore !== 'undefined') {
+    IshakStore.updateOrderStatus(id, 'avbruten');
+  }
+  renderAll();
+  showToast(`Order ${id} avbruten.`);
 }
 
 function statusBadge(s) {
   if (s === 'klar') return '<span class="status-tag status-done">Klar</span>';
-  if (s === 'kö') return '<span class="status-tag status-active">På stekbordet</span>';
+  if (s === 'new') return '<span class="status-tag status-active">Ny order</span>';
+  if (s === 'ready') return '<span class="status-tag status-done" style="background:rgba(61,139,79,.22);color:#7ddb94">Redo för luckan</span>';
+  if (isQueueStatus(s)) return '<span class="status-tag status-active">På stekbordet</span>';
   return '<span class="status-tag status-canceled">Avbruten</span>';
 }
 
 // ===== MENU =====
 function renderMenu() {
+  if (!menuState.length) return;
+  if (menuCat >= menuState.length) menuCat = 0;
+
   const tabs = document.getElementById('menuAdminTabs');
   tabs.innerHTML = menuState.map((cat, i) => `
-    <div class="menu-admin-tab ${i===menuCat?'active':''}" onclick="switchMenuCat(${i})">${cat.cat} (${cat.items.length})</div>`).join('');
+    <div class="menu-admin-tab ${i===menuCat?'active':''}" onclick="switchMenuCat(${i})">${escapeHtml(cat.label || cat.cat)} (${cat.items.length})</div>`).join('');
 
   const content = document.getElementById('menuAdminContent');
   const cat = menuState[menuCat];
-  content.innerHTML = cat.items.map((item, i) => `
-    <div class="menu-row">
-      <img class="menu-row-img" src="${item.img}" alt="${item.name}" onerror="this.style.background='#1e1e1e'" />
-      <div>
-        <div class="menu-row-name">${item.name}</div>
-        <div class="menu-row-desc">${item.desc}</div>
-      </div>
-      <div>
-        <label class="settings-label" style="margin-bottom:3px">Pris (kr)</label>
-        <input type="number" class="price-input" value="${item.price}" min="0" step="5"
-          onchange="updatePrice(${menuCat},${i},this.value)" />
-      </div>
-      <div style="text-align:center">
-        <label class="settings-label" style="margin-bottom:6px">${item.active ? 'Aktiv' : 'Pausad'}</label>
-        <label class="toggle">
-          <input type="checkbox" ${item.active ? 'checked' : ''} onchange="toggleItem(${menuCat},${i},this.checked)" />
-          <span class="toggle-track"></span>
-          <span class="toggle-thumb"></span>
-        </label>
-      </div>
-    </div>`).join('');
+  content.innerHTML = cat.items.map((item, i) => {
+    const isActive = item.active !== false;
+    return `
+      <div class="menu-row">
+        <img class="menu-row-img" src="${escapeHtml(resolveAdminImg(item.img))}" alt="${escapeHtml(item.name)}" onerror="this.style.background='#1e1e1e'" />
+        <div>
+          <div class="menu-row-name">${escapeHtml(item.name)}</div>
+          <div class="menu-row-desc">${escapeHtml(item.desc)}</div>
+        </div>
+        <div>
+          <label class="settings-label" style="margin-bottom:3px">Pris (kr)</label>
+          <input type="number" class="price-input" value="${item.price}" min="0" step="5"
+            onchange="updatePrice(${menuCat},${i},this.value)" />
+        </div>
+        <div style="text-align:center">
+          <label class="settings-label" id="menuItemStatus-${menuCat}-${i}" style="margin-bottom:6px">${isActive ? 'Aktiv' : 'Pausad'}</label>
+          <label class="toggle">
+            <input type="checkbox" ${isActive ? 'checked' : ''} onchange="toggleItem(${menuCat},${i},this.checked)" />
+            <span class="toggle-track"></span>
+            <span class="toggle-thumb"></span>
+          </label>
+        </div>
+      </div>`;
+  }).join('');
 
   updateMenuCounts();
 }
@@ -992,31 +1187,51 @@ function switchMenuCat(i) {
 }
 
 function updatePrice(catI, itemI, val) {
-  menuState[catI].items[itemI].price = parseInt(val) || 0;
+  const num = parseInt(val, 10);
+  menuState[catI].items[itemI].price = isNaN(num) || num < 0 ? 0 : num;
+  persistMenu(false);
 }
 
 function toggleItem(catI, itemI, active) {
   menuState[catI].items[itemI].active = active;
+  const lbl = document.getElementById(`menuItemStatus-${catI}-${itemI}`);
+  if (lbl) lbl.textContent = active ? 'Aktiv' : 'Pausad';
   updateMenuCounts();
+  persistMenu(false);
 }
 
 function updateMenuCounts() {
   let total = 0, active = 0;
-  menuState.forEach(c => c.items.forEach(it => { total++; if(it.active) active++; }));
+  menuState.forEach(c => c.items.forEach(it => { total++; if (it.active !== false) active++; }));
   document.getElementById('activeItems').textContent = active;
   document.getElementById('pausedItems').textContent = total - active;
 }
 
-function saveMenu() { showToast('Meny sparad och publicerad!'); }
+function persistMenu(showBanner) {
+  if (typeof IshakStore !== 'undefined') {
+    IshakStore.saveMenu(menuState);
+  }
+  const nowStr = new Date().toLocaleTimeString('sv-SE', { hour: '2-digit', minute: '2-digit' });
+  const updatedEl = document.getElementById('menuLastUpdated');
+  if (updatedEl) updatedEl.textContent = `Idag ${nowStr}`;
+  if (showBanner) showToast('Meny sparad och publicerad!');
+}
+
+function saveMenu() { persistMenu(true); }
 
 // ===== STATS =====
 function renderStats(period) {
   currentPeriod = period;
-  const d = WEEK_DATA[period] || WEEK_DATA.week;
+  const orders = getOrders();
+  const weekData = buildLiveWeekData(orders);
+  const d = period === 'week' ? weekData : (WEEK_DATA[period] || weekData);
+  const weekRevTotal = weekData.vals.reduce((s, v) => s + v, 0);
 
-  const totals = { week:{rev:'20 180 kr',ord:'149 st',avg:'135 kr',rsub:'▲ +18% vs förra veckan',osub:'▲ +21 vs förra veckan',asub:'Stabilt'},
-    month:{rev:'82 400 kr',ord:'612 st',avg:'134 kr',rsub:'▲ +9% vs föregående månad',osub:'▲ +48 vs föregående månad',asub:'▲ +1 kr'},
-    '3month':{rev:'217 000 kr',ord:'1 608 st',avg:'135 kr',rsub:'▲ +24% vs föregående period',osub:'▲ +198 vs föregående period',asub:'Stabilt'} };
+  const totals = {
+    week: { rev: weekRevTotal.toLocaleString('sv-SE') + ' kr', ord: (137 + orders.filter(o => o.status !== 'avbruten').length) + ' st', avg: '142 kr', rsub: '▲ +18% vs förra veckan', osub: '▲ +21 vs förra veckan', asub: 'Live inkl. dagens ordrar' },
+    month: { rev: '82 400 kr', ord: '612 st', avg: '134 kr', rsub: '▲ +9% vs föregående månad', osub: '▲ +48 vs föregående månad', asub: '▲ +1 kr' },
+    '3month': { rev: '217 000 kr', ord: '1 608 st', avg: '135 kr', rsub: '▲ +24% vs föregående period', osub: '▲ +198 vs föregående period', asub: 'Stabilt' }
+  };
 
   const t = totals[period];
   document.getElementById('statRevenue').textContent = t.rev;
@@ -1026,7 +1241,6 @@ function renderStats(period) {
   document.getElementById('statOrdSub').textContent = t.osub;
   document.getElementById('statAvgSub').textContent = t.asub;
 
-  // Chart
   const chart = document.getElementById('statChart');
   chart.innerHTML = '';
   const max = Math.max(...d.vals, 1);
@@ -1044,19 +1258,20 @@ function renderStats(period) {
     chart.appendChild(col);
   });
 
-  // Best sellers
+  const bestList = computePopularItems(orders, true).slice(0, 7);
+  const maxPct = Math.max(...bestList.map(b => b.pct), 1);
   const best = document.getElementById('statBest');
-  best.innerHTML = BEST_SELLERS.map(b => `
+  best.innerHTML = bestList.map(b => `
     <div class="bar-wrap">
       <div class="bar-label">
-        <span>${b.name}</span>
+        <span>${escapeHtml(b.name)}</span>
         <span style="color:var(--muted)">${b.count} st &nbsp;·&nbsp; ${b.pct}%</span>
       </div>
-      <div class="bar-track"><div class="bar-fill" style="width:${b.pct * 5.5}%"></div></div>
+      <div class="bar-track"><div class="bar-fill" style="width:${Math.round((b.pct / maxPct) * 100)}%"></div></div>
     </div>`).join('');
 
   renderHeatmap();
-  renderPayment();
+  renderPayment(orders);
 }
 
 function renderHeatmap() {
@@ -1078,12 +1293,23 @@ function renderHeatmap() {
   wrap.innerHTML = html;
 }
 
-function renderPayment() {
-  const data = [{label:'WhatsApp',val:68,color:'var(--yellow)'},{label:'Foodora',val:24,color:'#5a4000'},{label:'Swish direkt',val:8,color:'#333'}];
+function renderPayment(orders) {
+  const active = orders.filter(o => o.status !== 'avbruten');
+  const total = active.length || 1;
+  const countBy = (matcher) => active.filter(o => matcher(o.kanal || '')).length;
+  const swishCount = countBy(k => k.toLowerCase().includes('swish'));
+  const waCount = countBy(k => k.toLowerCase().includes('whatsapp'));
+  const foodoraCount = countBy(k => k.toLowerCase().includes('foodora'));
+
+  const data = [
+    { label: 'Swish Direkt (Webb)', val: Math.round((swishCount / total) * 100), count: swishCount, color: 'var(--yellow)' },
+    { label: 'WhatsApp', val: Math.round((waCount / total) * 100), count: waCount, color: '#8cc999' },
+    { label: 'Foodora', val: Math.round((foodoraCount / total) * 100), count: foodoraCount, color: '#5a4000' }
+  ];
   const pc = document.getElementById('paymentChart');
   pc.innerHTML = data.map(d => `
     <div class="bar-wrap">
-      <div class="bar-label"><span>${d.label}</span><span style="color:var(--muted)">${d.val}%</span></div>
+      <div class="bar-label"><span>${d.label}</span><span style="color:var(--muted)">${d.count} st (${d.val}%)</span></div>
       <div class="bar-track"><div class="bar-fill" style="width:${d.val}%;background:${d.color}"></div></div>
     </div>`).join('');
 }
@@ -1094,14 +1320,76 @@ function setPeriod(el, period) {
   renderStats(period);
 }
 
-// ===== HOURS =====
+// ===== SETTINGS & HOURS =====
+function populateSettingsForms() {
+  if (typeof IshakStore === 'undefined') return;
+  const s = IshakStore.getSettings();
+  const setVal = (id, val) => {
+    const el = document.getElementById(id);
+    if (el && val !== undefined) el.value = val;
+  };
+  setVal('setName', s.name);
+  setVal('setAddress', s.address);
+  setVal('setZipCity', s.zipCity);
+  setVal('setPhone', s.phone);
+  setVal('setSwish', s.swish);
+  setVal('setInstagram', s.instagram);
+  setVal('setIntroMsg', s.introMsg);
+  setVal('setOutroMsg', s.outroMsg);
+  setVal('setWaitTime', s.waitTime);
+  setVal('setOrderType', s.orderType);
+
+  const acceptEl = document.getElementById('acceptOrders');
+  if (acceptEl) acceptEl.checked = s.acceptOrders !== false;
+
+  const sidebarName = document.querySelector('.sidebar-footer-name');
+  if (sidebarName && s.name) sidebarName.textContent = s.name;
+  const sysSwish = document.getElementById('sysSwish');
+  if (sysSwish && s.swish) sysSwish.textContent = s.swish;
+}
+
+function saveSettingsSection(section) {
+  if (typeof IshakStore === 'undefined') return;
+  const s = IshakStore.getSettings();
+  const getVal = (id, fallback) => {
+    const el = document.getElementById(id);
+    return el ? el.value.trim() : fallback;
+  };
+
+  if (section === 'info') {
+    s.name = getVal('setName', s.name);
+    s.address = getVal('setAddress', s.address);
+    s.zipCity = getVal('setZipCity', s.zipCity);
+    s.phone = getVal('setPhone', s.phone);
+    s.swish = getVal('setSwish', s.swish);
+    s.instagram = getVal('setInstagram', s.instagram);
+  } else if (section === 'msg') {
+    s.introMsg = getVal('setIntroMsg', s.introMsg);
+    s.outroMsg = getVal('setOutroMsg', s.outroMsg);
+  } else if (section === 'delivery') {
+    s.waitTime = getVal('setWaitTime', s.waitTime);
+    s.orderType = getVal('setOrderType', s.orderType);
+    const acceptEl = document.getElementById('acceptOrders');
+    if (acceptEl) s.acceptOrders = acceptEl.checked;
+  }
+
+  IshakStore.saveSettings(s);
+  populateSettingsForms();
+  checkOpen();
+  showToast('Inställningar sparade!');
+}
+
 function renderHours() {
   const el = document.getElementById('hoursEditor');
-  el.innerHTML = HOURS_DATA.map((h, i) => `
+  if (!el) return;
+  el.innerHTML = hoursState.map((h, i) => `
     <div class="hours-row">
-      <div class="hours-day">${h.day}</div>
-      <input type="time" value="${h.open ? h.start : ''}" ${!h.open ? 'disabled' : ''} style="text-align:center" />
-      <input type="time" value="${h.open ? h.end : ''}" ${!h.open ? 'disabled' : ''} style="text-align:center" />
+      <div>
+        <div class="hours-day">${escapeHtml(h.day)}</div>
+        ${!h.open && h.note ? `<div style="font-size:11px;color:var(--yellow)">${escapeHtml(h.note)}</div>` : ''}
+      </div>
+      <input type="time" value="${h.open ? escapeHtml(h.start || '11:00') : ''}" ${!h.open ? 'disabled' : ''} style="text-align:center" onchange="updateHourTime(${i},'start',this.value)" />
+      <input type="time" value="${h.open ? escapeHtml(h.end || '15:00') : ''}" ${!h.open ? 'disabled' : ''} style="text-align:center" onchange="updateHourTime(${i},'end',this.value)" />
       <label class="toggle" style="margin-left:auto">
         <input type="checkbox" ${h.open ? 'checked' : ''} onchange="toggleHour(${i},this.checked)" />
         <span class="toggle-track"></span>
@@ -1111,16 +1399,44 @@ function renderHours() {
 }
 
 function toggleHour(i, open) {
-  HOURS_DATA[i].open = open;
+  hoursState[i].open = open;
+  if (open) {
+    if (!hoursState[i].start) hoursState[i].start = '11:00';
+    if (!hoursState[i].end) hoursState[i].end = '15:00';
+  }
   renderHours();
 }
 
+function updateHourTime(i, field, val) {
+  hoursState[i][field] = val;
+}
+
+function saveHoursSection() {
+  if (typeof IshakStore !== 'undefined') {
+    IshakStore.saveHours(hoursState);
+  }
+  checkOpen();
+  showToast('Öppettider sparade!');
+}
+
+function resetDemoData() {
+  if (typeof IshakStore === 'undefined') return;
+  IshakStore.resetAll();
+  loadStoreState();
+  populateSettingsForms();
+  checkOpen();
+  renderAll();
+  showToast('Demo-data återställd till grundläge!');
+}
+
 // ===== TOAST =====
+let toastTimer = null;
 function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg;
   t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3200);
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3200);
 }
 
 // Animate bars on load

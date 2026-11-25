@@ -223,6 +223,7 @@ a{color:inherit;text-decoration:none}
 
   <main class="kds-grid" id="kdsGrid"></main>
 
+  <script src="../store.js"></script>
   <script>
     let soundEnabled = true;
     function playChime() {
@@ -250,65 +251,26 @@ a{color:inherit;text-decoration:none}
       if (soundEnabled) playChime();
     }
 
-    let tickets = [
-      {
-        id: '#1026',
-        customer: 'Marcus K.',
-        phone: '0701234567',
-        time: '12:28',
-        elapsedSec: 140,
-        pay: 'Swish',
-        status: 'cooking',
-        items: [
-          { name: 'Smash Burger 1', qty: 2, mods: ['Kött', 'Extra kött (+35 kr)', 'Extra cheddar (+10 kr)'] },
-          { name: 'Fries', qty: 2, mods: [] },
-          { name: 'Trocadero 33 cl', qty: 2, mods: [] }
-        ],
-        note: 'Notering: Extra krispiga pommes'
-      },
-      {
-        id: '#1025',
-        customer: 'Sara Lind',
-        phone: '0739876543',
-        time: '12:24',
-        elapsedSec: 380,
-        pay: 'Swish',
-        status: 'cooking',
-        items: [
-          { name: 'Smash Burger 2', qty: 1, mods: ['Halloumi', 'Glutenfritt bröd'] },
-          { name: 'Chili cheese, 6 st', qty: 1, mods: [] }
-        ],
-        note: 'Allergi: Glutenallergi — viktigt med rent stekbord'
-      },
-      {
-        id: '#1024',
-        customer: 'Johan Bergström',
-        phone: '0705544332',
-        time: '12:18',
-        elapsedSec: 740,
-        pay: 'Swish',
-        status: 'ready',
-        items: [
-          { name: 'Smash Burger 3', qty: 3, mods: ['Kött', 'Srirachamajo'] },
-          { name: 'Chicken Nuggets (8 st)', qty: 1, mods: ['Dip: Tryffelmajo'] },
-          { name: 'Coca-Cola Zero 33 cl', qty: 4, mods: [] }
-        ],
-        note: ''
-      },
-      {
-        id: '#1023',
-        customer: 'Anders E.',
-        phone: '0722334455',
-        time: '12:12',
-        elapsedSec: 1080,
-        pay: 'Vid luckan',
-        status: 'new',
-        items: [
-          { name: 'Smash Burger 4', qty: 1, mods: ['Kyckling', 'Utan senap'] }
-        ],
-        note: ''
-      }
-    ];
+    let tickets = [];
+    const elapsedMap = {};
+
+    function loadTicketsFromStore() {
+      const all = IshakStore.getOrders();
+      tickets = all
+        .filter(o => o.status === 'new' || o.status === 'cooking' || o.status === 'ready')
+        .map(o => ({
+          id: o.id,
+          customer: o.customer || 'Kund',
+          phone: o.phone || '',
+          time: o.tid || '',
+          pickupTime: o.pickupTime || '',
+          elapsedSec: elapsedMap[o.id] != null ? elapsedMap[o.id] : (o.elapsedSec || 0),
+          pay: o.kanal === 'Swish Direkt' ? 'Swish' : (o.kanal || 'Vid luckan'),
+          status: o.status,
+          items: o.items || [],
+          note: o.note || ''
+        }));
+    }
 
     function calculatePucks() {
       let count = 0;
@@ -326,12 +288,20 @@ a{color:inherit;text-decoration:none}
     }
 
     function renderTickets() {
+      loadTicketsFromStore();
       const grid = document.getElementById('kdsGrid');
+
+      if (!tickets.length) {
+        grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:48px 20px;color:#777;font-size:15px;">Inga aktiva ordrar på stekbordet just nu.</div>';
+        calculatePucks();
+        return;
+      }
+
       grid.innerHTML = tickets.map((t, idx) => {
         const minutes = Math.floor(t.elapsedSec / 60);
         const seconds = t.elapsedSec % 60;
         const timeStr = `${minutes}:${seconds < 10 ? '0' : ''}${seconds} min`;
-        
+
         let timerClass = '';
         if (minutes >= 12) timerClass = 'timer-urgent';
         else if (minutes >= 6) timerClass = 'timer-warn';
@@ -344,7 +314,7 @@ a{color:inherit;text-decoration:none}
             </div>
 
             <div class="ticket-meta">
-              <span class="ticket-customer">${t.customer}</span>
+              <span class="ticket-customer">${t.customer}${t.pickupTime && !t.pickupTime.startsWith('Snarast') ? ' · ' + t.pickupTime : ''}</span>
               <span class="ticket-pay-badge">${t.pay}</span>
             </div>
 
@@ -355,7 +325,7 @@ a{color:inherit;text-decoration:none}
                     <span class="ticket-item-qty">${it.qty}×</span>
                     <span>${it.name}</span>
                   </div>
-                  ${it.mods.length ? `<div class="ticket-item-mods">${it.mods.join(' · ')}</div>` : ''}
+                  ${it.mods && it.mods.length ? `<div class="ticket-item-mods">${it.mods.join(' · ')}</div>` : ''}
                 </div>
               `).join('')}
 
@@ -376,7 +346,7 @@ a{color:inherit;text-decoration:none}
               ` : ''}
 
               ${t.status === 'ready' ? `
-                <button class="btn-kds-action btn-ping" onclick="pingCustomer('${t.id}', '${t.customer}', '${t.phone}')">
+                <button class="btn-kds-action btn-ping" onclick="pingCustomer(${idx})">
                   Meddela kund (WhatsApp)
                 </button>
                 <button class="btn-archive" onclick="archiveTicket(${idx})" title="Arkivera order">
@@ -392,30 +362,31 @@ a{color:inherit;text-decoration:none}
     }
 
     function setTicketStatus(idx, status) {
-      tickets[idx].status = status;
+      const t = tickets[idx];
+      if (!t) return;
+      IshakStore.updateOrderStatus(t.id, status);
       playChime();
       renderTickets();
     }
 
     function archiveTicket(idx) {
-      tickets.splice(idx, 1);
+      const t = tickets[idx];
+      if (!t) return;
+      IshakStore.updateOrderStatus(t.id, 'klar');
       renderTickets();
     }
 
-    function formatSwedishWhatsApp(phone) {
-      const digits = (phone || '').replace(/\D/g, '');
-      if (digits.startsWith('0')) return '46' + digits.slice(1);
-      return digits || '46705491132';
-    }
-
-    function pingCustomer(orderId, name, phone) {
-      const msg = `Hej ${name}! Din beställning ${orderId} hos Ishak's Smash Burger är nu klar att hämtas vid luckan på Hantverkargatan 5. Välkommen!`;
-      window.open(`https://wa.me/${formatSwedishWhatsApp(phone)}?text=${encodeURIComponent(msg)}`, '_blank');
+    function pingCustomer(idx) {
+      const t = tickets[idx];
+      if (!t) return;
+      const msg = `Hej ${t.customer}! Din beställning ${t.id} hos Ishak's Smash Burger är nu klar att hämtas vid luckan på Hantverkargatan 5. Välkommen!`;
+      window.open(`https://wa.me/${IshakStore.formatSwedishWhatsApp(t.phone)}?text=${encodeURIComponent(msg)}`, '_blank');
     }
 
     function updateTimers() {
       tickets.forEach((t, idx) => {
         t.elapsedSec++;
+        elapsedMap[t.id] = t.elapsedSec;
         const timerEl = document.querySelector(`[data-ticket-timer="${idx}"]`);
         const cardEl = document.querySelector(`[data-ticket-card="${idx}"]`);
         if (!timerEl) return;
@@ -432,6 +403,14 @@ a{color:inherit;text-decoration:none}
       const now = new Date();
       document.getElementById('liveClock').textContent = now.toTimeString().split(' ')[0];
     }
+
+    window.addEventListener('storage', (e) => {
+      if (e.key === IshakStore.KEYS.ORDERS) {
+        const prevCount = tickets.length;
+        renderTickets();
+        if (tickets.length > prevCount) playChime();
+      }
+    });
 
     setInterval(updateTimers, 1000);
     setInterval(updateClock, 1000);

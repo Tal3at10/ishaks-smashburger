@@ -691,6 +691,27 @@ h1, h2, h3, h4, .section-title, .hero-clean-title, .about-name, .menu-section-ti
   border-radius: 4px;
 }
 .dish-card:hover .dish-add-btn { background: var(--yellow); color: #000; }
+.dish-card.paused { opacity: 0.45; cursor: not-allowed; }
+.dish-card.paused:hover { border-color: var(--border); }
+.dish-card.paused .dish-add-btn { background: #1a1a1a; color: #777; pointer-events: none; }
+.dish-paused-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #f5b0a6;
+  margin-bottom: 6px;
+}
+.orders-paused-banner {
+  background: #1f1908;
+  border: 1px solid #4a3a00;
+  border-radius: 6px;
+  padding: 14px 18px;
+  margin-bottom: 24px;
+  font-size: 13.5px;
+  color: #f0d788;
+}
 
 @media (max-width: 1100px) {
   .dish-grid { grid-template-columns: repeat(2, 1fr); }
