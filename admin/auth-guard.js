@@ -126,14 +126,11 @@
           <button type="button" class="pin-key" data-k="0">0</button>
           <button type="button" class="pin-key fn" data-k="back">⌫</button>
         </div>
-        <div class="pin-demo-hint">Demokod för visning: <strong id="pinDemoVal">1234</strong></div>
+        <div class="pin-demo-hint">Endast behörig personal</div>
         <a href="../index.html" class="pin-back-link">← Tillbaka till hemsidan</a>
       </div>
     `;
     document.body.appendChild(gate);
-
-    const demoValEl = document.getElementById('pinDemoVal');
-    if (demoValEl) demoValEl.textContent = getExpectedPin();
 
     let buf = '';
     const dots = Array.from(gate.querySelectorAll('.pin-dot'));
