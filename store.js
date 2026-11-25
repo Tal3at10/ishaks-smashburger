@@ -214,6 +214,7 @@ window.IshakStore = (function () {
     waitTime: '15–20 min',
     orderType: 'Avhämtning (Hämta-själv)',
     acceptOrders: true,
+    staffPin: '1234',
     introMsg: "Tack för din beställning hos Ishak's Smash Burger! Vi bekräftar din beställning inom kort.",
     outroMsg: 'Vi ses vid luckan på Hantverkargatan 5. Swish: 123 082 44 41'
   };

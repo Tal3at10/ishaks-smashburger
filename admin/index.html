@@ -297,6 +297,10 @@ input:focus,select:focus,textarea:focus{border-color:#444}
       <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
       Öppna beställningssida
     </a>
+    <button type="button" class="sidebar-link" onclick="IshakAuth.lock()" style="width:100%;text-align:left;">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+      Lås terminal
+    </button>
   </nav>
 
   <div class="sidebar-footer">
@@ -634,14 +638,22 @@ input:focus,select:focus,textarea:focus{border-color:#444}
           </div>
 
           <div class="card">
-            <div class="card-title">Systeminfo</div>
+            <div class="card-title">Säkerhet &amp; Systeminfo</div>
+            <div class="settings-section" style="margin-bottom:16px">
+              <label class="settings-label">Personalkod (4 siffror för Admin &amp; KDS)</label>
+              <div style="display:flex;gap:8px;align-items:center">
+                <input type="text" id="setStaffPin" maxlength="4" inputmode="numeric" pattern="[0-9]{4}" value="1234" style="max-width:110px;text-align:center;font-family:var(--font-d);font-weight:800;font-size:18px;letter-spacing:3px;color:var(--yellow)" />
+                <button class="save-btn" onclick="saveSettingsSection('pin')" style="padding:8px 16px;font-size:13px">Spara kod</button>
+              </div>
+            </div>
             <div style="font-size:12px;color:var(--muted);line-height:2">
-              <div>Version: <span style="color:#fff">1.1.0 (Live Demo)</span></div>
+              <div>Version: <span style="color:#fff">1.2.0 (Live POS Demo)</span></div>
               <div>Webbplats: <a href="../menu.html" target="_blank" style="color:var(--yellow)">Öppna beställningssida</a></div>
               <div>Swish Företag: <span id="sysSwish" style="color:#8cc999">123 082 44 41</span></div>
-              <div>Lokal synkronisering: <span style="color:#8cc999">Aktiv (Meny + KDS + Ordrar)</span></div>
+              <div>Synkronisering: <span style="color:#8cc999">Aktiv (Meny + KDS + Spårning)</span></div>
             </div>
-            <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border)">
+            <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);display:flex;gap:8px;flex-wrap:wrap">
+              <button class="badge badge-muted" onclick="IshakAuth.lock()" style="cursor:pointer;padding:6px 12px">Lås skärm nu</button>
               <button class="badge badge-muted" onclick="resetDemoData()" style="cursor:pointer;padding:6px 12px">Återställ demo-data</button>
             </div>
           </div>
@@ -656,6 +668,7 @@ input:focus,select:focus,textarea:focus{border-color:#444}
 
 <script src="../menu-data.js"></script>
 <script src="../store.js"></script>
+<script src="auth-guard.js"></script>
 <script>
 // ===== DATA & HELPERS =====
 function escapeHtml(str) {
@@ -1423,6 +1436,7 @@ function populateSettingsForms() {
   setVal('setOutroMsg', s.outroMsg);
   setVal('setWaitTime', s.waitTime);
   setVal('setOrderType', s.orderType);
+  setVal('setStaffPin', s.staffPin || '1234');
 
   const acceptEl = document.getElementById('acceptOrders');
   if (acceptEl) acceptEl.checked = s.acceptOrders !== false;
@@ -1456,6 +1470,13 @@ function saveSettingsSection(section) {
     s.orderType = getVal('setOrderType', s.orderType);
     const acceptEl = document.getElementById('acceptOrders');
     if (acceptEl) s.acceptOrders = acceptEl.checked;
+  } else if (section === 'pin') {
+    const pinVal = getVal('setStaffPin', '1234').replace(/\D/g, '');
+    if (pinVal.length !== 4) {
+      showToast('Ange exakt 4 siffror för personalkod');
+      return;
+    }
+    s.staffPin = pinVal;
   }
 
   IshakStore.saveSettings(s);
