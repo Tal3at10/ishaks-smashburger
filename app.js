@@ -208,12 +208,6 @@ function findDish(id) {
 function openProductModal(dish) {
   activeModalItem = dish;
   modalQuantity = 1;
-  selectedOptions = {
-    doubleMeat: false,
-    glutenFree: false,
-    drink: 'Coca-Cola 33 cl',
-    dip: 'Tryffelmajo'
-  };
 
   const modal = document.getElementById('productModal');
   const img = document.getElementById('modalImg');
@@ -232,122 +226,98 @@ function openProductModal(dish) {
 
   let optionsHTML = '';
 
-  // Burgers allow double meat & gluten-free bread
-  if (dish.categoryId === 'smash' || dish.id === 'barn') {
+  if (dish.categoryId === 'smash' && typeof PROTEINS_LIST !== 'undefined') {
     optionsHTML += `
       <div class="modal-opt-group">
-        <div class="modal-opt-label">Tillval &amp; Anpassningar</div>
+        <div class="modal-opt-label">Välj protein</div>
         <div class="modal-opts">
-          <label class="modal-opt">
-            <input type="checkbox" id="optDoubleMeat" />
-            <span class="modal-opt-name">Extra smashad patty (+100g)</span>
-            <span class="modal-opt-price">+35 kr</span>
-          </label>
-          <label class="modal-opt">
-            <input type="checkbox" id="optGlutenFree" />
-            <span class="modal-opt-name">Glutenfritt briochebröd</span>
-            <span class="modal-opt-price">+15 kr</span>
-          </label>
+          ${PROTEINS_LIST.map((prot, idx) => `
+            <label class="modal-opt ${idx === 0 ? 'selected' : ''}">
+              <input type="radio" name="optProtein" value="${prot}" ${idx === 0 ? 'checked' : ''} />
+              <span class="modal-opt-name">${prot}</span>
+            </label>
+          `).join('')}
         </div>
       </div>
     `;
   }
 
-  // Menus include 33cl drink
-  if (dish.categoryId === 'smash' || dish.categoryId === 'klassiker') {
+  if ((dish.categoryId === 'smash' || dish.id === 'barn') && typeof EXTRAS !== 'undefined') {
+    optionsHTML += `
+      <div class="modal-opt-group">
+        <div class="modal-opt-label">Extra hungrig? &amp; Alternativ</div>
+        <div class="modal-opts">
+          ${EXTRAS.map(ex => `
+            <label class="modal-opt">
+              <input type="checkbox" class="opt-extra-cb" data-id="${ex.id}" data-label="${ex.label}" data-price="${ex.price}" />
+              <span class="modal-opt-name">${ex.label}</span>
+              <span class="modal-opt-price">${ex.price > 0 ? '+' + ex.price + ' kr' : 'Ingår'}</span>
+            </label>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }
+
+  if ((dish.categoryId === 'smash' || dish.categoryId === 'klassiker') && typeof DRINKS_LIST !== 'undefined') {
     optionsHTML += `
       <div class="modal-opt-group">
         <div class="modal-opt-label">Välj dryck (33 cl ingår)</div>
         <div class="modal-opts">
-          <label class="modal-opt selected">
-            <input type="radio" name="optDrink" value="Coca-Cola 33 cl" checked />
-            <span class="modal-opt-name">Coca-Cola</span>
-          </label>
-          <label class="modal-opt">
-            <input type="radio" name="optDrink" value="Coca-Cola Zero 33 cl" />
-            <span class="modal-opt-name">Coca-Cola Zero</span>
-          </label>
-          <label class="modal-opt">
-            <input type="radio" name="optDrink" value="Fanta 33 cl" />
-            <span class="modal-opt-name">Fanta</span>
-          </label>
-          <label class="modal-opt">
-            <input type="radio" name="optDrink" value="Sprite 33 cl" />
-            <span class="modal-opt-name">Sprite</span>
-          </label>
+          ${DRINKS_LIST.map((dr, idx) => `
+            <label class="modal-opt ${idx === 0 ? 'selected' : ''}">
+              <input type="radio" name="optDrink" value="${dr}" ${idx === 0 ? 'checked' : ''} />
+              <span class="modal-opt-name">${dr.replace(' 33 cl', '')}</span>
+            </label>
+          `).join('')}
         </div>
       </div>
     `;
   }
 
-  // Nuggets include dip
-  if (dish.id === 'nuggets') {
+  if (dish.id === 'nuggets' && typeof DIPS_LIST !== 'undefined') {
     optionsHTML += `
       <div class="modal-opt-group">
-        <div class="modal-opt-label">Välj dippsås (ingår)</div>
+        <div class="modal-opt-label">Välj dip (ingår)</div>
         <div class="modal-opts">
-          <label class="modal-opt selected">
-            <input type="radio" name="optDip" value="Tryffelmajo" checked />
-            <span class="modal-opt-name">Tryffelmajo</span>
-          </label>
-          <label class="modal-opt">
-            <input type="radio" name="optDip" value="Srirachamajo" />
-            <span class="modal-opt-name">Srirachamajo</span>
-          </label>
-          <label class="modal-opt">
-            <input type="radio" name="optDip" value="Ketchup" />
-            <span class="modal-opt-name">Ketchup</span>
-          </label>
+          ${DIPS_LIST.map((dip, idx) => `
+            <label class="modal-opt ${idx === 0 ? 'selected' : ''}">
+              <input type="radio" name="optDip" value="${dip}" ${idx === 0 ? 'checked' : ''} />
+              <span class="modal-opt-name">${dip}</span>
+            </label>
+          `).join('')}
         </div>
       </div>
     `;
   }
 
-  // Dippsåser selection
-  if (dish.id === 'dips') {
+  if (dish.id === 'dips' && typeof DIPS_LIST !== 'undefined') {
     optionsHTML += `
       <div class="modal-opt-group">
         <div class="modal-opt-label">Välj smak</div>
         <div class="modal-opts">
-          <label class="modal-opt selected">
-            <input type="radio" name="optDip" value="Tryffelmajo" checked />
-            <span class="modal-opt-name">Tryffelmajo</span>
-          </label>
-          <label class="modal-opt">
-            <input type="radio" name="optDip" value="Srirachamajo" />
-            <span class="modal-opt-name">Srirachamajo</span>
-          </label>
-          <label class="modal-opt">
-            <input type="radio" name="optDip" value="Ketchup" />
-            <span class="modal-opt-name">Ketchup</span>
-          </label>
+          ${DIPS_LIST.map((dip, idx) => `
+            <label class="modal-opt ${idx === 0 ? 'selected' : ''}">
+              <input type="radio" name="optDip" value="${dip}" ${idx === 0 ? 'checked' : ''} />
+              <span class="modal-opt-name">${dip}</span>
+            </label>
+          `).join('')}
         </div>
       </div>
     `;
   }
 
-  // Drycker flavor
-  if (dish.id === 'drink') {
+  if (dish.id === 'drink' && typeof DRINKS_LIST !== 'undefined') {
     optionsHTML += `
       <div class="modal-opt-group">
-        <div class="modal-opt-label">Välj smak</div>
+        <div class="modal-opt-label">Välj dricka</div>
         <div class="modal-opts">
-          <label class="modal-opt selected">
-            <input type="radio" name="optDrink" value="Coca-Cola 33 cl" checked />
-            <span class="modal-opt-name">Coca-Cola</span>
-          </label>
-          <label class="modal-opt">
-            <input type="radio" name="optDrink" value="Coca-Cola Zero 33 cl" />
-            <span class="modal-opt-name">Coca-Cola Zero</span>
-          </label>
-          <label class="modal-opt">
-            <input type="radio" name="optDrink" value="Fanta 33 cl" />
-            <span class="modal-opt-name">Fanta</span>
-          </label>
-          <label class="modal-opt">
-            <input type="radio" name="optDrink" value="Sprite 33 cl" />
-            <span class="modal-opt-name">Sprite</span>
-          </label>
+          ${DRINKS_LIST.map((dr, idx) => `
+            <label class="modal-opt ${idx === 0 ? 'selected' : ''}">
+              <input type="radio" name="optDrink" value="${dr}" ${idx === 0 ? 'checked' : ''} />
+              <span class="modal-opt-name">${dr.replace(' 33 cl', '')}</span>
+            </label>
+          `).join('')}
         </div>
       </div>
     `;
@@ -355,10 +325,8 @@ function openProductModal(dish) {
 
   optionsContainer.innerHTML = optionsHTML;
 
-  // Listeners inside options
   optionsContainer.querySelectorAll('input').forEach(input => {
     input.addEventListener('change', () => {
-      // update selected styling for radios
       if (input.type === 'radio') {
         const group = optionsContainer.querySelectorAll(`input[name="${input.name}"]`);
         group.forEach(r => r.closest('.modal-opt').classList.remove('selected'));
@@ -378,11 +346,9 @@ function updateModalAddPrice() {
   if (!activeModalItem) return;
   let unitPrice = activeModalItem.price;
 
-  const dMeat = document.getElementById('optDoubleMeat');
-  if (dMeat && dMeat.checked) unitPrice += 35;
-
-  const gFree = document.getElementById('optGlutenFree');
-  if (gFree && gFree.checked) unitPrice += 15;
+  document.querySelectorAll('.opt-extra-cb:checked').forEach(cb => {
+    unitPrice += parseInt(cb.dataset.price || '0', 10);
+  });
 
   const total = unitPrice * modalQuantity;
   const priceEl = document.getElementById('modalAddPrice');
@@ -420,27 +386,26 @@ function initModals() {
   addBtn.addEventListener('click', () => {
     if (!activeModalItem) return;
 
-    const dMeat = document.getElementById('optDoubleMeat');
-    const gFree = document.getElementById('optGlutenFree');
+    const proteinEl = document.querySelector('input[name="optProtein"]:checked');
     const drinkEl = document.querySelector('input[name="optDrink"]:checked');
     const dipEl = document.querySelector('input[name="optDip"]:checked');
 
     const mods = [];
     let extraCost = 0;
 
-    if (dMeat && dMeat.checked) {
-      mods.push('Dubbelkött (+35 kr)');
-      extraCost += 35;
+    if (proteinEl) {
+      mods.push(proteinEl.value);
     }
-    if (gFree && gFree.checked) {
-      mods.push('Glutenfritt brioche (+15 kr)');
-      extraCost += 15;
-    }
+    document.querySelectorAll('.opt-extra-cb:checked').forEach(cb => {
+      const p = parseInt(cb.dataset.price || '0', 10);
+      mods.push(p > 0 ? `${cb.dataset.label} (+${p} kr)` : cb.dataset.label);
+      extraCost += p;
+    });
     if (drinkEl) {
       mods.push(drinkEl.value);
     }
     if (dipEl) {
-      mods.push(`Dipp: ${dipEl.value}`);
+      mods.push(`Dip: ${dipEl.value}`);
     }
 
     const itemKey = `${activeModalItem.id}-${mods.join('|')}`;
@@ -711,7 +676,7 @@ function initCheckout() {
 
       text += `\n━━━━━━━━━━━━━━━━━━━━━\n`;
       text += `*TOTALT:* ${totalPrice} kr\n`;
-      text += `*Betalsätt:* Vid luckan / Swish vid hämtning\n`;
+      text += `*Betalsätt:* Swish 123 082 44 41 / Vid luckan\n`;
 
       if (notes) {
         text += `\n*Önskemål:* ${notes}\n`;

@@ -566,12 +566,12 @@ input:focus,select:focus,textarea:focus{border-color:#444}
             </div>
             <div class="settings-row">
               <div>
-                <label class="settings-label">Telefon / Swish</label>
+                <label class="settings-label">Telefon</label>
                 <input type="text" value="+46 70 549 11 32" />
               </div>
               <div>
-                <label class="settings-label">WhatsApp-nummer</label>
-                <input type="text" value="46705491132" />
+                <label class="settings-label">Swish Företag</label>
+                <input type="text" value="123 082 44 41" />
               </div>
             </div>
             <div class="settings-section">
@@ -589,7 +589,7 @@ input:focus,select:focus,textarea:focus{border-color:#444}
             </div>
             <div class="settings-section">
               <label class="settings-label">Avslutningstext</label>
-              <textarea rows="2" style="resize:vertical">Vi ses vid luckan på Hantverkargatan 5. Swish: 070-549 11 32</textarea>
+              <textarea rows="2" style="resize:vertical">Vi ses vid luckan på Hantverkargatan 5. Swish: 123 082 44 41</textarea>
             </div>
             <button class="save-btn" onclick="showToast('Meddelandetext sparad!')">Spara</button>
           </div>
@@ -654,40 +654,40 @@ input:focus,select:focus,textarea:focus{border-color:#444}
 <script>
 // ===== DATA =====
 const ORDERS = [
-  {id:'#1024',tid:'14:32',items:'Smash Burger 2 × 1, Fries × 1',kanal:'WhatsApp',total:185,status:'klar',details:['Smash Burger 2 × 1 — 150 kr','Pommes Frites × 1 — 35 kr'],extras:'Dubbelkött',note:''},
-  {id:'#1023',tid:'14:18',items:'Smash Burger 3 × 2',kanal:'WhatsApp',total:300,status:'klar',details:['Smash Burger 3 × 2 — 300 kr'],extras:'',note:'Extra sås'},
-  {id:'#1022',tid:'14:05',items:'Barn Burger × 1, Nuggets × 1',kanal:'Foodora',total:220,status:'klar',details:['Barn Burger × 1 — 110 kr','Chicken Nuggets × 1 — 110 kr'],extras:'',note:''},
-  {id:'#1021',tid:'13:52',items:'Smash Burger 1 × 1',kanal:'WhatsApp',total:150,status:'klar',details:['Smash Burger 1 × 1 — 150 kr'],extras:'',note:'Utan lök'},
-  {id:'#1020',tid:'13:41',items:'Smash Burger 5 × 2, Fries × 2',kanal:'WhatsApp',total:370,status:'klar',details:['Smash Burger 5 × 2 — 300 kr','Pommes Frites × 2 — 70 kr'],extras:'',note:''},
-  {id:'#1019',tid:'13:28',items:'Smash Burger 4 × 1',kanal:'Foodora',total:150,status:'klar',details:['Smash Burger 4 × 1 — 150 kr'],extras:'Glutenfritt',note:''},
-  {id:'#1018',tid:'13:15',items:'Smash Burger 6 × 1, Nuggets × 1',kanal:'WhatsApp',total:260,status:'kö',details:['Smash Burger 6 × 1 — 150 kr','Chicken Nuggets × 1 — 110 kr'],extras:'',note:'Snälla ta bort jalapeños'},
+  {id:'#1024',tid:'14:32',items:'Smash Burger 2 × 1, Fries × 1',kanal:'WhatsApp',total:205,status:'klar',details:['Smash Burger 2 (Kött) × 1 — 135 kr','Extra kött × 1 — 35 kr','Fries × 1 — 35 kr'],extras:'Extra kött',note:''},
+  {id:'#1023',tid:'14:18',items:'Smash Burger 3 × 2',kanal:'WhatsApp',total:270,status:'klar',details:['Smash Burger 3 (Kött) × 2 — 270 kr'],extras:'',note:'Extra sås'},
+  {id:'#1022',tid:'14:05',items:'Barn Burger × 1, Nuggets × 1',kanal:'Foodora',total:220,status:'klar',details:['Barn Burger × 1 — 110 kr','Chicken Nuggets (8 st) × 1 — 110 kr'],extras:'',note:''},
+  {id:'#1021',tid:'13:52',items:'Smash Burger 1 × 1',kanal:'WhatsApp',total:135,status:'klar',details:['Smash Burger 1 (Kött) × 1 — 135 kr'],extras:'',note:'Utan lök'},
+  {id:'#1020',tid:'13:41',items:'Smash Burger 5 × 2, Fries × 2',kanal:'WhatsApp',total:340,status:'klar',details:['Smash Burger 5 (Kött) × 2 — 270 kr','Fries × 2 — 70 kr'],extras:'',note:''},
+  {id:'#1019',tid:'13:28',items:'Smash Burger 4 × 1',kanal:'Foodora',total:135,status:'klar',details:['Smash Burger 4 (Kött) × 1 — 135 kr'],extras:'Glutenfritt bröd',note:''},
+  {id:'#1018',tid:'13:15',items:'Smash Burger 6 × 1, Nuggets × 1',kanal:'WhatsApp',total:245,status:'kö',details:['Smash Burger 6 (Halloumi) × 1 — 135 kr','Chicken Nuggets (8 st) × 1 — 110 kr'],extras:'',note:'Snälla ta bort jalapeños'},
   {id:'#1017',tid:'13:02',items:'Barn Burger × 2',kanal:'WhatsApp',total:220,status:'kö',details:['Barn Burger × 2 — 220 kr'],extras:'',note:'Till barn, lugnt med krydda'},
-  {id:'#1016',tid:'12:48',items:'Smash Burger 1 × 3',kanal:'Foodora',total:450,status:'klar',details:['Smash Burger 1 × 3 — 450 kr'],extras:'',note:''},
-  {id:'#1015',tid:'12:33',items:'Smash Burger 2 × 2, Dips × 2',kanal:'WhatsApp',total:320,status:'klar',details:['Smash Burger 2 × 2 — 300 kr','Dippsåser × 2 — 20 kr'],extras:'',note:''},
-  {id:'#1014',tid:'12:20',items:'Smash Burger 3 × 1, Chili × 2',kanal:'WhatsApp',total:210,status:'klar',details:['Smash Burger 3 × 1 — 150 kr','Chili Cheese Nuggets × 2 — 60 kr'],extras:'',note:''},
-  {id:'#1013',tid:'12:11',items:'Nuggets × 2',kanal:'Foodora',total:220,status:'klar',details:['Chicken Nuggets × 2 — 220 kr'],extras:'',note:''},
+  {id:'#1016',tid:'12:48',items:'Smash Burger 1 × 3',kanal:'Foodora',total:405,status:'klar',details:['Smash Burger 1 (Kött) × 3 — 405 kr'],extras:'',note:''},
+  {id:'#1015',tid:'12:33',items:'Smash Burger 2 × 2, Dip × 2',kanal:'WhatsApp',total:290,status:'klar',details:['Smash Burger 2 (Kyckling) × 2 — 270 kr','Dip × 2 — 20 kr'],extras:'',note:''},
+  {id:'#1014',tid:'12:20',items:'Smash Burger 3 × 1, Chili cheese × 2',kanal:'WhatsApp',total:215,status:'klar',details:['Smash Burger 3 (Kött) × 1 — 135 kr','Chili cheese, 6 st × 2 — 80 kr'],extras:'',note:''},
+  {id:'#1013',tid:'12:11',items:'Nuggets × 2',kanal:'Foodora',total:220,status:'klar',details:['Chicken Nuggets (8 st) × 2 — 220 kr'],extras:'',note:''},
 ];
 
 const MENU_DATA = [
   {cat:'Smash Burgers',items:[
-    {id:'sb1',name:'Smash Burger 1',desc:'Dubbel patty, cheddar, karamelliserad lök, pickles',price:150,active:true,img:'../assets/images/smash-burger-2.jpg'},
-    {id:'sb2',name:'Smash Burger 2',desc:'Dubbel patty, bacon, cheddar, jalapeño, chipotle-majo',price:150,active:true,img:'../assets/images/smash-burger-3.jpg'},
-    {id:'sb3',name:'Smash Burger 3',desc:'Trippel smash, trippel cheddar, pickles, lök',price:150,active:true,img:'../assets/images/smash-burger-5.jpg'},
-    {id:'sb4',name:'Smash Burger 4',desc:'Dubbel patty, gruyère, karamelliserad lök, dijon',price:150,active:true,img:'../assets/images/smash-burger-2.jpg'},
-    {id:'sb5',name:'Smash Burger 5',desc:'Smashad patty, blåmögelost, knaprig bacon',price:150,active:true,img:'../assets/images/smash-burger-5.jpg'},
-    {id:'sb6',name:'Smash Burger 6',desc:'Kycklingpatty, picklade jalapeños, pico de gallo',price:150,active:true,img:'../assets/images/smash-burger-3.jpg'},
+    {id:'sb1',name:'Smash Burger 1',desc:'Steks med jalapeños. Briochebröd, cheddar, srirachamajo, karamelliserad lök, chili cheese',price:135,active:true,img:'../assets/images/smash-burger-2.jpg'},
+    {id:'sb2',name:'Smash Burger 2',desc:'Briochebröd, cheddar, tryffelmajo, karamelliserad lök, rostad lök',price:135,active:true,img:'../assets/images/smash-burger-3.jpg'},
+    {id:'sb3',name:'Smash Burger 3',desc:'Steks med lök. Briochebröd, cheddar, barbequesås, picklad gurka, rostad lök',price:135,active:true,img:'../assets/images/smash-burger-5.jpg'},
+    {id:'sb4',name:'Smash Burger 4',desc:'Briochebröd, cheddar, ketchup, senap, sallad, rödlök',price:135,active:true,img:'../assets/images/smash-burger-2.jpg'},
+    {id:'sb5',name:'Smash Burger 5',desc:'Briochebröd, cheddar, tryffelmajo, karamelliserad lök, picklad jalapeño, barbequesås',price:135,active:true,img:'../assets/images/smash-burger-5.jpg'},
+    {id:'sb6',name:'Smash Burger 6',desc:'Briochebröd, cheddar, tryffelmajo, sallad, picklad rödlök',price:135,active:true,img:'../assets/images/smash-burger-3.jpg'},
   ]},
-  {cat:'Klassiker',items:[
-    {id:'barn',name:'Barn Burger',desc:'Enkel patty, cheddar, ketchup, senap, lök',price:110,active:true,img:'../assets/images/barn-burger.jpg'},
-    {id:'nuggets',name:'Chicken Nuggets',desc:'8 knapriga kycklingnuggets, valfri dippsås',price:110,active:true,img:'../assets/images/chicken-nuggets.jpg'},
+  {cat:'Barnmeny',items:[
+    {id:'barn',name:'Barn Burger',desc:'Briochebröd, kött, cheddar, tryffelmajo, sallad, ketchup',price:110,active:true,img:'../assets/images/barn-burger.jpg'},
+    {id:'nuggets',name:'Chicken Nuggets (8 st)',desc:'8 st chicken nuggets med valfri dip, pommes och dricka',price:110,active:true,img:'../assets/images/chicken-nuggets.jpg'},
   ]},
-  {cat:'Smårätter',items:[
-    {id:'fries',name:'Pommes Frites',desc:'Nyfriterade pommes, havssalt',price:35,active:true,img:'../assets/images/fries.jpg'},
-    {id:'chili',name:'Chili Cheese Nuggets',desc:'6 st — krämig ostfyllning, chiliskorpa',price:30,active:true,img:'../assets/images/chili-cheese.jpg'},
-    {id:'dips',name:'Dippsåser',desc:'Tryffelmajo · Srirachamajo · Ketchup',price:10,active:true,img:'../assets/images/dips.jpg'},
+  {cat:'Sides & Dip',items:[
+    {id:'fries',name:'Fries',desc:'Nystekta pommes frites',price:35,active:true,img:'../assets/images/fries.jpg'},
+    {id:'chili',name:'Chili cheese, 6 st',desc:'6 st frasiga chili cheese',price:40,active:true,img:'../assets/images/chili-cheese.jpg'},
+    {id:'dips',name:'Dip',desc:'Tryffelmajo · Srirachamajo · Ketchup',price:10,active:true,img:'../assets/images/dips.jpg'},
   ]},
   {cat:'Drycker',items:[
-    {id:'drink',name:'Dryck 33 cl',desc:'Coca-Cola, Zero, Fanta, Sprite',price:15,active:true,img:'../assets/images/drinks.jpg'},
+    {id:'drink',name:'Dricka 33 cl',desc:'Coca-Cola, Zero, Fanta, Sprite, Trocadero, Loka',price:20,active:true,img:'../assets/images/drinks.jpg'},
   ]},
 ];
 
